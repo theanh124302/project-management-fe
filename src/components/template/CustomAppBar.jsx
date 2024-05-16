@@ -13,6 +13,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import { useNavigate } from 'react-router-dom';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -54,7 +55,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   }));
 export default function CustomAppBar() {
     const [anchorEl, setAnchorEl] = React.useState(null);
-    
+    const navigate = useNavigate();
     const isMenuOpen = Boolean(anchorEl);
     const handleProfileMenuOpen = (event) => {
         setAnchorEl(event.currentTarget);
@@ -62,6 +63,18 @@ export default function CustomAppBar() {
     const handleMenuClose = () => {
         setAnchorEl(null);
     };
+
+    const handleLogout = () => {
+      // Điều hướng đến trang "/login" khi nhấn vào nút "Sign Out"
+      navigate('/login');
+      handleMenuClose();
+    };
+  
+    const handleADMClick = () => {
+      // Điều hướng đến trang "/home" khi nhấn vào nút "ADM"
+      navigate('/home');
+    };
+
     const menuId = 'primary-search-account-menu';
     const renderMenu = (
         <Menu
@@ -80,7 +93,7 @@ export default function CustomAppBar() {
           onClose={handleMenuClose}
         >
           <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-          <MenuItem onClick={handleMenuClose}>Sign Out</MenuItem>
+          <MenuItem onClick={handleLogout}>Sign Out</MenuItem>
         </Menu>
       );
       return (
@@ -94,6 +107,7 @@ export default function CustomAppBar() {
                 color="inherit"
                 aria-label="open drawer"
                 sx={{ mr: 2 }}
+                onClick={handleADMClick}
               >
                 <ApiIcon />
                 ADM
