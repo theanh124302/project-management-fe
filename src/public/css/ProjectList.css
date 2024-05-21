@@ -1,0 +1,22 @@
+.project-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-around;
+  }
+  
+  .project-item {
+    width: calc(20% - 20px);
+    cursor: pointer;
+    text-align: center;
+  }
+  
+  .project-item img {
+    width: 100%;
+    height: auto;
+  }
+  
+  .project-item h3 {
+    margin-top: 10px;
+  }
+  
