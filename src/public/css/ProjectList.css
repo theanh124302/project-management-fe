@@ -1,22 +1,38 @@
-.project-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: space-around;
-  }
-  
-  .project-item {
-    width: calc(20% - 20px);
-    cursor: pointer;
-    text-align: center;
-  }
-  
-  .project-item img {
-    width: 100%;
-    height: auto;
-  }
-  
-  .project-item h3 {
-    margin-top: 10px;
-  }
-  
+/* public/css/ProjectList.css */
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h2 {
+  text-align: center;
+  color: #333;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+ul li {
+  background: #fff;
+  margin: 10px 0;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+ul li button {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  text-align: left;
+  font-size: 16px;
+}
+
+ul li button:hover {
+  text-decoration: underline;
+}

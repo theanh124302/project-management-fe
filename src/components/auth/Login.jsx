@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import '../../public/css/Login.css';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -21,15 +22,19 @@ const Login = () => {
       const { token, refreshToken } = response.data;
       localStorage.setItem('token', token);
       localStorage.setItem('refreshToken', refreshToken);
-      localStorage.setItem('username', username); // Lưu username vào localStorage
-      navigate('/home');
+      localStorage.setItem('username', username);
+
+      // Lấy danh sách dự án sau khi đăng nhập thành công
+      const projectResponse = await axios.get(`http://localhost:8080/api/v1/project/findByUsername?username=${username}`);
+      const projects = projectResponse.data.data;
+      navigate('/projects', { state: { projects } });
     } catch (error) {
       setError('Đăng nhập thất bại. Vui lòng kiểm tra lại tên đăng nhập và mật khẩu.');
     }
   };
 
   return (
-    <div>
+    <div className="container">
       <h2>Đăng nhập</h2>
       <form onSubmit={handleLogin}>
         <div>
@@ -50,9 +55,10 @@ const Login = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        {error && <p>{error}</p>}
+        {error && <p className="error">{error}</p>}
         <button type="submit">Đăng nhập</button>
       </form>
+      <p>Bạn chưa có tài khoản? <Link to="/signup">Đăng ký ngay</Link></p>
     </div>
   );
 };

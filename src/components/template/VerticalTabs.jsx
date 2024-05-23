@@ -1,31 +1,25 @@
 import * as React from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate từ react-router-dom
-
-function a11yProps(index) {
-  return {
-    id: `vertical-tab-${index}`,
-    'aria-controls': `vertical-tabpanel-${index}`,
-  };
-}
+import { useNavigate } from 'react-router-dom';
+import '../../public/css/VerticalTabs.css';
 
 export default function VerticalTabs() {
-  const [value, setValue] = React.useState(0);
-  const navigate = useNavigate(); // Lấy navigate từ hook useNavigate
+  const navigate = useNavigate();
 
   const handleChange = (event, newValue) => {
-    setValue(newValue);
-    // Chuyển đến trang cụ thể tùy thuộc vào giá trị của newValue
     switch (newValue) {
       case 0:
-        navigate('/project/env');
+        navigate('/project/api');
         break;
       case 1:
-        navigate('/project/task');
+        navigate('/project/env');
         break;
       case 2:
-        navigate('/project/board');
+        navigate('/project/task');
+        break;
+      case 3:
+        navigate('/project/details'); // Đổi đường dẫn này để điều hướng đến trang chi tiết dự án
         break;
       default:
         break;
@@ -33,18 +27,19 @@ export default function VerticalTabs() {
   };
 
   return (
-    <div style={{ marginTop: '250px', display: 'flex', justifyContent: 'flex-start' }}> 
+    <div style={{ display: 'flex', justifyContent: 'flex-start', marginTop: '100px' }}>
       <Tabs
         orientation="vertical"
         variant="scrollable"
-        value={value}
+        value={false} // Đặt giá trị mặc định của value là false
         onChange={handleChange}
         aria-label="Vertical tabs example"
-        sx={{ borderRight: 1, borderColor: 'divider', paddingLeft: 0 }} // Thêm paddingLeft vào sx để đẩy tabs vào sát bên trái
+        sx={{ borderRight: 1, borderColor: 'divider' }}
       >
-        <Tab label="ENV" {...a11yProps(0)} />
-        <Tab label="TASK" {...a11yProps(1)} />
-        <Tab label="BOARD" {...a11yProps(2)} />
+        <Tab label="API" />
+        <Tab label="ENV" />
+        <Tab label="TASK" />
+        <Tab label="DETAILS" />
       </Tabs>
     </div>
   );
