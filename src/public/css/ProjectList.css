@@ -1,11 +1,21 @@
+/* ProjectList.css */
 .project-list-container {
   padding: 20px;
+}
+
+h2 {
+  margin-top: 0;
+  font-weight: normal;
 }
 
 .project-list {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
+}
+
+.project-button-wrapper {
+  position: relative;
 }
 
 .project-button {
@@ -17,18 +27,24 @@
   text-align: left;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s;
+  overflow: hidden; /* Ensure the content does not overflow */
 }
 
 .project-button:hover {
   transform: scale(1.05);
 }
 
-.project-button h3 {
-  margin-top: 0;
+.project-button h3,
+.project-button p {
+  width: 70%;
+  white-space: nowrap; /* Prevent line breaks */
+  overflow: hidden; /* Hide the overflowing content */
+  text-overflow: ellipsis; /* Display the ellipsis (...) */
+  margin: 5px 0;
 }
 
-.project-button p {
-  margin: 5px 0;
+.project-button h3 {
+  margin-top: 0;
 }
 
 .project-button p strong {
@@ -77,4 +93,18 @@
 
 .add-project-form button:hover {
   background-color: #0056b3;
+}
+
+.icon {
+  position: absolute;
+  top: 10px;
+  cursor: pointer;
+}
+
+.edit-icon {
+  right: 40px;
+}
+
+.delete-icon {
+  right: 10px;
 }

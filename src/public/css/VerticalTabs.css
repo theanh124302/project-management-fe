@@ -1,0 +1,17 @@
+/* VerticalTabs.css */
+.tabs-container {
+    display: flex;
+  }
+  
+  .tabs {
+    border-right: 1px solid #ccc;
+  }
+  
+  .tab {
+    width: 200px;
+  }
+  
+  .icon-button {
+    margin-right: 10px;
+  }
+  

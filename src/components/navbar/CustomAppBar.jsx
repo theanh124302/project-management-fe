@@ -1,3 +1,4 @@
+// CustomAppBar.jsx
 import * as React from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
@@ -55,7 +56,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function CustomAppBar() {
+export default function CustomAppBar({ username }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const navigate = useNavigate();
   const isMenuOpen = Boolean(anchorEl);
@@ -74,7 +75,7 @@ export default function CustomAppBar() {
   };
 
   const handleADMClick = () => {
-    navigate('/home');
+    navigate(`/projectList?username=${username}`);
   };
 
   const menuId = 'primary-search-account-menu';
