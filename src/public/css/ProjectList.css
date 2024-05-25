@@ -1,38 +1,80 @@
-/* public/css/ProjectList.css */
-
-.container {
-  max-width: 800px;
-  margin: 0 auto;
+.project-list-container {
   padding: 20px;
 }
 
-h2 {
-  text-align: center;
-  color: #333;
+.project-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
 }
 
-ul {
-  list-style: none;
-  padding: 0;
-}
-
-ul li {
-  background: #fff;
-  margin: 10px 0;
-  padding: 15px;
+.project-button {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
   border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-ul li button {
-  background: none;
-  border: none;
-  color: #007bff;
-  cursor: pointer;
+  padding: 20px;
+  width: 250px;
   text-align: left;
-  font-size: 16px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
 }
 
-ul li button:hover {
-  text-decoration: underline;
+.project-button:hover {
+  transform: scale(1.05);
+}
+
+.project-button h3 {
+  margin-top: 0;
+}
+
+.project-button p {
+  margin: 5px 0;
+}
+
+.project-button p strong {
+  display: block;
+}
+
+.add-project-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.add-project-form {
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.add-project-form h3 {
+  margin-top: 0;
+}
+
+.add-project-form input,
+.add-project-form textarea {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.add-project-form button {
+  margin-right: 10px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: #fff;
+}
+
+.add-project-form button:hover {
+  background-color: #0056b3;
 }

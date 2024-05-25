@@ -23,11 +23,7 @@ const Login = () => {
       localStorage.setItem('token', token);
       localStorage.setItem('refreshToken', refreshToken);
       localStorage.setItem('username', username);
-
-      // Lấy danh sách dự án sau khi đăng nhập thành công
-      const projectResponse = await axios.get(`http://localhost:8080/api/v1/project/findByUsername?username=${username}`);
-      const projects = projectResponse.data.data;
-      navigate('/projects', { state: { projects } });
+      navigate(`/projectList?username=${username}`);
     } catch (error) {
       setError('Đăng nhập thất bại. Vui lòng kiểm tra lại tên đăng nhập và mật khẩu.');
     }
