@@ -3,13 +3,17 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import CustomAppBar from '../navbar/CustomAppBar';
 import VerticalTabs from '../tabs/VerticalTabs';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Box, Typography } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Box, Typography, TextField, Button, IconButton, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import '../../public/css/ProjectDetail.css';
 
 const ProjectDetail = () => {
   const { projectId } = useParams();
   const [project, setProject] = useState(null);
   const [members, setMembers] = useState([]);
+  const [newMember, setNewMember] = useState({ username: '', role: '' });
+  const [editingMember, setEditingMember] = useState(null);
 
   useEffect(() => {
     const fetchProjectDetails = async () => {
@@ -26,6 +30,49 @@ const ProjectDetail = () => {
 
     fetchProjectDetails();
   }, [projectId]);
+
+  const handleAddOrEditMember = async () => {
+    try {
+      await axios.post(`http://localhost:8080/api/v1/project/assignUserByUsername`, null, {
+        params: {
+          projectId,
+          username: newMember.username,
+          role: newMember.role,
+        },
+      });
+      setNewMember({ username: '', role: '' });
+      setEditingMember(null);
+      const membersResponse = await axios.get(`http://localhost:8080/api/v1/user/findByProjectId/${projectId}`);
+      setMembers(membersResponse.data.data);
+    } catch (error) {
+      console.error('Error adding or editing member:', error);
+    }
+  };
+
+  const handleDeleteMember = async (username) => {
+    try {
+      await axios.post(`http://localhost:8080/api/v1/project/removeUserByUsername`, null, {
+        params: {
+          projectId,
+          username,
+        },
+      });
+      const membersResponse = await axios.get(`http://localhost:8080/api/v1/user/findByProjectId/${projectId}`);
+      setMembers(membersResponse.data.data);
+    } catch (error) {
+      console.error('Error deleting member:', error);
+    }
+  };
+
+  const handleEditClick = (member) => {
+    setNewMember({ username: member.username, role: member.role });
+    setEditingMember(member);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewMember({ ...newMember, [name]: value });
+  };
 
   return (
     <div>
@@ -51,6 +98,34 @@ const ProjectDetail = () => {
                 <Typography variant="body1" component="p"><strong>Number of Members:</strong> {project.numberOfMembers}</Typography>
                 <Typography variant="body1" component="p"><strong>Source Code:</strong> <a href={project.sourceCode} target="_blank" rel="noopener noreferrer">{project.sourceCode}</a></Typography>
               </Box>
+              <Box sx={{ mb: 3 }}>
+                <Typography variant="h5" component="h3">Add or Edit Member</Typography>
+                <TextField
+                  label="Username"
+                  name="username"
+                  value={newMember.username}
+                  onChange={handleInputChange}
+                  sx={{ mr: 2 }}
+                />
+                <FormControl sx={{ mr: 2, minWidth: 200 }}>
+                  <InputLabel>Role</InputLabel>
+                  <Select
+                    label="Role"
+                    name="role"
+                    value={newMember.role}
+                    onChange={handleInputChange}
+                  >
+                    <MenuItem value="LEADER">LEADER</MenuItem>
+                    <MenuItem value="BE">BE</MenuItem>
+                    <MenuItem value="FE">FE</MenuItem>
+                    <MenuItem value="PM">PM</MenuItem>
+                    <MenuItem value="BA">BA</MenuItem>
+                  </Select>
+                </FormControl>
+                <Button variant="contained" color="primary" onClick={handleAddOrEditMember}>
+                  {editingMember ? 'Edit Member' : 'Add Member'}
+                </Button>
+              </Box>
               <Box>
                 <Typography variant="h5" component="h3">Project Members</Typography>
                 <TableContainer component={Paper}>
@@ -60,6 +135,7 @@ const ProjectDetail = () => {
                         <TableCell>Name</TableCell>
                         <TableCell>Email</TableCell>
                         <TableCell>Role</TableCell>
+                        <TableCell>Actions</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -68,6 +144,14 @@ const ProjectDetail = () => {
                           <TableCell>{member.name}</TableCell>
                           <TableCell>{member.email}</TableCell>
                           <TableCell>{member.role}</TableCell>
+                          <TableCell>
+                            <IconButton onClick={() => handleEditClick(member)}>
+                              <EditIcon />
+                            </IconButton>
+                            <IconButton onClick={() => handleDeleteMember(member.username)}>
+                              <DeleteIcon />
+                            </IconButton>
+                          </TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
