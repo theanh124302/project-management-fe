@@ -1,3 +1,4 @@
+// App.js
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './components/auth/Login';
@@ -7,6 +8,8 @@ import ProjectDetailPage from './components/project/ProjectDetailPage';
 import UserProfile from './components/profile/UserProfile';
 import EnvList from './components/env/EnvList';
 import ProjectDetail from './components/project/ProjectDetail';
+import TaskList from './components/task/TaskList';
+import TaskDetail from './components/task/TaskDetail'; // Import TaskDetail
 
 function App() {
   return (
@@ -20,6 +23,8 @@ function App() {
         <Route path='/profile' element={<UserProfile />} />
         <Route path='/project/:projectId/env' element={<EnvList />} />
         <Route path='/project/:projectId/detail' element={<ProjectDetail />} />
+        <Route path='/project/:projectId/task' element={<TaskList />} />
+        <Route path='/project/:projectId/task/:taskId' element={<TaskDetail />} /> {/* Add route for TaskDetail */}
       </Routes>
     </Router>
   );

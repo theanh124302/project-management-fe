@@ -1,0 +1,83 @@
+.task-list-container {
+  padding: 20px;
+}
+
+.task-list-content {
+  margin-left: 20px;
+  padding: 20px;
+  flex: 1;
+}
+
+.task-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.task-card {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 20px;
+  width: 250px;
+  text-align: left;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+  position: relative;
+  overflow: hidden; /* Ensure the content does not overflow */
+}
+
+.task-card:hover {
+  transform: scale(1.05);
+}
+
+.task-card h3,
+.task-card p {
+  width: 70%;
+  white-space: nowrap; /* Prevent line breaks */
+  overflow: hidden; /* Hide the overflowing content */
+  text-overflow: ellipsis; /* Display the ellipsis (...) */
+  margin: 5px 0;
+}
+
+.task-card h3 {
+  margin-top: 0;
+}
+
+.task-card p strong {
+  display: block;
+}
+
+.add-task-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.icon {
+  position: absolute;
+  top: 10px;
+  cursor: pointer;
+}
+
+.edit-icon {
+  right: 40px;
+}
+
+.delete-icon {
+  right: 10px;
+}
+
+.task-modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  background-color: #fff;
+  border: 2px solid #000;
+  box-shadow: 24;
+  padding: 20px;
+}

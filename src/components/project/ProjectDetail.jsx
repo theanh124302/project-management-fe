@@ -77,7 +77,7 @@ const ProjectDetail = () => {
   };
 
   return (
-    <div>
+    <div style={{padding: '20px'}}>
       <CustomAppBar />
       <div style={{ display: 'flex' }}>
         <VerticalTabs projectId={projectId} />
