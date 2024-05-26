@@ -28,7 +28,7 @@ const ProjectDetail = () => {
   }, [projectId]);
 
   return (
-    <div style={{padding: '20px'}}>
+    <div>
       <CustomAppBar />
       <div style={{ display: 'flex' }}>
         <VerticalTabs projectId={projectId} />
