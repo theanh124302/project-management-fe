@@ -110,7 +110,6 @@ const ProjectList = () => {
   return (
     <div className="project-list-container">
       <CustomAppBar username={username} />
-      <h4 style={{ marginBottom: '100px', marginTop: '50px' }}>API DOCUMENT MANAGEMENT, {userName}!</h4>
       <h2 style={{ marginBottom: '100px', marginTop: '50px' }}>Welcome, {userName}!</h2>
       <div className="project-list">
         {projects.map((project) => (

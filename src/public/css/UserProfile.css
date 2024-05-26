@@ -1,0 +1,29 @@
+/* UserProfile.css */
+.avatar {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 20px;
+  }
+  
+  .profile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .profile-form {
+    width: 100%;
+    margin-top: 20px;
+  }
+  
+  .profile-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+  .profile-button {
+    width: 48%;
+  }
+  

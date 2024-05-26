@@ -19,16 +19,16 @@ const VerticalTabs = () => {
     setSelectedTab(newValue);
     // Logic để chuyển hướng tới các trang tương ứng
     switch (newValue) {
-      case 0:
+      case 1:
         navigate(`/project/${projectId}/api`);
         break;
-      case 1:
+      case 2:
         navigate(`/project/${projectId}/env`);
         break;
-      case 2:
+      case 3:
         navigate(`/project/${projectId}/task`);
         break;
-      case 3:
+      case 4:
         navigate(`/project/${projectId}/detail`);
         break;
       default:

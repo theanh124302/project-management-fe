@@ -23,7 +23,13 @@ const Login = () => {
       localStorage.setItem('token', token);
       localStorage.setItem('refreshToken', refreshToken);
       localStorage.setItem('username', username);
-      navigate(`/projectList?username=${username}`);
+
+      // Fetch user data to get userId
+      const userResponse = await axios.get(`http://localhost:8080/api/v1/user/findByUsername/${username}`);
+      const userId = userResponse.data.data.id;
+      localStorage.setItem('userId', userId);
+
+      navigate(`/projectList`);
     } catch (error) {
       setError('Đăng nhập thất bại. Vui lòng kiểm tra lại tên đăng nhập và mật khẩu.');
     }

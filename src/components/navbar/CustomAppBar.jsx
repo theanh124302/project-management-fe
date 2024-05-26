@@ -56,7 +56,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function CustomAppBar({ username }) {
+export default function CustomAppBar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const navigate = useNavigate();
   const isMenuOpen = Boolean(anchorEl);
@@ -74,8 +74,13 @@ export default function CustomAppBar({ username }) {
     handleMenuClose();
   };
 
+  const handleProfileClick = () => {
+    navigate('/profile');
+    handleMenuClose();
+  };
+
   const handleADMClick = () => {
-    navigate(`/projectList?username=${username}`);
+    navigate('/projectList');
   };
 
   const menuId = 'primary-search-account-menu';
@@ -95,7 +100,7 @@ export default function CustomAppBar({ username }) {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
       <MenuItem onClick={handleLogout}>Sign Out</MenuItem>
     </Menu>
   );

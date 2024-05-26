@@ -1,0 +1,25 @@
+/* EnvList.css */
+.table-container {
+    margin-top: 20px;
+  }
+  
+  .add-env-form {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+  }
+  
+  .add-env-form .input-field {
+    margin-bottom: 10px;
+  }
+  
+  .add-env-form .buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+  
+  .add-env-form .button {
+    width: 48%;
+  }
+  
