@@ -14,6 +14,7 @@ const ProjectDetail = () => {
   const [members, setMembers] = useState([]);
   const [newMember, setNewMember] = useState({ username: '', role: '' });
   const [editingMember, setEditingMember] = useState(null);
+  const deleterId = localStorage.getItem('userId');
 
   useEffect(() => {
     const fetchProjectDetails = async () => {
@@ -55,6 +56,7 @@ const ProjectDetail = () => {
         params: {
           projectId,
           username,
+          deleterId,
         },
       });
       const membersResponse = await axios.get(`http://localhost:8080/api/v1/user/findByProjectId/${projectId}`);
