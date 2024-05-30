@@ -8,6 +8,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Box, Button, TextField, Select, MenuItem, FormControl, InputLabel, Modal, Typography } from '@mui/material';
 
+const backendUrl = 'http://localhost:8080'; // Cập nhật URL backend cố định ở đây
+
 const TaskList = () => {
   const { projectId } = useParams();
   const [tasks, setTasks] = useState([]);
@@ -29,7 +31,7 @@ const TaskList = () => {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/api/v1/task/findByProjectId?projectId=${projectId}`);
+        const response = await axios.get(`${backendUrl}/api/v1/task/findByProjectId?projectId=${projectId}`);
         setTasks(response.data.data);
       } catch (error) {
         console.error('Error fetching tasks:', error);
@@ -46,14 +48,14 @@ const TaskList = () => {
     }
 
     try {
-      await axios.post('http://localhost:8080/api/v1/task/create', {
+      await axios.post(`${backendUrl}/api/v1/task/create`, {
         ...newTask,
         projectId: projectId,
         createdBy: userId,
       });
       setShowAddForm(false);
       setNewTask({ name: '', description: '', status: '', priority: '', type: '', startDate: '', dueDate: '' });
-      const response = await axios.get(`http://localhost:8080/api/v1/task/findByProjectId?projectId=${projectId}`);
+      const response = await axios.get(`${backendUrl}/api/v1/task/findByProjectId?projectId=${projectId}`);
       setTasks(response.data.data);
     } catch (error) {
       console.error('Error adding task:', error);
@@ -62,8 +64,8 @@ const TaskList = () => {
 
   const handleDeleteTask = async (id) => {
     try {
-      await axios.delete(`http://localhost:8080/api/v1/task/delete`, { data: { id: id } });
-      const response = await axios.get(`http://localhost:8080/api/v1/task/findByProjectId?projectId=${projectId}`);
+      await axios.delete(`${backendUrl}/api/v1/task/delete`, { data: { id: id } });
+      const response = await axios.get(`${backendUrl}/api/v1/task/findByProjectId?projectId=${projectId}`);
       setTasks(response.data.data);
     } catch (error) {
       console.error('Error deleting task:', error);
@@ -86,14 +88,14 @@ const TaskList = () => {
 
   const handleUpdateTask = async () => {
     try {
-      await axios.post(`http://localhost:8080/api/v1/task/update`, {
+      await axios.post(`${backendUrl}/api/v1/task/update`, {
         ...currentTask,
         ...newTask,
       });
       setShowEditForm(false);
       setNewTask({ name: '', description: '', status: '', priority: '', type: '', startDate: '', dueDate: '' });
       setCurrentTask(null);
-      const response = await axios.get(`http://localhost:8080/api/v1/task/findByProjectId?projectId=${projectId}`);
+      const response = await axios.get(`${backendUrl}/api/v1/task/findByProjectId?projectId=${projectId}`);
       setTasks(response.data.data);
     } catch (error) {
       console.error('Error updating task:', error);

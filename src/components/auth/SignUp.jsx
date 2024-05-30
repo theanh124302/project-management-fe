@@ -3,6 +3,8 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import '../../public/css/SignUp.css';
 
+const backendUrl = 'http://localhost:8080'; // Cập nhật URL backend cố định ở đây
+
 const SignUp = () => {
   const [name, setName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -16,7 +18,7 @@ const SignUp = () => {
     e.preventDefault();
     try {
       await axios.post(
-        'http://localhost:8080/api/v1/auth/signup',
+        `${backendUrl}/api/v1/auth/signup`,
         {
           name: name,
           phoneNumber: phoneNumber,

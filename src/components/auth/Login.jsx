@@ -3,6 +3,8 @@ import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import '../../public/css/Login.css';
 
+const backendUrl = 'http://localhost:8080'; // Cập nhật URL backend cố định ở đây
+
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -13,7 +15,7 @@ const Login = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        'http://localhost:8080/api/v1/auth/signin',
+        `${backendUrl}/api/v1/auth/signin`,
         {
           username: username,
           password: password,
@@ -25,7 +27,7 @@ const Login = () => {
       localStorage.setItem('username', username);
 
       // Fetch user data to get userId
-      const userResponse = await axios.get(`http://localhost:8080/api/v1/user/findByUsername/${username}`);
+      const userResponse = await axios.get(`${backendUrl}/api/v1/user/findByUsername/${username}`);
       const userId = userResponse.data.data.id;
       localStorage.setItem('userId', userId);
 

@@ -6,6 +6,8 @@ import VerticalTabs from '../tabs/VerticalTabs';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Checkbox, TextField, Button, Box } from '@mui/material';
 import '../../public/css/EnvList.css';
 
+const backendUrl = 'http://localhost:8080'; // Cập nhật URL backend cố định ở đây
+
 const EnvList = () => {
   const [environments, setEnvironments] = useState([]);
   const [newEnv, setNewEnv] = useState({ name: '', value: '', description: '', status: 'inactive' });
@@ -17,7 +19,7 @@ const EnvList = () => {
   useEffect(() => {
     const fetchEnvironments = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/api/v1/environment/findByProjectId?projectId=${projectId}`);
+        const response = await axios.get(`${backendUrl}/api/v1/environment/findByProjectId?projectId=${projectId}`);
         setEnvironments(response.data.data);
       } catch (error) {
         console.error('Error fetching environments:', error);
@@ -34,7 +36,7 @@ const EnvList = () => {
 
   const handleAddEnv = async () => {
     try {
-      const response = await axios.post('http://localhost:8080/api/v1/environment/create', {
+      const response = await axios.post(`${backendUrl}/api/v1/environment/create`, {
         ...newEnv,
         projectId: projectId,
         createdBy: userId,
@@ -48,7 +50,7 @@ const EnvList = () => {
 
   const handleUpdateEnv = async (env) => {
     try {
-      const response = await axios.post('http://localhost:8080/api/v1/environment/update', {
+      const response = await axios.post(`${backendUrl}/api/v1/environment/update`, {
         ...env,
         projectId: projectId,
         createdBy: userId,
@@ -69,7 +71,7 @@ const EnvList = () => {
 
   const handleDeleteEnv = async (id) => {
     try {
-      await axios.delete(`http://localhost:8080/api/v1/environment/delete?id=${id}&userId=${userId}`);
+      await axios.delete(`${backendUrl}/api/v1/environment/delete?id=${id}&userId=${userId}`);
       setEnvironments(environments.filter((item) => item.id !== id));
     } catch (error) {
       console.error('Error deleting environment:', error);

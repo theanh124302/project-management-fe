@@ -3,37 +3,53 @@ import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import CustomAppBar from '../navbar/CustomAppBar';
 import VerticalTabs from '../tabs/VerticalTabs';
-import { Box, Typography, Paper, Button, TextField } from '@mui/material';
+import { Box, Typography, Paper, Button, TextField, IconButton, List, ListItem, ListItemText } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 import '../../public/css/TaskDetail.css';
+
+const backendUrl = 'http://localhost:8080'; // Cập nhật URL backend cố định ở đây
 
 const TaskDetail = () => {
   const { taskId, projectId } = useParams();
   const [task, setTask] = useState(null);
   const [username, setUsername] = useState('');
   const [assignError, setAssignError] = useState('');
+  const [assignedUsers, setAssignedUsers] = useState([]);
   const navigate = useNavigate();
   const assignerId = localStorage.getItem('userId');
 
   useEffect(() => {
     const fetchTaskDetail = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/api/v1/task/findById?id=${taskId}`);
+        const response = await axios.get(`${backendUrl}/api/v1/task/findById?id=${taskId}`);
         setTask(response.data.data);
       } catch (error) {
         console.error('Error fetching task detail:', error);
       }
     };
 
+    const fetchAssignedUsers = async () => {
+      try {
+        const response = await axios.get(`${backendUrl}/api/v1/user/findByTaskId/${taskId}`);
+        setAssignedUsers(response.data.data);
+      } catch (error) {
+        console.error('Error fetching assigned users:', error);
+      }
+    };
+
     fetchTaskDetail();
+    fetchAssignedUsers();
   }, [taskId]);
 
   const handleAssign = async () => {
     try {
-      await axios.post(`http://localhost:8080/api/v1/task/assignByUsername`, null, {
+      await axios.post(`${backendUrl}/api/v1/task/assignByUsername`, null, {
         params: { taskId, username, assignerId },
       });
-      const response = await axios.get(`http://localhost:8080/api/v1/task/findById?id=${taskId}`);
+      const response = await axios.get(`${backendUrl}/api/v1/task/findById?id=${taskId}`);
       setTask(response.data.data);
+      const usersResponse = await axios.get(`${backendUrl}/api/v1/user/findByTaskId/${taskId}`);
+      setAssignedUsers(usersResponse.data.data);
       setAssignError('');
     } catch (error) {
       setAssignError('Failed to assign task. Make sure the username is correct.');
@@ -41,13 +57,15 @@ const TaskDetail = () => {
     }
   };
 
-  const handleUnassign = async () => {
+  const handleUnassign = async (username) => {
     try {
-      await axios.post(`http://localhost:8080/api/v1/task/unassignByUsername`, null, {
+      await axios.post(`${backendUrl}/api/v1/task/unassignByUsername`, null, {
         params: { taskId, username, unAssignerId: assignerId },
       });
-      const response = await axios.get(`http://localhost:8080/api/v1/task/findById?id=${taskId}`);
+      const response = await axios.get(`${backendUrl}/api/v1/task/findById?id=${taskId}`);
       setTask(response.data.data);
+      const usersResponse = await axios.get(`${backendUrl}/api/v1/user/findByTaskId/${taskId}`);
+      setAssignedUsers(usersResponse.data.data);
       setAssignError('');
     } catch (error) {
       setAssignError('Failed to unassign task. Make sure the username is correct.');
@@ -75,7 +93,18 @@ const TaskDetail = () => {
             <Typography variant="body1"><strong>Due Date:</strong> {task.dueDate}</Typography>
             <Typography variant="body1"><strong>Created By:</strong> {task.createdBy}</Typography>
             <Typography variant="body1"><strong>Created At:</strong> {task.createdAt}</Typography>
-            <Typography variant="body1"><strong>Assignee:</strong> {task.executorId ? task.executorId : 'None'}</Typography>
+            <Typography variant="body1"><strong>Assignees:</strong></Typography>
+            <List>
+              {assignedUsers.map(user => (
+                <ListItem key={user.id} secondaryAction={
+                  <IconButton edge="end" aria-label="delete" onClick={() => handleUnassign(user.username)}>
+                    <DeleteIcon />
+                  </IconButton>
+                }>
+                  <ListItemText primary={user.name} primaryTypographyProps={{ className: 'assigned-user-name' }} />
+                </ListItem>
+              ))}
+            </List>
             <Box sx={{ mt: 3 }}>
               <TextField
                 label="Username"
@@ -86,9 +115,6 @@ const TaskDetail = () => {
               />
               <Button variant="contained" color="primary" onClick={handleAssign} sx={{ mt: 2, mr: 2 }}>
                 Assign Task
-              </Button>
-              <Button variant="contained" color="secondary" onClick={handleUnassign} sx={{ mt: 2 }}>
-                Unassign Task
               </Button>
               {assignError && <Typography color="error" variant="body2" sx={{ mt: 2 }}>{assignError}</Typography>}
             </Box>

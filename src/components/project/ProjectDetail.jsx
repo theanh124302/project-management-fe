@@ -8,6 +8,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import '../../public/css/ProjectDetail.css';
 
+const backendUrl = 'http://localhost:8080'; // Cập nhật URL backend cố định ở đây
+
 const ProjectDetail = () => {
   const { projectId } = useParams();
   const [project, setProject] = useState(null);
@@ -19,10 +21,10 @@ const ProjectDetail = () => {
   useEffect(() => {
     const fetchProjectDetails = async () => {
       try {
-        const projectResponse = await axios.get(`http://localhost:8080/api/v1/project/findById?id=${projectId}`);
+        const projectResponse = await axios.get(`${backendUrl}/api/v1/project/findById?id=${projectId}`);
         setProject(projectResponse.data.data);
         
-        const membersResponse = await axios.get(`http://localhost:8080/api/v1/user/findByProjectId/${projectId}`);
+        const membersResponse = await axios.get(`${backendUrl}/api/v1/user/findByProjectId/${projectId}`);
         setMembers(membersResponse.data.data);
       } catch (error) {
         console.error('Error fetching project details or members:', error);
@@ -34,7 +36,7 @@ const ProjectDetail = () => {
 
   const handleAddOrEditMember = async () => {
     try {
-      await axios.post(`http://localhost:8080/api/v1/project/assignUserByUsername`, null, {
+      await axios.post(`${backendUrl}/api/v1/project/assignUserByUsername`, null, {
         params: {
           projectId,
           username: newMember.username,
@@ -43,7 +45,7 @@ const ProjectDetail = () => {
       });
       setNewMember({ username: '', role: '' });
       setEditingMember(null);
-      const membersResponse = await axios.get(`http://localhost:8080/api/v1/user/findByProjectId/${projectId}`);
+      const membersResponse = await axios.get(`${backendUrl}/api/v1/user/findByProjectId/${projectId}`);
       setMembers(membersResponse.data.data);
     } catch (error) {
       console.error('Error adding or editing member:', error);
@@ -52,14 +54,14 @@ const ProjectDetail = () => {
 
   const handleDeleteMember = async (username) => {
     try {
-      await axios.post(`http://localhost:8080/api/v1/project/removeUserByUsername`, null, {
+      await axios.post(`${backendUrl}/api/v1/project/removeUserByUsername`, null, {
         params: {
           projectId,
           username,
           deleterId,
         },
       });
-      const membersResponse = await axios.get(`http://localhost:8080/api/v1/user/findByProjectId/${projectId}`);
+      const membersResponse = await axios.get(`${backendUrl}/api/v1/user/findByProjectId/${projectId}`);
       setMembers(membersResponse.data.data);
     } catch (error) {
       console.error('Error deleting member:', error);

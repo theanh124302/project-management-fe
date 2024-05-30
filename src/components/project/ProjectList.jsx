@@ -6,6 +6,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import CustomAppBar from '../navbar/CustomAppBar';
 import '../../public/css/ProjectList.css';
 
+const backendUrl = 'http://localhost:8080'; // Cập nhật URL backend cố định ở đây
+
 const ProjectList = () => {
   const [projects, setProjects] = useState([]);
   const [showAddForm, setShowAddForm] = useState(false);
@@ -24,7 +26,7 @@ const ProjectList = () => {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/api/v1/project/findByUsername?username=${username}`);
+        const response = await axios.get(`${backendUrl}/api/v1/project/findByUsername?username=${username}`);
         setProjects(response.data.data);
       } catch (error) {
         console.error('Error fetching projects:', error);
@@ -33,7 +35,7 @@ const ProjectList = () => {
 
     const fetchUserInfo = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/api/v1/user/findByUsername/${username}`);
+        const response = await axios.get(`${backendUrl}/api/v1/user/findByUsername/${username}`);
         setUserName(response.data.data.name);
         setLeaderId(response.data.data.id);
       } catch (error) {
@@ -52,13 +54,13 @@ const ProjectList = () => {
     }
 
     try {
-      await axios.post('http://localhost:8080/api/v1/project/create', {
+      await axios.post(`${backendUrl}/api/v1/project/create`, {
         ...newProject,
         leaderId
       });
       setShowAddForm(false);
       setNewProject({ name: '', description: '', status: '' });
-      const response = await axios.get(`http://localhost:8080/api/v1/project/findByUsername?username=${username}`);
+      const response = await axios.get(`${backendUrl}/api/v1/project/findByUsername?username=${username}`);
       setProjects(response.data.data);
     } catch (error) {
       console.error('Error adding project:', error);
@@ -67,8 +69,8 @@ const ProjectList = () => {
 
   const handleDeleteProject = async (id) => {
     try {
-      await axios.delete(`http://localhost:8080/api/v1/project/delete?id=${id}&userId=${leaderId}`);
-      const response = await axios.get(`http://localhost:8080/api/v1/project/findByUsername?username=${username}`);
+      await axios.delete(`${backendUrl}/api/v1/project/delete?id=${id}&userId=${leaderId}`);
+      const response = await axios.get(`${backendUrl}/api/v1/project/findByUsername?username=${username}`);
       setProjects(response.data.data);
     } catch (error) {
       console.error('Error deleting project:', error);
@@ -91,7 +93,7 @@ const ProjectList = () => {
 
   const handleUpdateProject = async () => {
     try {
-      await axios.post(`http://localhost:8080/api/v1/project/update?userId=${leaderId}`, {
+      await axios.post(`${backendUrl}/api/v1/project/update?userId=${leaderId}`, {
         ...currentProject,
         name: newProject.name,
         description: newProject.description,
@@ -100,7 +102,7 @@ const ProjectList = () => {
       setShowEditForm(false);
       setNewProject({ name: '', description: '', status: '' });
       setCurrentProject(null);
-      const response = await axios.get(`http://localhost:8080/api/v1/project/findByUsername?username=${username}`);
+      const response = await axios.get(`${backendUrl}/api/v1/project/findByUsername?username=${username}`);
       setProjects(response.data.data);
     } catch (error) {
       console.error('Error updating project:', error);
