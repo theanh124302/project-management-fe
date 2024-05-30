@@ -12,6 +12,7 @@ const TaskDetail = () => {
   const [username, setUsername] = useState('');
   const [assignError, setAssignError] = useState('');
   const navigate = useNavigate();
+  const assignerId = localStorage.getItem('userId');
 
   useEffect(() => {
     const fetchTaskDetail = async () => {
@@ -29,7 +30,7 @@ const TaskDetail = () => {
   const handleAssign = async () => {
     try {
       await axios.post(`http://localhost:8080/api/v1/task/assignByUsername`, null, {
-        params: { taskId, username },
+        params: { taskId, username, assignerId },
       });
       const response = await axios.get(`http://localhost:8080/api/v1/task/findById?id=${taskId}`);
       setTask(response.data.data);
@@ -43,7 +44,7 @@ const TaskDetail = () => {
   const handleUnassign = async () => {
     try {
       await axios.post(`http://localhost:8080/api/v1/task/unassignByUsername`, null, {
-        params: { taskId, username },
+        params: { taskId, username, unAssignerId: assignerId },
       });
       const response = await axios.get(`http://localhost:8080/api/v1/task/findById?id=${taskId}`);
       setTask(response.data.data);
