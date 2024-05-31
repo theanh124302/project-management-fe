@@ -1,4 +1,3 @@
-// App.js
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './components/auth/Login';
@@ -9,7 +8,9 @@ import UserProfile from './components/profile/UserProfile';
 import EnvList from './components/env/EnvList';
 import ProjectDetail from './components/project/ProjectDetail';
 import TaskList from './components/task/TaskList';
-import TaskDetail from './components/task/TaskDetail'; // Import TaskDetail
+import TaskDetail from './components/task/TaskDetail';
+import FolderList from './components/api-management/FolderList';
+import ApiList from './components/api-management/ApiList';
 
 function App() {
   return (
@@ -24,7 +25,9 @@ function App() {
         <Route path='/project/:projectId/env' element={<EnvList />} />
         <Route path='/project/:projectId/detail' element={<ProjectDetail />} />
         <Route path='/project/:projectId/task' element={<TaskList />} />
-        <Route path='/project/:projectId/task/:taskId' element={<TaskDetail />} /> {/* Add route for TaskDetail */}
+        <Route path='/project/:projectId/task/:taskId' element={<TaskDetail />} />
+        <Route path='/project/:projectId/api' element={<FolderList />} />
+        <Route path='/project/:projectId/folder/:folderId/apis' element={<ApiList />} />
       </Routes>
     </Router>
   );

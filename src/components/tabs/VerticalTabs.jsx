@@ -1,3 +1,4 @@
+// VerticalTabs.jsx
 import * as React from 'react';
 import { useState } from 'react';
 import Box from '@mui/material/Box';
@@ -15,7 +16,6 @@ const VerticalTabs = () => {
 
   const handleTabChange = (event, newValue) => {
     setSelectedTab(newValue);
-    // Logic để chuyển hướng tới các trang tương ứng
     switch (newValue) {
       case 1:
         navigate(`/project/${projectId}/api`);
