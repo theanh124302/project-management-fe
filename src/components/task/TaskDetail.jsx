@@ -92,7 +92,6 @@ const TaskDetail = () => {
             <Typography variant="body1"><strong>Start Date:</strong> {task.startDate}</Typography>
             <Typography variant="body1"><strong>Due Date:</strong> {task.dueDate}</Typography>
             <Typography variant="body1"><strong>Created By:</strong> {task.createdBy}</Typography>
-            <Typography variant="body1"><strong>Created At:</strong> {task.createdAt}</Typography>
             <Typography variant="body1"><strong>Assignees:</strong></Typography>
             <List>
               {assignedUsers.map(user => (

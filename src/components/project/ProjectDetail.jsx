@@ -91,16 +91,10 @@ const ProjectDetail = () => {
                 <Typography variant="body1" component="p">{project.description}</Typography>
                 <Typography variant="body1" component="p"><strong>Status:</strong> {project.status}</Typography>
                 <Typography variant="body1" component="p"><strong>Leader ID:</strong> {project.leaderId}</Typography>
-                <Typography variant="body1" component="p"><strong>Creation Date:</strong> {project.creationDate}</Typography>
                 <Typography variant="body1" component="p"><strong>Start Date:</strong> {project.startDate}</Typography>
                 <Typography variant="body1" component="p"><strong>Expected End Date:</strong> {project.expectedEndDate}</Typography>
-                <Typography variant="body1" component="p"><strong>Notes:</strong> {project.notes}</Typography>
                 <Typography variant="body1" component="p"><strong>Version:</strong> {project.version}</Typography>
-                <Typography variant="body1" component="p"><strong>Platform:</strong> {project.platform}</Typography>
-                <Typography variant="body1" component="p"><strong>Copyright:</strong> {project.copyright}</Typography>
-                <Typography variant="body1" component="p"><strong>Tags:</strong> {project.tags}</Typography>
                 <Typography variant="body1" component="p"><strong>Number of Members:</strong> {project.numberOfMembers}</Typography>
-                <Typography variant="body1" component="p"><strong>Source Code:</strong> <a href={project.sourceCode} target="_blank" rel="noopener noreferrer">{project.sourceCode}</a></Typography>
               </Box>
               <Box sx={{ mb: 3 }}>
                 <Typography variant="h5" component="h3">Add or Edit Member</Typography>
