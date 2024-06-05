@@ -11,7 +11,6 @@ const backendUrl = 'http://localhost:8080'; // Cập nhật URL backend cố đ�
 const ProjectList = () => {
   const [projects, setProjects] = useState([]);
   const [showForm, setShowForm] = useState(false);
-  const [currentProject, setCurrentProject] = useState(null);
   const [newProject, setNewProject] = useState({
     name: '',
     description: '',
@@ -67,53 +66,12 @@ const ProjectList = () => {
     }
   };
 
-  const handleDeleteProject = async (id) => {
-    try {
-      await axios.delete(`${backendUrl}/api/v1/project/delete`, { params: { id, userId: leaderId } });
-      const response = await axios.get(`${backendUrl}/api/v1/project/findByUsername?username=${username}`);
-      setProjects(response.data.data);
-    } catch (error) {
-      console.error('Error deleting project:', error);
-    }
-  };
-
-  const handleEditProject = (project) => {
-    setCurrentProject(project);
-    setNewProject({
-      name: project.name,
-      description: project.description,
-      coverImage: project.coverImage
-    });
-    setShowForm(true);
-  };
-
   const handleProjectClick = (projectId) => {
     navigate(`/project/${projectId}?username=${username}`);
   };
 
-  const handleUpdateProject = async () => {
-    try {
-      await axios.post(`${backendUrl}/api/v1/project/update`, {
-        ...currentProject,
-        name: newProject.name,
-        description: newProject.description,
-        coverImage: newProject.coverImage
-      }, {
-        params: { userId: leaderId }
-      });
-      setShowForm(false);
-      setNewProject({ name: '', description: '', coverImage: '' });
-      setCurrentProject(null);
-      const response = await axios.get(`${backendUrl}/api/v1/project/findByUsername?username=${username}`);
-      setProjects(response.data.data);
-    } catch (error) {
-      console.error('Error updating project:', error);
-    }
-  };
-
   const handleCloseForm = () => {
     setShowForm(false);
-    setCurrentProject(null);
     setNewProject({ name: '', description: '', coverImage: '' });
   };
 
@@ -134,16 +92,6 @@ const ProjectList = () => {
               <Card.Body>
                 <Card.Title>{project.name}</Card.Title>
                 <Card.Text>{project.description}</Card.Text>
-                {project.leaderId === parseInt(userId, 10) && (
-                  <>
-                    <Button variant="primary" onClick={(e) => { e.stopPropagation(); handleEditProject(project); }} className="me-2">
-                      Edit
-                    </Button>
-                    <Button variant="danger" onClick={(e) => { e.stopPropagation(); handleDeleteProject(project.id); }}>
-                      Delete
-                    </Button>
-                  </>
-                )}
               </Card.Body>
             </Card>
           </Col>
@@ -151,7 +99,7 @@ const ProjectList = () => {
       </Row>
       <Modal show={showForm} onHide={handleCloseForm}>
         <Modal.Header closeButton>
-          <Modal.Title>{currentProject ? 'Update Project' : 'Add New Project'}</Modal.Title>
+          <Modal.Title>Add New Project</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
@@ -189,8 +137,8 @@ const ProjectList = () => {
           <Button variant="secondary" onClick={handleCloseForm}>
             Cancel
           </Button>
-          <Button variant="primary" onClick={currentProject ? handleUpdateProject : handleAddProject}>
-            {currentProject ? 'Update Project' : 'Add Project'}
+          <Button variant="primary" onClick={handleAddProject}>
+            Add Project
           </Button>
         </Modal.Footer>
       </Modal>

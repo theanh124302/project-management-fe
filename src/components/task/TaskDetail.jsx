@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Card, Button, Form, ListGroup, ListGroupItem } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Form, ListGroup, ListGroupItem, Modal } from 'react-bootstrap';
 import CustomAppBar from '../navbar/CustomAppBar';
 import VerticalTabs from '../tabs/VerticalTabs';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -26,6 +26,14 @@ const TaskDetail = () => {
   const [assignError, setAssignError] = useState('');
   const [assignedUsers, setAssignedUsers] = useState([]);
   const [newStatus, setNewStatus] = useState('');
+  const [showForm, setShowForm] = useState(false);
+  const [newTask, setNewTask] = useState({
+    name: '',
+    description: '',
+    priority: '',
+    startDate: '',
+    dueDate: ''
+  });
   const navigate = useNavigate();
   const userId = localStorage.getItem('userId');
 
@@ -35,6 +43,13 @@ const TaskDetail = () => {
         const response = await axios.get(`${backendUrl}/api/v1/task/findById?id=${taskId}`);
         setTask(response.data.data);
         setNewStatus(response.data.data.status);
+        setNewTask({
+          name: response.data.data.name,
+          description: response.data.data.description,
+          priority: response.data.data.priority,
+          startDate: response.data.data.startDate,
+          dueDate: response.data.data.dueDate
+        });
       } catch (error) {
         console.error('Error fetching task detail:', error);
       }
@@ -97,6 +112,37 @@ const TaskDetail = () => {
     } catch (error) {
       console.error('Error updating status:', error);
     }
+  };
+
+  const handleEditTask = () => {
+    setShowForm(true);
+  };
+
+  const handleUpdateTask = async () => {
+    try {
+      await axios.post(`${backendUrl}/api/v1/task/update`, {
+        ...task,
+        ...newTask,
+      });
+      setShowForm(false);
+      const response = await axios.get(`${backendUrl}/api/v1/task/findById?id=${taskId}`);
+      setTask(response.data.data);
+    } catch (error) {
+      console.error('Error updating task:', error);
+    }
+  };
+
+  const handleDeleteTask = async () => {
+    try {
+      await axios.delete(`${backendUrl}/api/v1/task/delete`, { data: { id: taskId } });
+      navigate(`/project/${projectId}/task`);
+    } catch (error) {
+      console.error('Error deleting task:', error);
+    }
+  };
+
+  const handleCloseForm = () => {
+    setShowForm(false);
   };
 
   if (!task) {
@@ -173,6 +219,16 @@ const TaskDetail = () => {
                   {assignError && <p className="text-danger mt-2">{assignError}</p>}
                 </Form>
               )}
+              {isTaskCreatedByUser && (
+                <>
+                  <Button variant="primary" className="mt-3 me-2" onClick={handleEditTask}>
+                    Edit Task
+                  </Button>
+                  <Button variant="danger" className="mt-3" onClick={handleDeleteTask}>
+                    Delete Task
+                  </Button>
+                </>
+              )}
               <Button variant="secondary" className="mt-3" onClick={() => navigate(-1)}>
                 Back to Task List
               </Button>
@@ -180,6 +236,71 @@ const TaskDetail = () => {
           </Card>
         </Col>
       </Row>
+      <Modal show={showForm} onHide={handleCloseForm}>
+        <Modal.Header closeButton>
+          <Modal.Title>Edit Task</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group controlId="formTaskName" className="mb-3">
+              <Form.Label>Task Name</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter task name"
+                value={newTask.name}
+                onChange={(e) => setNewTask({ ...newTask, name: e.target.value })}
+              />
+            </Form.Group>
+            <Form.Group controlId="formTaskDescription" className="mb-3">
+              <Form.Label>Description</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                placeholder="Enter task description"
+                value={newTask.description}
+                onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
+              />
+            </Form.Group>
+            <Form.Group controlId="formTaskPriority" className="mb-3">
+              <Form.Label>Priority</Form.Label>
+              <Form.Control
+                as="select"
+                value={newTask.priority}
+                onChange={(e) => setNewTask({ ...newTask, priority: e.target.value })}
+              >
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+                <option value="Critical">Critical</option>
+              </Form.Control>
+            </Form.Group>
+            <Form.Group controlId="formTaskStartDate" className="mb-3">
+              <Form.Label>Start Date</Form.Label>
+              <Form.Control
+                type="date"
+                value={newTask.startDate}
+                onChange={(e) => setNewTask({ ...newTask, startDate: e.target.value })}
+              />
+            </Form.Group>
+            <Form.Group controlId="formTaskDueDate" className="mb-3">
+              <Form.Label>Due Date</Form.Label>
+              <Form.Control
+                type="date"
+                value={newTask.dueDate}
+                onChange={(e) => setNewTask({ ...newTask, dueDate: e.target.value })}
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseForm}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={handleUpdateTask}>
+            Update Task
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Container>
   );
 };

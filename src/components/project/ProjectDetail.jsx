@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import CustomAppBar from '../navbar/CustomAppBar';
 import VerticalTabs from '../tabs/VerticalTabs';
-import { Container, Row, Col, Card, Button, Table, Form, FormControl } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Table, Form, FormControl, Modal } from 'react-bootstrap';
 import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../public/css/ProjectDetail.css';
@@ -19,6 +19,12 @@ const ProjectDetail = () => {
   const [startDate, setStartDate] = useState('');
   const [expectedEndDate, setExpectedEndDate] = useState('');
   const [leaderName, setLeaderName] = useState('');
+  const [showForm, setShowForm] = useState(false);
+  const [newProject, setNewProject] = useState({
+    name: '',
+    description: '',
+    coverImage: ''
+  });
   const userId = localStorage.getItem('userId');
   const navigate = useNavigate();
 
@@ -113,6 +119,43 @@ const ProjectDetail = () => {
     }
   };
 
+  const handleEditProject = () => {
+    setNewProject({
+      name: project.name,
+      description: project.description,
+      coverImage: project.coverImage
+    });
+    setShowForm(true);
+  };
+
+  const handleDeleteProject = async () => {
+    try {
+      await axios.delete(`${backendUrl}/api/v1/project/delete`, { params: { id: project.id, userId } });
+      navigate('/projectList');
+    } catch (error) {
+      console.error('Error deleting project:', error);
+    }
+  };
+
+  const handleUpdateProject = async () => {
+    try {
+      const updatedProject = { ...project, ...newProject };
+      const response = await axios.post(`${backendUrl}/api/v1/project/update`, updatedProject, {
+        params: { userId }
+      });
+      setProject(response.data.data);
+      setShowForm(false);
+      setNewProject({ name: '', description: '', coverImage: '' });
+    } catch (error) {
+      console.error('Error updating project:', error);
+    }
+  };
+
+  const handleCloseForm = () => {
+    setShowForm(false);
+    setNewProject({ name: '', description: '', coverImage: '' });
+  };
+
   const isLeader = project && project.leaderId === parseInt(userId, 10);
 
   return (
@@ -149,6 +192,12 @@ const ProjectDetail = () => {
                       </Card.Text>
                       <Button variant="primary" className="mt-2" onClick={handleUpdateProjectDates}>
                         Update Dates
+                      </Button>
+                      <Button variant="primary" className="mt-2 ms-2" onClick={handleEditProject}>
+                        Edit Project
+                      </Button>
+                      <Button variant="danger" className="mt-2 ms-2" onClick={handleDeleteProject}>
+                        Delete Project
                       </Button>
                     </>
                   ) : (
@@ -236,6 +285,52 @@ const ProjectDetail = () => {
           </Card>
         </Col>
       </Row>
+
+      <Modal show={showForm} onHide={handleCloseForm}>
+        <Modal.Header closeButton>
+          <Modal.Title>Update Project</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group controlId="formProjectName" className="mb-3">
+              <Form.Label>Project Name</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter project name"
+                value={newProject.name}
+                onChange={(e) => setNewProject({ ...newProject, name: e.target.value })}
+              />
+            </Form.Group>
+            <Form.Group controlId="formProjectDescription" className="mb-3">
+              <Form.Label>Project Description</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                placeholder="Enter project description"
+                value={newProject.description}
+                onChange={(e) => setNewProject({ ...newProject, description: e.target.value })}
+              />
+            </Form.Group>
+            <Form.Group controlId="formProjectCoverImage" className="mb-3">
+              <Form.Label>Cover Image URL</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter cover image URL"
+                value={newProject.coverImage}
+                onChange={(e) => setNewProject({ ...newProject, coverImage: e.target.value })}
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseForm}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={handleUpdateProject}>
+            Update Project
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Container>
   );
 };

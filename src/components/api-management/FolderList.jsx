@@ -1,72 +1,101 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Container, Row, Col, Card, Button, Form, FormControl, ListGroup, ListGroupItem } from 'react-bootstrap';
-import { FaEdit, FaTrashAlt } from 'react-icons/fa';
+import { Container, Row, Col, Card, Button, Modal, Form } from 'react-bootstrap';
 import CustomAppBar from '../navbar/CustomAppBar';
 import VerticalTabs from '../tabs/VerticalTabs';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../../public/css/FolderList.css';
+import '../../public/css/TaskList.css';
 
-const backendUrl = 'http://localhost:8080';
+const backendUrl = 'http://localhost:8080'; // Cập nhật URL backend cố định ở đây
 
 const FolderList = () => {
   const { projectId } = useParams();
   const [folders, setFolders] = useState([]);
-  const [newFolder, setNewFolder] = useState('');
-  const [editingFolder, setEditingFolder] = useState(null);
-  const [isLeader, setIsLeader] = useState(false);
-  const navigate = useNavigate();
+  const [showForm, setShowForm] = useState(false);
+  const [currentFolder, setCurrentFolder] = useState(null);
+  const [newFolder, setNewFolder] = useState({ name: '' });
+  const [projectLeaderId, setProjectLeaderId] = useState(null);
   const userId = localStorage.getItem('userId');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProjectDetails = async () => {
       try {
-        const projectResponse = await axios.get(`${backendUrl}/api/v1/project/findById?id=${projectId}`);
-        const leaderId = projectResponse.data.data.leaderId;
-        setIsLeader(parseInt(userId, 10) === leaderId);
-
-        const folderResponse = await axios.get(`${backendUrl}/api/v1/folder/findByProjectId?projectId=${projectId}`);
-        setFolders(folderResponse.data.data);
+        const response = await axios.get(`${backendUrl}/api/v1/project/findById?id=${projectId}`);
+        setProjectLeaderId(response.data.data.leaderId);
       } catch (error) {
-        console.error('Error fetching project or folders:', error);
+        console.error('Error fetching project details:', error);
+      }
+    };
+
+    const fetchFolders = async () => {
+      try {
+        const response = await axios.get(`${backendUrl}/api/v1/folder/findByProjectId?projectId=${projectId}`);
+        setFolders(response.data.data);
+      } catch (error) {
+        console.error('Error fetching folders:', error);
       }
     };
 
     fetchProjectDetails();
-  }, [projectId, userId]);
+    fetchFolders();
+  }, [projectId]);
 
   const handleAddFolder = async () => {
+    if (!userId) {
+      console.error('User ID not found');
+      return;
+    }
+
     try {
-      const response = await axios.post(`${backendUrl}/api/v1/folder/create`, { name: newFolder, projectId });
-      setFolders([...folders, response.data.data]);
-      setNewFolder('');
+      await axios.post(`${backendUrl}/api/v1/folder/create`, { name: newFolder.name, projectId });
+      setShowForm(false);
+      setNewFolder({ name: '' });
+      const response = await axios.get(`${backendUrl}/api/v1/folder/findByProjectId?projectId=${projectId}`);
+      setFolders(response.data.data);
     } catch (error) {
       console.error('Error adding folder:', error);
-    }
-  };
-
-  const handleUpdateFolder = async () => {
-    try {
-      const response = await axios.post(`${backendUrl}/api/v1/folder/update`, { ...editingFolder });
-      setFolders(folders.map(f => (f.id === editingFolder.id ? response.data.data : f)));
-      setEditingFolder(null);
-    } catch (error) {
-      console.error('Error updating folder:', error);
     }
   };
 
   const handleDeleteFolder = async (id) => {
     try {
       await axios.delete(`${backendUrl}/api/v1/folder/delete`, { params: { id } });
-      setFolders(folders.filter(f => f.id !== id));
+      const response = await axios.get(`${backendUrl}/api/v1/folder/findByProjectId?projectId=${projectId}`);
+      setFolders(response.data.data);
     } catch (error) {
       console.error('Error deleting folder:', error);
     }
   };
 
+  const handleEditFolder = (folder) => {
+    setCurrentFolder(folder);
+    setNewFolder({ name: folder.name });
+    setShowForm(true);
+  };
+
+  const handleUpdateFolder = async () => {
+    try {
+      await axios.post(`${backendUrl}/api/v1/folder/update`, { id: currentFolder.id, name: newFolder.name });
+      setShowForm(false);
+      setNewFolder({ name: '' });
+      setCurrentFolder(null);
+      const response = await axios.get(`${backendUrl}/api/v1/folder/findByProjectId?projectId=${projectId}`);
+      setFolders(response.data.data);
+    } catch (error) {
+      console.error('Error updating folder:', error);
+    }
+  };
+
   const handleFolderClick = (folderId) => {
     navigate(`/project/${projectId}/folder/${folderId}/apis`);
+  };
+
+  const handleCloseForm = () => {
+    setShowForm(false);
+    setCurrentFolder(null);
+    setNewFolder({ name: '' });
   };
 
   return (
@@ -77,59 +106,61 @@ const FolderList = () => {
           <VerticalTabs projectId={projectId} />
         </Col>
         <Col xs={12} md={9}>
-          <Card className="mt-4">
-            <Card.Body>
-              <Card.Title>Folder List</Card.Title>
-              <ListGroup className="mb-3">
-                {folders.map((folder) => (
-                  <ListGroupItem key={folder.id} className="d-flex justify-content-between align-items-center">
-                    <div onClick={() => handleFolderClick(folder.id)} style={{ cursor: 'pointer' }}>
-                      {folder.name}
-                    </div>
-                    {isLeader && (
-                      <div>
-                        <Button
-                          variant="outline-primary"
-                          className="me-2"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setEditingFolder(folder);
-                          }}
-                        >
-                          <FaEdit />
+          <h2>Folder List</h2>
+          <Row>
+            {folders.map((folder) => (
+              <Col key={folder.id} xs={12} md={6} lg={4} className="mb-3">
+                <Card onClick={() => handleFolderClick(folder.id)} className="folder-card" style={{ cursor: 'pointer' }}>
+                  <Card.Body>
+                    <Card.Title>{folder.name}</Card.Title>
+                    {projectLeaderId === parseInt(userId, 10) && (
+                      <>
+                        <Button variant="primary" onClick={(e) => { e.stopPropagation(); handleEditFolder(folder); }} className="me-2">
+                          Edit
                         </Button>
-                        <Button
-                          variant="outline-danger"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDeleteFolder(folder.id);
-                          }}
-                        >
-                          <FaTrashAlt />
+                        <Button variant="danger" onClick={(e) => { e.stopPropagation(); handleDeleteFolder(folder.id); }}>
+                          Delete
                         </Button>
-                      </div>
+                      </>
                     )}
-                  </ListGroupItem>
-                ))}
-              </ListGroup>
-              {isLeader && (
-                <div className="mt-4">
-                  <h3>{editingFolder ? 'Edit Folder' : 'Add Folder'}</h3>
-                  <Form className="d-flex">
-                    <FormControl
-                      placeholder="Folder Name"
-                      value={editingFolder ? editingFolder.name : newFolder}
-                      onChange={(e) => editingFolder ? setEditingFolder({ ...editingFolder, name: e.target.value }) : setNewFolder(e.target.value)}
-                      className="me-2"
-                    />
-                    <Button variant="primary" onClick={editingFolder ? handleUpdateFolder : handleAddFolder}>
-                      {editingFolder ? 'Save' : 'Add'}
-                    </Button>
-                  </Form>
-                </div>
-              )}
-            </Card.Body>
-          </Card>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
+            <Col xs={12} md={6} lg={4} className="mb-3">
+              <Card onClick={() => setShowForm(true)} className="folder-card add-folder-card" style={{ cursor: 'pointer' }}>
+                <Card.Body className="d-flex justify-content-center align-items-center">
+                  <h1>+</h1>
+                </Card.Body>
+              </Card>
+            </Col>
+          </Row>
+          <Modal show={showForm} onHide={handleCloseForm}>
+            <Modal.Header closeButton>
+              <Modal.Title>{currentFolder ? 'Edit Folder' : 'Add New Folder'}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Form>
+                <Form.Group controlId="formFolderName" className="mb-3">
+                  <Form.Label>Folder Name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter folder name"
+                    value={newFolder.name}
+                    onChange={(e) => setNewFolder({ ...newFolder, name: e.target.value })}
+                  />
+                </Form.Group>
+              </Form>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={handleCloseForm}>
+                Cancel
+              </Button>
+              <Button variant="primary" onClick={currentFolder ? handleUpdateFolder : handleAddFolder}>
+                {currentFolder ? 'Update Folder' : 'Add Folder'}
+              </Button>
+            </Modal.Footer>
+          </Modal>
         </Col>
       </Row>
     </Container>

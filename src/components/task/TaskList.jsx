@@ -79,44 +79,6 @@ const TaskList = () => {
     }
   };
 
-  const handleDeleteTask = async (id) => {
-    try {
-      await axios.delete(`${backendUrl}/api/v1/task/delete`, { data: { id: id } });
-      const response = await axios.get(`${backendUrl}/api/v1/task/findByProjectId?projectId=${projectId}`);
-      setTasks(response.data.data);
-    } catch (error) {
-      console.error('Error deleting task:', error);
-    }
-  };
-
-  const handleEditTask = (task) => {
-    setCurrentTask(task);
-    setNewTask({
-      name: task.name,
-      description: task.description,
-      priority: task.priority,
-      startDate: task.startDate,
-      dueDate: task.dueDate
-    });
-    setShowForm(true);
-  };
-
-  const handleUpdateTask = async () => {
-    try {
-      await axios.post(`${backendUrl}/api/v1/task/update`, {
-        ...currentTask,
-        ...newTask,
-      });
-      setShowForm(false);
-      setNewTask({ name: '', description: '', priority: '', startDate: '', dueDate: '' });
-      setCurrentTask(null);
-      const response = await axios.get(`${backendUrl}/api/v1/task/findByProjectId?projectId=${projectId}`);
-      setTasks(response.data.data);
-    } catch (error) {
-      console.error('Error updating task:', error);
-    }
-  };
-
   const handleTaskClick = (taskId) => {
     navigate(`/project/${projectId}/task/${taskId}`);
   };
@@ -149,16 +111,9 @@ const TaskList = () => {
                     <Card.Text>
                       <strong>Due Date:</strong> {task.dueDate}
                     </Card.Text>
-                    {projectLeaderId === parseInt(userId, 10) && (
-                      <>
-                        <Button variant="primary" onClick={(e) => { e.stopPropagation(); handleEditTask(task); }} className="me-2">
-                          Edit
-                        </Button>
-                        <Button variant="danger" onClick={(e) => { e.stopPropagation(); handleDeleteTask(task.id); }}>
-                          Delete
-                        </Button>
-                      </>
-                    )}
+                    <Card.Text>
+                      <strong>Priority:</strong> {task.priority}
+                    </Card.Text>
                   </Card.Body>
                 </Card>
               </Col>
@@ -199,11 +154,15 @@ const TaskList = () => {
                 <Form.Group controlId="formTaskPriority" className="mb-3">
                   <Form.Label>Priority</Form.Label>
                   <Form.Control
-                    type="text"
-                    placeholder="Enter task priority"
+                    as="select"
                     value={newTask.priority}
                     onChange={(e) => setNewTask({ ...newTask, priority: e.target.value })}
-                  />
+                  >
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                    <option value="Critical">Critical</option>
+                  </Form.Control>
                 </Form.Group>
                 <Form.Group controlId="formTaskStartDate" className="mb-3">
                   <Form.Label>Start Date</Form.Label>
@@ -227,7 +186,7 @@ const TaskList = () => {
               <Button variant="secondary" onClick={handleCloseForm}>
                 Cancel
               </Button>
-              <Button variant="primary" onClick={currentTask ? handleUpdateTask : handleAddTask}>
+              <Button variant="primary" onClick={handleAddTask}>
                 {currentTask ? 'Update Task' : 'Add Task'}
               </Button>
             </Modal.Footer>
