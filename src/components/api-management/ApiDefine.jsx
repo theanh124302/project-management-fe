@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Card, Button, Form } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Form, ListGroup, Modal } from 'react-bootstrap';
 import CustomAppBar from '../navbar/CustomAppBar';
 import VerticalTabs from '../tabs/VerticalTabs';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -12,12 +12,16 @@ const backendUrl = 'http://localhost:8080'; // Cập nhật URL backend cố đ�
 const ApiDefine = () => {
   const { projectId, folderId, apiId } = useParams();
   const [api, setApi] = useState(null);
+  const [docs, setDocs] = useState([]);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
     url: '',
     method: ''
   });
+  const [showDocForm, setShowDocForm] = useState(false);
+  const [currentDoc, setCurrentDoc] = useState(null);
+  const [newDoc, setNewDoc] = useState({ description: '', url: '' });
   const navigate = useNavigate();
   const userId = localStorage.getItem('userId');
 
@@ -37,12 +41,27 @@ const ApiDefine = () => {
       }
     };
 
+    const fetchDocs = async () => {
+      try {
+        const response = await axios.get(`${backendUrl}/api/v1/docs/findByApiId?apiId=${apiId}`);
+        setDocs(response.data.data);
+      } catch (error) {
+        console.error('Error fetching docs:', error);
+      }
+    };
+
     fetchApiDetails();
+    fetchDocs();
   }, [apiId]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+  };
+
+  const handleDocInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewDoc({ ...newDoc, [name]: value });
   };
 
   const handleUpdateApi = async () => {
@@ -61,6 +80,60 @@ const ApiDefine = () => {
     } catch (error) {
       console.error('Error deleting API:', error);
     }
+  };
+
+  const handleAddDoc = async () => {
+    try {
+      await axios.post(`${backendUrl}/api/v1/docs/create`, { ...newDoc, apiId });
+      setShowDocForm(false);
+      setNewDoc({ description: '', url: '' });
+      const response = await axios.get(`${backendUrl}/api/v1/docs/findByApiId?apiId=${apiId}`);
+      setDocs(response.data.data);
+    } catch (error) {
+      console.error('Error adding doc:', error);
+    }
+  };
+
+  const handleUpdateDoc = async () => {
+    try {
+      await axios.post(`${backendUrl}/api/v1/docs/update`, { id: currentDoc.id, apiId, ...newDoc });
+      setShowDocForm(false);
+      setNewDoc({ description: '', url: '' });
+      setCurrentDoc(null);
+      const response = await axios.get(`${backendUrl}/api/v1/docs/findByApiId?apiId=${apiId}`);
+      setDocs(response.data.data);
+    } catch (error) {
+      console.error('Error updating doc:', error);
+    }
+  };
+
+  const handleDeleteDoc = async (docId) => {
+    try {
+      await axios.delete(`${backendUrl}/api/v1/docs/delete`, { params: { id: docId, deletedBy: userId } });
+      const response = await axios.get(`${backendUrl}/api/v1/docs/findByApiId?apiId=${apiId}`);
+      setDocs(response.data.data);
+    } catch (error) {
+      console.error('Error deleting doc:', error);
+    }
+  };
+
+  const handleEditDocClick = (doc) => {
+    setNewDoc({ description: doc.description, url: doc.url });
+    setCurrentDoc(doc);
+    setShowDocForm(true);
+  };
+
+  const handleCloseDocForm = () => {
+    setShowDocForm(false);
+    setCurrentDoc(null);
+    setNewDoc({ description: '', url: '' });
+  };
+
+  const getFormattedUrl = (url) => {
+    if (!/^https?:\/\//i.test(url)) {
+      return `http://${url}`;
+    }
+    return url;
   };
 
   if (!api) {
@@ -128,6 +201,62 @@ const ApiDefine = () => {
               <Button variant="danger" onClick={handleDeleteApi}>
                 Delete API
               </Button>
+              <h3 className="mt-4">Related Docs</h3>
+              <ListGroup className="mb-3">
+                {docs.map((doc) => (
+                  <ListGroup.Item key={doc.id} className="d-flex justify-content-between align-items-center">
+                    <a href={getFormattedUrl(doc.url)} target="_blank" rel="noopener noreferrer">
+                      {doc.description}
+                    </a>
+                    <div>
+                      <Button variant="outline-primary" size="sm" className="me-2" onClick={() => handleEditDocClick(doc)}>
+                        Edit
+                      </Button>
+                      <Button variant="outline-danger" size="sm" onClick={() => handleDeleteDoc(doc.id)}>
+                        Delete
+                      </Button>
+                    </div>
+                  </ListGroup.Item>
+                ))}
+              </ListGroup>
+              <Button variant="secondary" onClick={() => setShowDocForm(true)}>
+                Add Doc
+              </Button>
+              <Modal show={showDocForm} onHide={handleCloseDocForm}>
+                <Modal.Header closeButton>
+                  <Modal.Title>{currentDoc ? 'Edit Doc' : 'Add New Doc'}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <Form>
+                    <Form.Group controlId="formDocDescription" className="mb-3">
+                      <Form.Label>Description</Form.Label>
+                      <Form.Control
+                        type="text"
+                        name="description"
+                        value={newDoc.description}
+                        onChange={handleDocInputChange}
+                      />
+                    </Form.Group>
+                    <Form.Group controlId="formDocUrl" className="mb-3">
+                      <Form.Label>URL</Form.Label>
+                      <Form.Control
+                        type="text"
+                        name="url"
+                        value={newDoc.url}
+                        onChange={handleDocInputChange}
+                      />
+                    </Form.Group>
+                  </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={handleCloseDocForm}>
+                    Cancel
+                  </Button>
+                  <Button variant="primary" onClick={currentDoc ? handleUpdateDoc : handleAddDoc}>
+                    {currentDoc ? 'Update Doc' : 'Add Doc'}
+                  </Button>
+                </Modal.Footer>
+              </Modal>
             </Card.Body>
           </Card>
         </Col>
