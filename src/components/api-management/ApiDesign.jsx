@@ -14,7 +14,7 @@ const ApiDesign = () => {
   const [params, setParams] = useState([]);
   const [showParamForm, setShowParamForm] = useState(false);
   const [currentParam, setCurrentParam] = useState(null);
-  const [newParam, setNewParam] = useState({ paramKey: '', type: '', description: '' });
+  const [newParam, setNewParam] = useState({ paramKey: '', type: '', description: '', sample: '' });
 
   useEffect(() => {
     const fetchParams = async () => {
@@ -38,7 +38,7 @@ const ApiDesign = () => {
     try {
       await axios.post(`${backendUrl}/api/v1/param/create`, { ...newParam, apiId });
       setShowParamForm(false);
-      setNewParam({ paramKey: '', type: '', description: '' });
+      setNewParam({ paramKey: '', type: '', description: '', sample: '' });
       const response = await axios.get(`${backendUrl}/api/v1/param/findByApiId?apiId=${apiId}`);
       setParams(response.data.data);
     } catch (error) {
@@ -50,7 +50,7 @@ const ApiDesign = () => {
     try {
       await axios.post(`${backendUrl}/api/v1/param/update`, { id: currentParam.id, apiId, ...newParam });
       setShowParamForm(false);
-      setNewParam({ paramKey: '', type: '', description: '' });
+      setNewParam({ paramKey: '', type: '', description: '', sample: '' });
       setCurrentParam(null);
       const response = await axios.get(`${backendUrl}/api/v1/param/findByApiId?apiId=${apiId}`);
       setParams(response.data.data);
@@ -70,7 +70,7 @@ const ApiDesign = () => {
   };
 
   const handleEditParamClick = (param) => {
-    setNewParam({ paramKey: param.paramKey, type: param.type, description: param.description });
+    setNewParam({ paramKey: param.paramKey, type: param.type, description: param.description, sample: param.sample });
     setCurrentParam(param);
     setShowParamForm(true);
   };
@@ -78,7 +78,7 @@ const ApiDesign = () => {
   const handleCloseParamForm = () => {
     setShowParamForm(false);
     setCurrentParam(null);
-    setNewParam({ paramKey: '', type: '', description: '' });
+    setNewParam({ paramKey: '', type: '', description: '', sample: '' });
   };
 
   return (
@@ -96,7 +96,7 @@ const ApiDesign = () => {
                 {params.map((param) => (
                   <ListGroup.Item key={param.id} className="d-flex justify-content-between align-items-center">
                     <div>
-                      <strong>{param.paramKey}</strong>: {param.description} ({param.type})
+                      <strong>{param.paramKey}</strong>: {param.description} ({param.type}) - Sample: {param.sample}
                     </div>
                     <div>
                       <Button variant="outline-primary" size="sm" className="me-2" onClick={() => handleEditParamClick(param)}>
@@ -143,6 +143,15 @@ const ApiDesign = () => {
                         rows={3}
                         name="description"
                         value={newParam.description}
+                        onChange={handleParamInputChange}
+                      />
+                    </Form.Group>
+                    <Form.Group controlId="formParamSample" className="mb-3">
+                      <Form.Label>Sample</Form.Label>
+                      <Form.Control
+                        type="text"
+                        name="sample"
+                        value={newParam.sample}
                         onChange={handleParamInputChange}
                       />
                     </Form.Group>
