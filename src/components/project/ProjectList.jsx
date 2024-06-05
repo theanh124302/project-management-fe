@@ -1,22 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
+import { Modal, Button, Form, Card, Container, Row, Col } from 'react-bootstrap';
 import CustomAppBar from '../navbar/CustomAppBar';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../public/css/ProjectList.css';
 
 const backendUrl = 'http://localhost:8080'; // Cập nhật URL backend cố định ở đây
 
 const ProjectList = () => {
   const [projects, setProjects] = useState([]);
-  const [showAddForm, setShowAddForm] = useState(false);
-  const [showEditForm, setShowEditForm] = useState(false);
+  const [showForm, setShowForm] = useState(false);
   const [currentProject, setCurrentProject] = useState(null);
   const [newProject, setNewProject] = useState({
     name: '',
     description: '',
-    status: ''
+    coverImage: ''
   });
   const [leaderId, setLeaderId] = useState(null);
   const [userName, setUserName] = useState('');
@@ -58,8 +57,8 @@ const ProjectList = () => {
         ...newProject,
         leaderId
       });
-      setShowAddForm(false);
-      setNewProject({ name: '', description: '', status: '' });
+      setShowForm(false);
+      setNewProject({ name: '', description: '', coverImage: '' });
       const response = await axios.get(`${backendUrl}/api/v1/project/findByUsername?username=${username}`);
       setProjects(response.data.data);
     } catch (error) {
@@ -82,9 +81,9 @@ const ProjectList = () => {
     setNewProject({
       name: project.name,
       description: project.description,
-      status: project.status
+      coverImage: project.coverImage
     });
-    setShowEditForm(true);
+    setShowForm(true);
   };
 
   const handleProjectClick = (projectId) => {
@@ -97,10 +96,10 @@ const ProjectList = () => {
         ...currentProject,
         name: newProject.name,
         description: newProject.description,
-        status: newProject.status
+        coverImage: newProject.coverImage
       });
-      setShowEditForm(false);
-      setNewProject({ name: '', description: '', status: '' });
+      setShowForm(false);
+      setNewProject({ name: '', description: '', coverImage: '' });
       setCurrentProject(null);
       const response = await axios.get(`${backendUrl}/api/v1/project/findByUsername?username=${username}`);
       setProjects(response.data.data);
@@ -109,55 +108,86 @@ const ProjectList = () => {
     }
   };
 
+  const handleCloseForm = () => {
+    setShowForm(false);
+    setCurrentProject(null);
+    setNewProject({ name: '', description: '', coverImage: '' });
+  };
+
   return (
-    <div className="project-list-container">
-      <CustomAppBar username={username} />
-      <h2 style={{ marginBottom: '100px', marginTop: '50px' }}>Welcome, {userName}!</h2>
-      <div className="project-list">
-        {projects.map((project) => (
-          <div key={project.id} className="project-button-wrapper">
-            <button className="project-button" onClick={() => handleProjectClick(project.id)}>
-              <h3>{project.name}</h3>
-              <p>{project.description}</p>
-              <p><strong>Status:</strong> {project.status}</p>
-              <EditIcon className="icon edit-icon" onClick={(e) => { e.stopPropagation(); handleEditProject(project); }} />
-              <DeleteIcon className="icon delete-icon" onClick={(e) => { e.stopPropagation(); handleDeleteProject(project.id); }} />
-            </button>
-          </div>
-        ))}
-        <button className="project-button add-project-button" onClick={() => setShowAddForm(true)}>
-          <span>+</span>
-        </button>
+    <Container>
+      <CustomAppBar/>
+      <h2 className="my-4">Welcome, {userName}!</h2>
+      <div className="text-end mb-3">
+        <Button variant="primary" onClick={() => setShowForm(true)}>
+          Add Project
+        </Button>
       </div>
-      {(showAddForm || showEditForm) && (
-        <div className="add-project-form">
-          <h3>{showEditForm ? 'Cập nhật dự án' : 'Thêm dự án mới'}</h3>
-          <input
-            type="text"
-            placeholder="Tên dự án"
-            value={newProject.name}
-            onChange={(e) => setNewProject({ ...newProject, name: e.target.value })}
-          />
-          <textarea
-            placeholder="Mô tả dự án"
-            value={newProject.description}
-            onChange={(e) => setNewProject({ ...newProject, description: e.target.value })}
-          />
-          <input
-            type="text"
-            placeholder="Trạng thái"
-            value={newProject.status}
-            onChange={(e) => setNewProject({ ...newProject, status: e.target.value })}
-          />
-          <button onClick={showEditForm ? handleUpdateProject : handleAddProject}>
-            {showEditForm ? 'Cập nhật dự án' : 'Thêm dự án'}
-          </button>
-          <button onClick={() => { setShowAddForm(false); setShowEditForm(false); setCurrentProject(null); }}>
-            Hủy
-          </button>
-        </div>
-      )}
-    </div>
+      <Row>
+        {projects.map((project) => (
+          <Col key={project.id} xs={12} sm={6} md={4} className="mb-4">
+            <Card onClick={() => handleProjectClick(project.id)} style={{ cursor: 'pointer' }}>
+              <Card.Img variant="top" src={project.coverImage || 'https://via.placeholder.com/150'} />
+              <Card.Body>
+                <Card.Title>{project.name}</Card.Title>
+                <Card.Text>{project.description}</Card.Text>
+                <Button variant="primary" onClick={(e) => { e.stopPropagation(); handleEditProject(project); }} className="me-2">
+                  Edit
+                </Button>
+                <Button variant="danger" onClick={(e) => { e.stopPropagation(); handleDeleteProject(project.id); }}>
+                  Delete
+                </Button>
+              </Card.Body>
+            </Card>
+          </Col>
+        ))}
+      </Row>
+      <Modal show={showForm} onHide={handleCloseForm}>
+        <Modal.Header closeButton>
+          <Modal.Title>{currentProject ? 'Update Project' : 'Add New Project'}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group controlId="formProjectName" className="mb-3">
+              <Form.Label>Project Name</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter project name"
+                value={newProject.name}
+                onChange={(e) => setNewProject({ ...newProject, name: e.target.value })}
+              />
+            </Form.Group>
+            <Form.Group controlId="formProjectDescription" className="mb-3">
+              <Form.Label>Project Description</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                placeholder="Enter project description"
+                value={newProject.description}
+                onChange={(e) => setNewProject({ ...newProject, description: e.target.value })}
+              />
+            </Form.Group>
+            <Form.Group controlId="formProjectCoverImage" className="mb-3">
+              <Form.Label>Cover Image URL</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter cover image URL"
+                value={newProject.coverImage}
+                onChange={(e) => setNewProject({ ...newProject, coverImage: e.target.value })}
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseForm}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={currentProject ? handleUpdateProject : handleAddProject}>
+            {currentProject ? 'Update Project' : 'Add Project'}
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </Container>
   );
 };
 

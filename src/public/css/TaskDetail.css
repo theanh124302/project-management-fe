@@ -2,17 +2,25 @@
   padding: 20px;
 }
 
-.task-detail-container ul {
-  list-style-type: none;
-  padding-left: 0;
+.task-detail-container .card {
+  margin-top: 20px;
 }
 
-.task-detail-container ul li {
-  padding: 5px 0;
+.task-detail-container .card-body {
+  padding: 20px;
 }
 
-.assigned-user-name {
-  font-weight: bold;
-  font-size: 1.2rem;
-  color: #3f51b5; /* Màu sắc tùy chỉnh */
+.task-detail-container .list-group-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.task-detail-container .form-control {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.task-detail-container .btn {
+  margin-right: 10px;
 }

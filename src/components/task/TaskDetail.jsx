@@ -1,13 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
+import { Container, Row, Col, Card, Button, Form, ListGroup, ListGroupItem } from 'react-bootstrap';
 import CustomAppBar from '../navbar/CustomAppBar';
 import VerticalTabs from '../tabs/VerticalTabs';
-import { Box, Typography, Paper, Button, TextField, IconButton, List, ListItem, ListItemText } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../public/css/TaskDetail.css';
 
 const backendUrl = 'http://localhost:8080'; // Cập nhật URL backend cố định ở đây
+
+const statusColors = {
+  CANCELLED: 'danger',
+  NOT_STARTED: 'secondary',
+  IN_PROGRESS: 'info',
+  COMPLETED: 'success',
+  BLOCKED: 'dark',
+  ON_HOLD: 'warning',
+  PENDING: 'primary',
+};
 
 const TaskDetail = () => {
   const { taskId, projectId } = useParams();
@@ -15,14 +25,16 @@ const TaskDetail = () => {
   const [username, setUsername] = useState('');
   const [assignError, setAssignError] = useState('');
   const [assignedUsers, setAssignedUsers] = useState([]);
+  const [newStatus, setNewStatus] = useState('');
   const navigate = useNavigate();
-  const assignerId = localStorage.getItem('userId');
+  const userId = localStorage.getItem('userId');
 
   useEffect(() => {
     const fetchTaskDetail = async () => {
       try {
         const response = await axios.get(`${backendUrl}/api/v1/task/findById?id=${taskId}`);
         setTask(response.data.data);
+        setNewStatus(response.data.data.status);
       } catch (error) {
         console.error('Error fetching task detail:', error);
       }
@@ -44,7 +56,7 @@ const TaskDetail = () => {
   const handleAssign = async () => {
     try {
       await axios.post(`${backendUrl}/api/v1/task/assignByUsername`, null, {
-        params: { taskId, username, assignerId },
+        params: { taskId, username, assignerId: userId },
       });
       const response = await axios.get(`${backendUrl}/api/v1/task/findById?id=${taskId}`);
       setTask(response.data.data);
@@ -60,7 +72,7 @@ const TaskDetail = () => {
   const handleUnassign = async (username) => {
     try {
       await axios.post(`${backendUrl}/api/v1/task/unassignByUsername`, null, {
-        params: { taskId, username, unAssignerId: assignerId },
+        params: { taskId, username, unAssignerId: userId },
       });
       const response = await axios.get(`${backendUrl}/api/v1/task/findById?id=${taskId}`);
       setTask(response.data.data);
@@ -73,57 +85,102 @@ const TaskDetail = () => {
     }
   };
 
+  const handleStatusChange = (e) => {
+    setNewStatus(e.target.value);
+  };
+
+  const handleUpdateStatus = async () => {
+    try {
+      const updatedTask = { ...task, status: newStatus };
+      const response = await axios.post(`${backendUrl}/api/v1/task/update`, updatedTask);
+      setTask(response.data.data);
+    } catch (error) {
+      console.error('Error updating status:', error);
+    }
+  };
+
   if (!task) {
-    return <Typography variant="h6">Loading task details...</Typography>;
+    return <p>Loading task details...</p>;
   }
 
+  const isTaskCreatedByUser = task.createdBy === userId;
+
   return (
-    <div style={{ padding: '20px' }}>
+    <Container fluid className="task-detail-container">
       <CustomAppBar />
-      <div style={{ display: 'flex' }}>
-        <VerticalTabs projectId={projectId} />
-        <div style={{ marginLeft: '20px', padding: '20px', flex: 1 }}>
-          <Paper elevation={3} className="task-detail-container">
-            <Typography variant="h4">{task.name}</Typography>
-            <Typography variant="body1"><strong>Description:</strong> {task.description}</Typography>
-            <Typography variant="body1"><strong>Status:</strong> {task.status}</Typography>
-            <Typography variant="body1"><strong>Priority:</strong> {task.priority}</Typography>
-            <Typography variant="body1"><strong>Type:</strong> {task.type}</Typography>
-            <Typography variant="body1"><strong>Start Date:</strong> {task.startDate}</Typography>
-            <Typography variant="body1"><strong>Due Date:</strong> {task.dueDate}</Typography>
-            <Typography variant="body1"><strong>Created By:</strong> {task.createdBy}</Typography>
-            <Typography variant="body1"><strong>Assignees:</strong></Typography>
-            <List>
-              {assignedUsers.map(user => (
-                <ListItem key={user.id} secondaryAction={
-                  <IconButton edge="end" aria-label="delete" onClick={() => handleUnassign(user.username)}>
-                    <DeleteIcon />
-                  </IconButton>
-                }>
-                  <ListItemText primary={user.name} primaryTypographyProps={{ className: 'assigned-user-name' }} />
-                </ListItem>
-              ))}
-            </List>
-            <Box sx={{ mt: 3 }}>
-              <TextField
-                label="Username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                fullWidth
-                margin="normal"
-              />
-              <Button variant="contained" color="primary" onClick={handleAssign} sx={{ mt: 2, mr: 2 }}>
-                Assign Task
+      <Row>
+        <Col xs={12} md={3}>
+          <VerticalTabs projectId={projectId} />
+        </Col>
+        <Col xs={12} md={9}>
+          <Card className="mt-4">
+            <Card.Body>
+              <Card.Title>{task.name}</Card.Title>
+              <Card.Text><strong>Description:</strong> {task.description}</Card.Text>
+              <Card.Text>
+                <strong>Status:</strong>
+                <Form.Select
+                  value={newStatus}
+                  onChange={handleStatusChange}
+                  disabled={!isTaskCreatedByUser}
+                  className={`text-${statusColors[newStatus]}`}
+                >
+                  <option value="CANCELLED" className="text-danger">CANCELLED</option>
+                  <option value="NOT_STARTED" className="text-secondary">NOT_STARTED</option>
+                  <option value="IN_PROGRESS" className="text-info">IN_PROGRESS</option>
+                  <option value="COMPLETED" className="text-success">COMPLETED</option>
+                  <option value="BLOCKED" className="text-dark">BLOCKED</option>
+                  <option value="ON_HOLD" className="text-warning">ON_HOLD</option>
+                  <option value="PENDING" className="text-primary">PENDING</option>
+                </Form.Select>
+                {isTaskCreatedByUser && (
+                  <Button variant="primary" className="mt-2" onClick={handleUpdateStatus}>
+                    Update Status
+                  </Button>
+                )}
+              </Card.Text>
+              <Card.Text><strong>Priority:</strong> {task.priority}</Card.Text>
+              <Card.Text><strong>Start Date:</strong> {task.startDate}</Card.Text>
+              <Card.Text><strong>Due Date:</strong> {task.dueDate}</Card.Text>
+              <Card.Text><strong>Created By:</strong> {task.createdBy}</Card.Text>
+              <Card.Text><strong>Assignees:</strong></Card.Text>
+              <ListGroup className="mb-3">
+                {assignedUsers.map(user => (
+                  <ListGroupItem key={user.id} className="d-flex justify-content-between align-items-center">
+                    {user.name}
+                    {isTaskCreatedByUser && (
+                      <Button variant="danger" size="sm" onClick={() => handleUnassign(user.username)}>
+                        Unassign
+                      </Button>
+                    )}
+                  </ListGroupItem>
+                ))}
+              </ListGroup>
+              {isTaskCreatedByUser && (
+                <Form>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Assign User</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="Enter username"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                    />
+                  </Form.Group>
+                  <Button variant="primary" onClick={handleAssign}>
+                    Assign Task
+                  </Button>
+                  {assignError && <p className="text-danger mt-2">{assignError}</p>}
+                </Form>
+              )}
+              <Button variant="secondary" className="mt-3" onClick={() => navigate(-1)}>
+                Back to Task List
               </Button>
-              {assignError && <Typography color="error" variant="body2" sx={{ mt: 2 }}>{assignError}</Typography>}
-            </Box>
-            <Box sx={{ mt: 3 }}>
-              <Button variant="contained" color="primary" onClick={() => navigate(-1)}>Back to Task List</Button>
-            </Box>
-          </Paper>
-        </div>
-      </div>
-    </div>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

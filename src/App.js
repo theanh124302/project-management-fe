@@ -11,6 +11,8 @@ import TaskList from './components/task/TaskList';
 import TaskDetail from './components/task/TaskDetail';
 import FolderList from './components/api-management/FolderList';
 import ApiList from './components/api-management/ApiList';
+import ApiDetail from './components/api-management/ApiDetail';  // Import ApiDetail
+import ApiCreate from './components/api-management/ApiCreate';  // Import ApiCreate
 
 function App() {
   return (
@@ -28,6 +30,8 @@ function App() {
         <Route path='/project/:projectId/task/:taskId' element={<TaskDetail />} />
         <Route path='/project/:projectId/api' element={<FolderList />} />
         <Route path='/project/:projectId/folder/:folderId/apis' element={<ApiList />} />
+        <Route path='/project/:projectId/folder/:folderId/api/:apiId' element={<ApiDetail />} />
+        <Route path='/project/:projectId/folder/:folderId/api/create' element={<ApiCreate />} />  {/* Route for creating a new API */}
       </Routes>
     </Router>
   );

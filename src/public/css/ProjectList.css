@@ -1,11 +1,5 @@
-/* ProjectList.css */
 .project-list-container {
-  padding: 20px;
-}
-
-h2 {
-  margin-top: 0;
-  font-weight: normal;
+  padding: 0px;
 }
 
 .project-list {
@@ -19,92 +13,49 @@ h2 {
 }
 
 .project-button {
-  background-color: #f0f0f0;
-  border: 1px solid #ccc;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 10px;
+  border: 1px solid #ddd;
   border-radius: 8px;
-  padding: 20px;
-  width: 250px;
-  text-align: left;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s;
-  overflow: hidden; /* Ensure the content does not overflow */
+  background-color: #fff;
+  cursor: pointer;
+  transition: box-shadow 0.3s ease;
 }
 
 .project-button:hover {
-  transform: scale(1.05);
-}
-
-.project-button h3,
-.project-button p {
-  width: 70%;
-  white-space: nowrap; /* Prevent line breaks */
-  overflow: hidden; /* Hide the overflowing content */
-  text-overflow: ellipsis; /* Display the ellipsis (...) */
-  margin: 5px 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .project-button h3 {
-  margin-top: 0;
+  margin: 0;
+  margin-bottom: 8px;
 }
 
-.project-button p strong {
-  display: block;
+.project-button p {
+  margin: 4px 0;
 }
 
 .add-project-button {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2rem;
-  font-weight: bold;
-}
-
-.add-project-form {
-  margin-top: 20px;
+  font-size: 24px;
   padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  background-color: #f9f9f9;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.add-project-form h3 {
-  margin-top: 0;
-}
-
-.add-project-form input,
-.add-project-form textarea {
-  width: 100%;
-  padding: 10px;
-  margin: 10px 0;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.add-project-form button {
-  margin-right: 10px;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  background-color: #007bff;
-  color: #fff;
-}
-
-.add-project-form button:hover {
-  background-color: #0056b3;
-}
-
-.icon {
+.form-popup {
   position: absolute;
-  top: 10px;
-  cursor: pointer;
-}
-
-.edit-icon {
-  right: 40px;
-}
-
-.delete-icon {
-  right: 10px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  background-color: white;
+  padding: 20px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }

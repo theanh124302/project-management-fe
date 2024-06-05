@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, TextField, Box, Button, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, TextField, Box, Button, Select, MenuItem, FormControl, InputLabel, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import SendIcon from '@mui/icons-material/Send';
 import CustomAppBar from '../navbar/CustomAppBar';
 import VerticalTabs from '../tabs/VerticalTabs';
 import '../../public/css/ApiList.css';
@@ -24,6 +25,8 @@ const ApiList = () => {
     lifeCycle: '',
   });
   const [editingApi, setEditingApi] = useState(null);
+  const [responseDialogOpen, setResponseDialogOpen] = useState(false);
+  const [apiResponse, setApiResponse] = useState('');
 
   useEffect(() => {
     const fetchApis = async () => {
@@ -40,7 +43,11 @@ const ApiList = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setNewApi({ ...newApi, [name]: value });
+    if (editingApi) {
+      setEditingApi({ ...editingApi, [name]: value });
+    } else {
+      setNewApi({ ...newApi, [name]: value });
+    }
   };
 
   const handleAddApi = async () => {
@@ -81,6 +88,16 @@ const ApiList = () => {
     }
   };
 
+  const handleSendApi = async (apiId) => {
+    try {
+      const response = await axios.get(`${backendUrl}/api/v1/send/sendApi`, { params: { apiId } });
+      setApiResponse(response.data);
+      setResponseDialogOpen(true);
+    } catch (error) {
+      console.error('Error sending API request:', error);
+    }
+  };
+
   return (
     <div style={{ padding: '20px' }}>
       <CustomAppBar />
@@ -109,15 +126,14 @@ const ApiList = () => {
                     <TableCell>{api.method}</TableCell>
                     <TableCell>{api.status}</TableCell>
                     <TableCell>
-                      <IconButton
-                        onClick={() => setEditingApi(api)}
-                      >
+                      <IconButton onClick={() => setEditingApi(api)}>
                         <EditIcon />
                       </IconButton>
-                      <IconButton
-                        onClick={() => handleDeleteApi(api.id)}
-                      >
+                      <IconButton onClick={() => handleDeleteApi(api.id)}>
                         <DeleteIcon />
+                      </IconButton>
+                      <IconButton onClick={() => handleSendApi(api.id)}>
+                        <SendIcon />
                       </IconButton>
                     </TableCell>
                   </TableRow>
@@ -202,6 +218,19 @@ const ApiList = () => {
               {editingApi ? 'Save' : 'Add'}
             </Button>
           </Box>
+          <Dialog open={responseDialogOpen} onClose={() => setResponseDialogOpen(false)}>
+            <DialogTitle>API Response</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                {apiResponse}
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setResponseDialogOpen(false)} color="primary">
+                Close
+              </Button>
+            </DialogActions>
+          </Dialog>
         </div>
       </div>
     </div>

@@ -1,27 +1,33 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
+import { Container, Row, Col, Card, Button, Modal, Form } from 'react-bootstrap';
 import CustomAppBar from '../navbar/CustomAppBar';
 import VerticalTabs from '../tabs/VerticalTabs';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../public/css/TaskList.css';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { Box, Button, TextField, Select, MenuItem, FormControl, InputLabel, Modal, Typography } from '@mui/material';
 
 const backendUrl = 'http://localhost:8080'; // Cập nhật URL backend cố định ở đây
+
+const statusColors = {
+  CANCELLED: 'danger',
+  NOT_STARTED: 'secondary',
+  IN_PROGRESS: 'info',
+  COMPLETED: 'success',
+  BLOCKED: 'dark',
+  ON_HOLD: 'warning',
+  PENDING: 'primary',
+};
 
 const TaskList = () => {
   const { projectId } = useParams();
   const [tasks, setTasks] = useState([]);
-  const [showAddForm, setShowAddForm] = useState(false);
-  const [showEditForm, setShowEditForm] = useState(false);
+  const [showForm, setShowForm] = useState(false);
   const [currentTask, setCurrentTask] = useState(null);
   const [newTask, setNewTask] = useState({
     name: '',
     description: '',
-    status: '',
     priority: '',
-    type: '',
     startDate: '',
     dueDate: ''
   });
@@ -53,8 +59,8 @@ const TaskList = () => {
         projectId: projectId,
         createdBy: userId,
       });
-      setShowAddForm(false);
-      setNewTask({ name: '', description: '', status: '', priority: '', type: '', startDate: '', dueDate: '' });
+      setShowForm(false);
+      setNewTask({ name: '', description: '', priority: '', startDate: '', dueDate: '' });
       const response = await axios.get(`${backendUrl}/api/v1/task/findByProjectId?projectId=${projectId}`);
       setTasks(response.data.data);
     } catch (error) {
@@ -77,13 +83,11 @@ const TaskList = () => {
     setNewTask({
       name: task.name,
       description: task.description,
-      status: task.status,
       priority: task.priority,
-      type: task.type,
       startDate: task.startDate,
       dueDate: task.dueDate
     });
-    setShowEditForm(true);
+    setShowForm(true);
   };
 
   const handleUpdateTask = async () => {
@@ -92,8 +96,8 @@ const TaskList = () => {
         ...currentTask,
         ...newTask,
       });
-      setShowEditForm(false);
-      setNewTask({ name: '', description: '', status: '', priority: '', type: '', startDate: '', dueDate: '' });
+      setShowForm(false);
+      setNewTask({ name: '', description: '', priority: '', startDate: '', dueDate: '' });
       setCurrentTask(null);
       const response = await axios.get(`${backendUrl}/api/v1/task/findByProjectId?projectId=${projectId}`);
       setTasks(response.data.data);
@@ -106,122 +110,113 @@ const TaskList = () => {
     navigate(`/project/${projectId}/task/${taskId}`);
   };
 
+  const handleCloseForm = () => {
+    setShowForm(false);
+    setCurrentTask(null);
+    setNewTask({ name: '', description: '', priority: '', startDate: '', dueDate: '' });
+  };
+
   return (
-    <div className="task-list-container">
+    <Container fluid className="task-list-container">
       <CustomAppBar />
-      <div style={{ display: 'flex' }}>
-        <VerticalTabs projectId={projectId} />
-        <div className="task-list-content">
+      <Row>
+        <Col xs={12} md={3}>
+          <VerticalTabs projectId={projectId} />
+        </Col>
+        <Col xs={12} md={9}>
           <h2>Task List</h2>
-          <div className="task-list">
+          <Row>
             {tasks.map((task) => (
-              <div key={task.id} className="task-card" onClick={() => handleTaskClick(task.id)}>
-                <h3>{task.name}</h3>
-                <p>{task.description}</p>
-                <p><strong>Status:</strong> {task.status}</p>
-                <EditIcon className="icon edit-icon" onClick={(e) => { e.stopPropagation(); handleEditTask(task); }} />
-                <DeleteIcon className="icon delete-icon" onClick={(e) => { e.stopPropagation(); handleDeleteTask(task.id); }} />
-              </div>
+              <Col key={task.id} xs={12} md={6} lg={4} className="mb-3">
+                <Card onClick={() => handleTaskClick(task.id)} className={`task-card border-${statusColors[task.status]}`} style={{ cursor: 'pointer' }}>
+                  <Card.Body>
+                    <Card.Title>{task.name}</Card.Title>
+                    <Card.Text>{task.description}</Card.Text>
+                    <Card.Text>
+                      <strong>Status:</strong> <span className={`text-${statusColors[task.status]}`}>{task.status}</span>
+                    </Card.Text>
+                    <Button variant="primary" onClick={(e) => { e.stopPropagation(); handleEditTask(task); }} className="me-2">
+                      Edit
+                    </Button>
+                    <Button variant="danger" onClick={(e) => { e.stopPropagation(); handleDeleteTask(task.id); }}>
+                      Delete
+                    </Button>
+                  </Card.Body>
+                </Card>
+              </Col>
             ))}
-            <div className="task-card add-task-card" onClick={() => setShowAddForm(true)}>
-              <span>+</span>
-            </div>
-          </div>
-          <Modal
-            open={showAddForm || showEditForm}
-            onClose={() => { setShowAddForm(false); setShowEditForm(false); setCurrentTask(null); }}
-            aria-labelledby="modal-title"
-            aria-describedby="modal-description"
-          >
-            <Box className="task-modal">
-              <Typography id="modal-title" variant="h6" component="h2">
-                {showEditForm ? 'Edit Task' : 'Add New Task'}
-              </Typography>
-              <TextField
-                label="Task Name"
-                name="name"
-                value={newTask.name}
-                onChange={(e) => setNewTask({ ...newTask, name: e.target.value })}
-                fullWidth
-                margin="normal"
-              />
-              <TextField
-                label="Description"
-                name="description"
-                value={newTask.description}
-                onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
-                fullWidth
-                margin="normal"
-              />
-              <FormControl fullWidth margin="normal">
-                <InputLabel>Status</InputLabel>
-                <Select
-                  name="status"
-                  value={newTask.status}
-                  onChange={(e) => setNewTask({ ...newTask, status: e.target.value })}
-                >
-                  <MenuItem value="NOT_STARTED">NOT_STARTED</MenuItem>
-                  <MenuItem value="IN_PROGRESS">IN_PROGRESS</MenuItem>
-                  <MenuItem value="COMPLETED">COMPLETED</MenuItem>
-                  <MenuItem value="PENDING">PENDING</MenuItem>
-                  <MenuItem value="ON_HOLD">ON_HOLD</MenuItem>
-                  <MenuItem value="CANCELLED">CANCELLED</MenuItem>
-                  <MenuItem value="BLOCKED">BLOCKED</MenuItem>
-                </Select>
-              </FormControl>
-              <TextField
-                label="Priority"
-                name="priority"
-                value={newTask.priority}
-                onChange={(e) => setNewTask({ ...newTask, priority: e.target.value })}
-                fullWidth
-                margin="normal"
-              />
-              <TextField
-                label="Type"
-                name="type"
-                value={newTask.type}
-                onChange={(e) => setNewTask({ ...newTask, type: e.target.value })}
-                fullWidth
-                margin="normal"
-              />
-              <TextField
-                label="Start Date"
-                name="startDate"
-                type="date"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                value={newTask.startDate}
-                onChange={(e) => setNewTask({ ...newTask, startDate: e.target.value })}
-                fullWidth
-                margin="normal"
-              />
-              <TextField
-                label="Due Date"
-                name="dueDate"
-                type="date"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                value={newTask.dueDate}
-                onChange={(e) => setNewTask({ ...newTask, dueDate: e.target.value })}
-                fullWidth
-                margin="normal"
-              />
-              <Box sx={{ mt: 2, display: 'flex', justifyContent: 'space-between' }}>
-                <Button onClick={showEditForm ? handleUpdateTask : handleAddTask} variant="contained" color="primary">
-                  {showEditForm ? 'Update Task' : 'Add Task'}
-                </Button>
-                <Button onClick={() => { setShowAddForm(false); setShowEditForm(false); setCurrentTask(null); }} variant="outlined">
-                  Cancel
-                </Button>
-              </Box>
-            </Box>
+            <Col xs={12} md={6} lg={4} className="mb-3">
+              <Card onClick={() => setShowForm(true)} className="task-card add-task-card" style={{ cursor: 'pointer' }}>
+                <Card.Body className="d-flex justify-content-center align-items-center">
+                  <h1>+</h1>
+                </Card.Body>
+              </Card>
+            </Col>
+          </Row>
+          <Modal show={showForm} onHide={handleCloseForm}>
+            <Modal.Header closeButton>
+              <Modal.Title>{currentTask ? 'Edit Task' : 'Add New Task'}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Form>
+                <Form.Group controlId="formTaskName" className="mb-3">
+                  <Form.Label>Task Name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter task name"
+                    value={newTask.name}
+                    onChange={(e) => setNewTask({ ...newTask, name: e.target.value })}
+                  />
+                </Form.Group>
+                <Form.Group controlId="formTaskDescription" className="mb-3">
+                  <Form.Label>Description</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    rows={3}
+                    placeholder="Enter task description"
+                    value={newTask.description}
+                    onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
+                  />
+                </Form.Group>
+                <Form.Group controlId="formTaskPriority" className="mb-3">
+                  <Form.Label>Priority</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter task priority"
+                    value={newTask.priority}
+                    onChange={(e) => setNewTask({ ...newTask, priority: e.target.value })}
+                  />
+                </Form.Group>
+                <Form.Group controlId="formTaskStartDate" className="mb-3">
+                  <Form.Label>Start Date</Form.Label>
+                  <Form.Control
+                    type="date"
+                    value={newTask.startDate}
+                    onChange={(e) => setNewTask({ ...newTask, startDate: e.target.value })}
+                  />
+                </Form.Group>
+                <Form.Group controlId="formTaskDueDate" className="mb-3">
+                  <Form.Label>Due Date</Form.Label>
+                  <Form.Control
+                    type="date"
+                    value={newTask.dueDate}
+                    onChange={(e) => setNewTask({ ...newTask, dueDate: e.target.value })}
+                  />
+                </Form.Group>
+              </Form>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={handleCloseForm}>
+                Cancel
+              </Button>
+              <Button variant="primary" onClick={currentTask ? handleUpdateTask : handleAddTask}>
+                {currentTask ? 'Update Task' : 'Add Task'}
+              </Button>
+            </Modal.Footer>
           </Modal>
-        </div>
-      </div>
-    </div>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

@@ -1,4 +1,3 @@
-// VerticalTabs.jsx
 import * as React from 'react';
 import { useState } from 'react';
 import Box from '@mui/material/Box';
@@ -7,6 +6,39 @@ import Tab from '@mui/material/Tab';
 import IconButton from '@mui/material/IconButton';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate, useParams } from 'react-router-dom';
+import { styled } from '@mui/system';
+
+const CustomTabs = styled(Tabs)({
+  borderRight: '1px solid #ddd',
+  width: 220,
+  marginTop: '20px',
+  backgroundColor: '#f5f5f5',
+  boxShadow: '0px 2px 10px rgba(0, 0, 0, 0.1)',
+  borderRadius: '8px',
+});
+
+const CustomTab = styled(Tab)({
+  textTransform: 'none',
+  fontWeight: 'bold',
+  fontSize: '16px',
+  color: '#555',
+  '&.Mui-selected': {
+    color: '#1976d2',
+  },
+  '&:hover': {
+    color: '#1976d2',
+    backgroundColor: '#e3f2fd',
+  },
+  padding: '12px 24px',
+});
+
+const CustomIconButton = styled(IconButton)({
+  margin: '10px',
+  color: '#1976d2',
+  '&:hover': {
+    backgroundColor: '#e3f2fd',
+  },
+});
 
 const VerticalTabs = () => {
   const [selectedTab, setSelectedTab] = useState(0);
@@ -40,21 +72,20 @@ const VerticalTabs = () => {
 
   return (
     <Box sx={{ display: 'flex' }}>
-      <Tabs
+      <CustomTabs
         orientation="vertical"
         variant="scrollable"
         value={selectedTab}
         onChange={handleTabChange}
-        sx={{ borderRight: 1, borderColor: 'divider', width: 200, marginTop: '20px' }}
       >
-        <IconButton onClick={handleBackClick}>
+        <CustomIconButton onClick={handleBackClick}>
           <ArrowBackIcon />
-        </IconButton>
-        <Tab label="API" />
-        <Tab label="ENV" />
-        <Tab label="TASK" />
-        <Tab label="DETAIL" />
-      </Tabs>
+        </CustomIconButton>
+        <CustomTab label="API" />
+        <CustomTab label="ENV" />
+        <CustomTab label="TASK" />
+        <CustomTab label="DETAIL" />
+      </CustomTabs>
     </Box>
   );
 };

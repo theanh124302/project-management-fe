@@ -1,24 +1,33 @@
-.table-container {
-    margin-top: 20px;
-  }
-  
-  .add-api-form {
-    display: flex;
-    flex-direction: column;
-    margin-top: 20px;
-  }
-  
-  .add-api-form .input-field {
-    margin-bottom: 10px;
-  }
-  
-  .add-api-form .buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
-  }
-  
-  .add-api-form .button {
-    width: 48%;
-  }
-  
+/* src/public/css/ApiList.css */
+.api-list-container {
+  display: flex;
+  height: calc(100vh - 64px); /* Adjust based on your header height */
+}
+
+.api-list-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 20px;
+  margin-left: 20px; /* Space between tabs and content */
+}
+
+.api-list-table {
+  margin-top: 20px;
+  width: 100%;
+}
+
+.api-list-table th, .api-list-table td {
+  padding: 10px;
+  text-align: left;
+}
+
+.api-list-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.add-api-button {
+  margin-bottom: 10px;
+}
