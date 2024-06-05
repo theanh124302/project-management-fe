@@ -136,6 +136,10 @@ const ApiDefine = () => {
     return url;
   };
 
+  const handleNavigateToDesign = () => {
+    navigate(`/project/${projectId}/folder/${folderId}/api/${apiId}/design`);
+  };
+
   if (!api) {
     return <p>Loading API details...</p>;
   }
@@ -198,8 +202,11 @@ const ApiDefine = () => {
               <Button variant="primary" onClick={handleUpdateApi} className="me-2">
                 Update API
               </Button>
-              <Button variant="danger" onClick={handleDeleteApi}>
+              <Button variant="danger" onClick={handleDeleteApi} className="me-2">
                 Delete API
+              </Button>
+              <Button variant="secondary" onClick={handleNavigateToDesign} className="me-2">
+                Design
               </Button>
               <h3 className="mt-4">Related Docs</h3>
               <ListGroup className="mb-3">
