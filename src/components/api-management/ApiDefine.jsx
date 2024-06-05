@@ -47,7 +47,7 @@ const ApiDefine = () => {
 
   const handleUpdateApi = async () => {
     try {
-      await axios.post(`${backendUrl}/api/v1/api/update`, { id: apiId, ...formData });
+      await axios.post(`${backendUrl}/api/v1/api/update`, { id: apiId, folderId: folderId, ...formData });
       navigate(`/project/${projectId}/folder/${folderId}/apis`);
     } catch (error) {
       console.error('Error updating API:', error);
