@@ -23,6 +23,8 @@ const TaskDetail = () => {
   const { taskId, projectId } = useParams();
   const [task, setTask] = useState(null);
   const [apiName, setApiName] = useState('');
+  const [apiId, setApiId] = useState(null);
+  const [folderId, setFolderId] = useState(null);
   const [username, setUsername] = useState('');
   const [assignError, setAssignError] = useState('');
   const [assignedUsers, setAssignedUsers] = useState([]);
@@ -56,6 +58,8 @@ const TaskDetail = () => {
         if (response.data.data.apiId) {
           const apiResponse = await axios.get(`${backendUrl}/api/v1/api/findById?id=${response.data.data.apiId}`);
           setApiName(apiResponse.data.data.name);
+          setApiId(response.data.data.apiId);
+          setFolderId(apiResponse.data.data.folderId); // Set folderId from API details
         }
       } catch (error) {
         console.error('Error fetching task detail:', error);
@@ -152,6 +156,12 @@ const TaskDetail = () => {
     setShowForm(false);
   };
 
+  const handleApiClick = () => {
+    if (apiId && folderId) {
+      navigate(`/project/${projectId}/folder/${folderId}/api/${apiId}`);
+    }
+  };
+
   if (!task) {
     return <p>Loading task details...</p>;
   }
@@ -170,7 +180,12 @@ const TaskDetail = () => {
             <Card.Body>
               <Card.Title>{task.name}</Card.Title>
               <Card.Text><strong>Description:</strong> {task.description}</Card.Text>
-              <Card.Text><strong>API Name:</strong> {apiName}</Card.Text> {/* Display API name */}
+              <Card.Text>
+                <strong>API Name:</strong>
+                <span className="api-name-link" onClick={handleApiClick} style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}>
+                  {apiName}
+                </span>
+              </Card.Text>
               <Card.Text>
                 <strong>Status:</strong>
                 <Form.Select
