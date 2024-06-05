@@ -31,10 +31,20 @@ const TaskList = () => {
     startDate: '',
     dueDate: ''
   });
+  const [projectLeaderId, setProjectLeaderId] = useState(null);
   const userId = localStorage.getItem('userId');
   const navigate = useNavigate();
 
   useEffect(() => {
+    const fetchProjectDetails = async () => {
+      try {
+        const response = await axios.get(`${backendUrl}/api/v1/project/findById?id=${projectId}`);
+        setProjectLeaderId(response.data.data.leaderId);
+      } catch (error) {
+        console.error('Error fetching project details:', error);
+      }
+    };
+
     const fetchTasks = async () => {
       try {
         const response = await axios.get(`${backendUrl}/api/v1/task/findByProjectId?projectId=${projectId}`);
@@ -44,6 +54,7 @@ const TaskList = () => {
       }
     };
 
+    fetchProjectDetails();
     fetchTasks();
   }, [projectId]);
 
@@ -135,12 +146,19 @@ const TaskList = () => {
                     <Card.Text>
                       <strong>Status:</strong> <span className={`text-${statusColors[task.status]}`}>{task.status}</span>
                     </Card.Text>
-                    <Button variant="primary" onClick={(e) => { e.stopPropagation(); handleEditTask(task); }} className="me-2">
-                      Edit
-                    </Button>
-                    <Button variant="danger" onClick={(e) => { e.stopPropagation(); handleDeleteTask(task.id); }}>
-                      Delete
-                    </Button>
+                    <Card.Text>
+                      <strong>Due Date:</strong> {task.dueDate}
+                    </Card.Text>
+                    {projectLeaderId === parseInt(userId, 10) && (
+                      <>
+                        <Button variant="primary" onClick={(e) => { e.stopPropagation(); handleEditTask(task); }} className="me-2">
+                          Edit
+                        </Button>
+                        <Button variant="danger" onClick={(e) => { e.stopPropagation(); handleDeleteTask(task.id); }}>
+                          Delete
+                        </Button>
+                      </>
+                    )}
                   </Card.Body>
                 </Card>
               </Col>

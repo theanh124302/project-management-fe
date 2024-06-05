@@ -20,6 +20,7 @@ const ProjectList = () => {
   const [leaderId, setLeaderId] = useState(null);
   const [userName, setUserName] = useState('');
   const username = localStorage.getItem('username');
+  const userId = localStorage.getItem('userId');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -68,7 +69,7 @@ const ProjectList = () => {
 
   const handleDeleteProject = async (id) => {
     try {
-      await axios.delete(`${backendUrl}/api/v1/project/delete?id=${id}&userId=${leaderId}`);
+      await axios.delete(`${backendUrl}/api/v1/project/delete`, { params: { id, userId: leaderId } });
       const response = await axios.get(`${backendUrl}/api/v1/project/findByUsername?username=${username}`);
       setProjects(response.data.data);
     } catch (error) {
@@ -92,11 +93,13 @@ const ProjectList = () => {
 
   const handleUpdateProject = async () => {
     try {
-      await axios.post(`${backendUrl}/api/v1/project/update?userId=${leaderId}`, {
+      await axios.post(`${backendUrl}/api/v1/project/update`, {
         ...currentProject,
         name: newProject.name,
         description: newProject.description,
         coverImage: newProject.coverImage
+      }, {
+        params: { userId: leaderId }
       });
       setShowForm(false);
       setNewProject({ name: '', description: '', coverImage: '' });
@@ -116,7 +119,7 @@ const ProjectList = () => {
 
   return (
     <Container>
-      <CustomAppBar/>
+      <CustomAppBar />
       <h2 className="my-4">Welcome, {userName}!</h2>
       <div className="text-end mb-3">
         <Button variant="primary" onClick={() => setShowForm(true)}>
@@ -131,12 +134,16 @@ const ProjectList = () => {
               <Card.Body>
                 <Card.Title>{project.name}</Card.Title>
                 <Card.Text>{project.description}</Card.Text>
-                <Button variant="primary" onClick={(e) => { e.stopPropagation(); handleEditProject(project); }} className="me-2">
-                  Edit
-                </Button>
-                <Button variant="danger" onClick={(e) => { e.stopPropagation(); handleDeleteProject(project.id); }}>
-                  Delete
-                </Button>
+                {project.leaderId === parseInt(userId, 10) && (
+                  <>
+                    <Button variant="primary" onClick={(e) => { e.stopPropagation(); handleEditProject(project); }} className="me-2">
+                      Edit
+                    </Button>
+                    <Button variant="danger" onClick={(e) => { e.stopPropagation(); handleDeleteProject(project.id); }}>
+                      Delete
+                    </Button>
+                  </>
+                )}
               </Card.Body>
             </Card>
           </Col>
