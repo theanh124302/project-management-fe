@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import CustomAppBar from '../navbar/CustomAppBar';
 import VerticalTabs from '../tabs/VerticalTabs';
 import { Container, Row, Col, Card, Button, Table, Form, FormControl } from 'react-bootstrap';
@@ -20,6 +20,7 @@ const ProjectDetail = () => {
   const [expectedEndDate, setExpectedEndDate] = useState('');
   const [leaderName, setLeaderName] = useState('');
   const userId = localStorage.getItem('userId');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProjectDetails = async () => {
@@ -98,6 +99,20 @@ const ProjectDetail = () => {
     }
   };
 
+  const handleLeaveProject = async () => {
+    try {
+      await axios.post(`${backendUrl}/api/v1/project/leaveProject`, null, {
+        params: {
+          projectId,
+          userId,
+        },
+      });
+      navigate('/projectList');
+    } catch (error) {
+      console.error('Error leaving project:', error);
+    }
+  };
+
   const isLeader = project && project.leaderId === parseInt(userId, 10);
 
   return (
@@ -116,7 +131,7 @@ const ProjectDetail = () => {
                   <Card.Text>{project.description}</Card.Text>
                   <Card.Text><strong>Status:</strong> {project.status}</Card.Text>
                   <Card.Text><strong>Leader:</strong> {leaderName}</Card.Text>
-                  {isLeader && (
+                  {isLeader ? (
                     <>
                       <Card.Text><strong>Start Date:</strong> 
                         <FormControl
@@ -136,6 +151,10 @@ const ProjectDetail = () => {
                         Update Dates
                       </Button>
                     </>
+                  ) : (
+                    <Button variant="danger" className="mt-2" onClick={handleLeaveProject}>
+                      Leave Project
+                    </Button>
                   )}
                   <Card.Text><strong>Version:</strong> {project.version}</Card.Text>
                   <Card.Text><strong>Number of Members:</strong> {project.numberOfMembers}</Card.Text>
@@ -160,7 +179,6 @@ const ProjectDetail = () => {
                             className="me-2"
                           >
                             <option value="">Select Role</option>
-                            <option value="LEADER">LEADER</option>
                             <option value="BE">BE</option>
                             <option value="FE">FE</option>
                             <option value="PM">PM</option>
