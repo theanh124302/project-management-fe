@@ -1,24 +1,11 @@
-.table-container {
-    margin-top: 20px;
-  }
-  
-  .add-folder-form {
-    display: flex;
-    flex-direction: column;
-    margin-top: 20px;
-  }
-  
-  .add-folder-form .input-field {
-    margin-bottom: 10px;
-  }
-  
-  .add-folder-form .buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
-  }
-  
-  .add-folder-form .button {
-    width: 48%;
-  }
-  
+.folder-list-container {
+  padding: 20px;
+}
+
+.mt-4 {
+  margin-top: 1.5rem;
+}
+
+.me-2 {
+  margin-right: 0.5rem;
+}

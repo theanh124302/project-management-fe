@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, TextField, Box, Button } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
+import { Container, Row, Col, Card, Button, Form, FormControl, ListGroup, ListGroupItem } from 'react-bootstrap';
+import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 import CustomAppBar from '../navbar/CustomAppBar';
 import VerticalTabs from '../tabs/VerticalTabs';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../public/css/FolderList.css';
 
 const backendUrl = 'http://localhost:8080';
@@ -15,20 +15,26 @@ const FolderList = () => {
   const [folders, setFolders] = useState([]);
   const [newFolder, setNewFolder] = useState('');
   const [editingFolder, setEditingFolder] = useState(null);
+  const [isLeader, setIsLeader] = useState(false);
   const navigate = useNavigate();
+  const userId = localStorage.getItem('userId');
 
   useEffect(() => {
-    const fetchFolders = async () => {
+    const fetchProjectDetails = async () => {
       try {
-        const response = await axios.get(`${backendUrl}/api/v1/folder/findByProjectId?projectId=${projectId}`);
-        setFolders(response.data.data);
+        const projectResponse = await axios.get(`${backendUrl}/api/v1/project/findById?id=${projectId}`);
+        const leaderId = projectResponse.data.data.leaderId;
+        setIsLeader(parseInt(userId, 10) === leaderId);
+
+        const folderResponse = await axios.get(`${backendUrl}/api/v1/folder/findByProjectId?projectId=${projectId}`);
+        setFolders(folderResponse.data.data);
       } catch (error) {
-        console.error('Error fetching folders:', error);
+        console.error('Error fetching project or folders:', error);
       }
     };
 
-    fetchFolders();
-  }, [projectId]);
+    fetchProjectDetails();
+  }, [projectId, userId]);
 
   const handleAddFolder = async () => {
     try {
@@ -64,62 +70,69 @@ const FolderList = () => {
   };
 
   return (
-    <div style={{ padding: '20px' }}>
+    <Container fluid className="folder-list-container">
       <CustomAppBar />
-      <div style={{ display: 'flex' }}>
-        <VerticalTabs projectId={projectId} />
-        <div style={{ marginLeft: '20px', padding: '20px', flex: 1 }}>
-          <h2>Folder List</h2>
-          <TableContainer component={Paper}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell style={{ width: '80%' }}>Name</TableCell>
-                  <TableCell style={{ width: '20%' }}>Actions</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
+      <Row>
+        <Col xs={12} md={3}>
+          <VerticalTabs projectId={projectId} />
+        </Col>
+        <Col xs={12} md={9}>
+          <Card className="mt-4">
+            <Card.Body>
+              <Card.Title>Folder List</Card.Title>
+              <ListGroup className="mb-3">
                 {folders.map((folder) => (
-                  <TableRow key={folder.id} onClick={() => handleFolderClick(folder.id)}>
-                    <TableCell>{folder.name}</TableCell>
-                    <TableCell>
-                      <IconButton
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setEditingFolder(folder);
-                        }}
-                      >
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDeleteFolder(folder.id);
-                        }}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
+                  <ListGroupItem key={folder.id} className="d-flex justify-content-between align-items-center">
+                    <div onClick={() => handleFolderClick(folder.id)} style={{ cursor: 'pointer' }}>
+                      {folder.name}
+                    </div>
+                    {isLeader && (
+                      <div>
+                        <Button
+                          variant="outline-primary"
+                          className="me-2"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setEditingFolder(folder);
+                          }}
+                        >
+                          <FaEdit />
+                        </Button>
+                        <Button
+                          variant="outline-danger"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteFolder(folder.id);
+                          }}
+                        >
+                          <FaTrashAlt />
+                        </Button>
+                      </div>
+                    )}
+                  </ListGroupItem>
                 ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <Box sx={{ mt: 3 }}>
-            <h3>{editingFolder ? 'Edit Folder' : 'Add Folder'}</h3>
-            <TextField
-              label="Folder Name"
-              value={editingFolder ? editingFolder.name : newFolder}
-              onChange={(e) => editingFolder ? setEditingFolder({ ...editingFolder, name: e.target.value }) : setNewFolder(e.target.value)}
-              sx={{ mr: 2 }}
-            />
-            <Button variant="contained" color="primary" onClick={editingFolder ? handleUpdateFolder : handleAddFolder}>
-              {editingFolder ? 'Save' : 'Add'}
-            </Button>
-          </Box>
-        </div>
-      </div>
-    </div>
+              </ListGroup>
+              {isLeader && (
+                <div className="mt-4">
+                  <h3>{editingFolder ? 'Edit Folder' : 'Add Folder'}</h3>
+                  <Form className="d-flex">
+                    <FormControl
+                      placeholder="Folder Name"
+                      value={editingFolder ? editingFolder.name : newFolder}
+                      onChange={(e) => editingFolder ? setEditingFolder({ ...editingFolder, name: e.target.value }) : setNewFolder(e.target.value)}
+                      className="me-2"
+                    />
+                    <Button variant="primary" onClick={editingFolder ? handleUpdateFolder : handleAddFolder}>
+                      {editingFolder ? 'Save' : 'Add'}
+                    </Button>
+                  </Form>
+                </div>
+              )}
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 
