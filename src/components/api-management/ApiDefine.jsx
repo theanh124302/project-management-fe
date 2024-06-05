@@ -22,6 +22,14 @@ const ApiDefine = () => {
   const [showDocForm, setShowDocForm] = useState(false);
   const [currentDoc, setCurrentDoc] = useState(null);
   const [newDoc, setNewDoc] = useState({ description: '', url: '' });
+  const [showTaskForm, setShowTaskForm] = useState(false);
+  const [newTask, setNewTask] = useState({
+    name: '',
+    description: '',
+    priority: '',
+    startDate: '',
+    dueDate: ''
+  });
   const navigate = useNavigate();
   const userId = localStorage.getItem('userId');
 
@@ -140,6 +148,36 @@ const ApiDefine = () => {
     navigate(`/project/${projectId}/folder/${folderId}/api/${apiId}/design`);
   };
 
+  const handleTaskInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewTask({ ...newTask, [name]: value });
+  };
+
+  const handleAddTask = async () => {
+    if (!userId) {
+      console.error('User ID not found');
+      return;
+    }
+
+    try {
+      await axios.post(`${backendUrl}/api/v1/task/create`, {
+        ...newTask,
+        projectId: projectId,
+        apiId: apiId,
+        createdBy: userId,
+      });
+      setShowTaskForm(false);
+      setNewTask({ name: '', description: '', priority: '', startDate: '', dueDate: '' });
+    } catch (error) {
+      console.error('Error adding task:', error);
+    }
+  };
+
+  const handleCloseTaskForm = () => {
+    setShowTaskForm(false);
+    setNewTask({ name: '', description: '', priority: '', startDate: '', dueDate: '' });
+  };
+
   if (!api) {
     return <p>Loading API details...</p>;
   }
@@ -208,6 +246,9 @@ const ApiDefine = () => {
               <Button variant="secondary" onClick={handleNavigateToDesign} className="me-2">
                 Design
               </Button>
+              <Button variant="secondary" onClick={() => setShowTaskForm(true)} className="me-2">
+                Create Task
+              </Button>
               <h3 className="mt-4">Related Docs</h3>
               <ListGroup className="mb-3">
                 {docs.map((doc) => (
@@ -261,6 +302,76 @@ const ApiDefine = () => {
                   </Button>
                   <Button variant="primary" onClick={currentDoc ? handleUpdateDoc : handleAddDoc}>
                     {currentDoc ? 'Update Doc' : 'Add Doc'}
+                  </Button>
+                </Modal.Footer>
+              </Modal>
+              <Modal show={showTaskForm} onHide={handleCloseTaskForm}>
+                <Modal.Header closeButton>
+                  <Modal.Title>Add New Task</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <Form>
+                    <Form.Group controlId="formTaskName" className="mb-3">
+                      <Form.Label>Task Name</Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder="Enter task name"
+                        name="name"
+                        value={newTask.name}
+                        onChange={handleTaskInputChange}
+                      />
+                    </Form.Group>
+                    <Form.Group controlId="formTaskDescription" className="mb-3">
+                      <Form.Label>Description</Form.Label>
+                      <Form.Control
+                        as="textarea"
+                        rows={3}
+                        placeholder="Enter task description"
+                        name="description"
+                        value={newTask.description}
+                        onChange={handleTaskInputChange}
+                      />
+                    </Form.Group>
+                    <Form.Group controlId="formTaskPriority" className="mb-3">
+                      <Form.Label>Priority</Form.Label>
+                      <Form.Control
+                        as="select"
+                        name="priority"
+                        value={newTask.priority}
+                        onChange={handleTaskInputChange}
+                      >
+                        <option value="Low">Low</option>
+                        <option value="Medium">Medium</option>
+                        <option value="High">High</option>
+                        <option value="Critical">Critical</option>
+                      </Form.Control>
+                    </Form.Group>
+                    <Form.Group controlId="formTaskStartDate" className="mb-3">
+                      <Form.Label>Start Date</Form.Label>
+                      <Form.Control
+                        type="date"
+                        name="startDate"
+                        value={newTask.startDate}
+                        onChange={handleTaskInputChange}
+                      />
+                    </Form.Group>
+                    <Form.Group controlId="formTaskDueDate" className="mb-3">
+                      <Form.Label>Due Date</Form.Label>
+                      <Form.Control
+                        type="date"
+                        name="dueDate"
+                        value={newTask.dueDate}
+                        onChange={handleTaskInputChange}
+                      />
+                    </Form.Group>
+                  </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={handleCloseTaskForm}>
+                    Cancel
+                  </Button>
+                  <Button variant="primary" onClick={handleAddTask}>
+                    Add Task
                   </Button>
                 </Modal.Footer>
               </Modal>
