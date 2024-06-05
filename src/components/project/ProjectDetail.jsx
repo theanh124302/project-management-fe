@@ -18,6 +18,7 @@ const ProjectDetail = () => {
   const [editingMember, setEditingMember] = useState(null);
   const [startDate, setStartDate] = useState('');
   const [expectedEndDate, setExpectedEndDate] = useState('');
+  const [leaderName, setLeaderName] = useState('');
   const userId = localStorage.getItem('userId');
 
   useEffect(() => {
@@ -27,6 +28,9 @@ const ProjectDetail = () => {
         setProject(projectResponse.data.data);
         setStartDate(projectResponse.data.data.startDate);
         setExpectedEndDate(projectResponse.data.data.expectedEndDate);
+
+        const leaderResponse = await axios.get(`${backendUrl}/api/v1/user/findById/${projectResponse.data.data.leaderId}`);
+        setLeaderName(leaderResponse.data.data.name);
         
         const membersResponse = await axios.get(`${backendUrl}/api/v1/user/findByProjectId/${projectId}`);
         setMembers(membersResponse.data.data);
@@ -111,7 +115,7 @@ const ProjectDetail = () => {
                   <Card.Title>{project.name}</Card.Title>
                   <Card.Text>{project.description}</Card.Text>
                   <Card.Text><strong>Status:</strong> {project.status}</Card.Text>
-                  <Card.Text><strong>Leader ID:</strong> {project.leaderId}</Card.Text>
+                  <Card.Text><strong>Leader:</strong> {leaderName}</Card.Text>
                   {isLeader && (
                     <>
                       <Card.Text><strong>Start Date:</strong> 
