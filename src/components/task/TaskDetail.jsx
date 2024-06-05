@@ -22,6 +22,7 @@ const statusColors = {
 const TaskDetail = () => {
   const { taskId, projectId } = useParams();
   const [task, setTask] = useState(null);
+  const [apiName, setApiName] = useState('');
   const [username, setUsername] = useState('');
   const [assignError, setAssignError] = useState('');
   const [assignedUsers, setAssignedUsers] = useState([]);
@@ -50,6 +51,12 @@ const TaskDetail = () => {
           startDate: response.data.data.startDate,
           dueDate: response.data.data.dueDate
         });
+        
+        // Fetch API details
+        if (response.data.data.apiId) {
+          const apiResponse = await axios.get(`${backendUrl}/api/v1/api/findById?id=${response.data.data.apiId}`);
+          setApiName(apiResponse.data.data.name);
+        }
       } catch (error) {
         console.error('Error fetching task detail:', error);
       }
@@ -163,6 +170,7 @@ const TaskDetail = () => {
             <Card.Body>
               <Card.Title>{task.name}</Card.Title>
               <Card.Text><strong>Description:</strong> {task.description}</Card.Text>
+              <Card.Text><strong>API Name:</strong> {apiName}</Card.Text> {/* Display API name */}
               <Card.Text>
                 <strong>Status:</strong>
                 <Form.Select
