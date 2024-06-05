@@ -57,7 +57,7 @@ const UserProfile = () => {
   };
 
   return (
-    <div >
+    <div style={{padding: '20px'}}>
       <CustomAppBar />
       <Container component="main" maxWidth="md">
         <Box

@@ -3,9 +3,9 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import CustomAppBar from '../navbar/CustomAppBar';
 import VerticalTabs from '../tabs/VerticalTabs';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Box, Typography, TextField, Button, IconButton, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
+import { Container, Row, Col, Card, Button, Table, Form, FormControl } from 'react-bootstrap';
+import { FaEdit, FaTrashAlt } from 'react-icons/fa';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../public/css/ProjectDetail.css';
 
 const backendUrl = 'http://localhost:8080'; // Cập nhật URL backend cố định ở đây
@@ -16,13 +16,17 @@ const ProjectDetail = () => {
   const [members, setMembers] = useState([]);
   const [newMember, setNewMember] = useState({ username: '', role: '' });
   const [editingMember, setEditingMember] = useState(null);
-  const deleterId = localStorage.getItem('userId');
+  const [startDate, setStartDate] = useState('');
+  const [expectedEndDate, setExpectedEndDate] = useState('');
+  const userId = localStorage.getItem('userId');
 
   useEffect(() => {
     const fetchProjectDetails = async () => {
       try {
         const projectResponse = await axios.get(`${backendUrl}/api/v1/project/findById?id=${projectId}`);
         setProject(projectResponse.data.data);
+        setStartDate(projectResponse.data.data.startDate);
+        setExpectedEndDate(projectResponse.data.data.expectedEndDate);
         
         const membersResponse = await axios.get(`${backendUrl}/api/v1/user/findByProjectId/${projectId}`);
         setMembers(membersResponse.data.data);
@@ -58,7 +62,7 @@ const ProjectDetail = () => {
         params: {
           projectId,
           username,
-          deleterId,
+          deleterId: userId,
         },
       });
       const membersResponse = await axios.get(`${backendUrl}/api/v1/user/findByProjectId/${projectId}`);
@@ -78,91 +82,139 @@ const ProjectDetail = () => {
     setNewMember({ ...newMember, [name]: value });
   };
 
+  const handleUpdateProjectDates = async () => {
+    try {
+      const updatedProject = { ...project, startDate, expectedEndDate };
+      const response = await axios.post(`${backendUrl}/api/v1/project/update`, updatedProject, {
+        params: { userId }
+      });
+      setProject(response.data.data);
+    } catch (error) {
+      console.error('Error updating project dates:', error);
+    }
+  };
+
+  const isLeader = project && project.leaderId === parseInt(userId, 10);
+
   return (
-    <div style={{padding: '20px'}}>
+    <Container fluid className="project-detail-container">
       <CustomAppBar />
-      <div style={{ display: 'flex' }}>
-        <VerticalTabs projectId={projectId} />
-        <div style={{ marginLeft: '20px', padding: '20px', flex: 1 }}>
-          {project ? (
-            <>
-              <Box sx={{ mb: 3 }}>
-                <Typography variant="h4" component="h2">{project.name}</Typography>
-                <Typography variant="body1" component="p">{project.description}</Typography>
-                <Typography variant="body1" component="p"><strong>Status:</strong> {project.status}</Typography>
-                <Typography variant="body1" component="p"><strong>Leader ID:</strong> {project.leaderId}</Typography>
-                <Typography variant="body1" component="p"><strong>Start Date:</strong> {project.startDate}</Typography>
-                <Typography variant="body1" component="p"><strong>Expected End Date:</strong> {project.expectedEndDate}</Typography>
-                <Typography variant="body1" component="p"><strong>Version:</strong> {project.version}</Typography>
-                <Typography variant="body1" component="p"><strong>Number of Members:</strong> {project.numberOfMembers}</Typography>
-              </Box>
-              <Box sx={{ mb: 3 }}>
-                <Typography variant="h5" component="h3">Add or Edit Member</Typography>
-                <TextField
-                  label="Username"
-                  name="username"
-                  value={newMember.username}
-                  onChange={handleInputChange}
-                  sx={{ mr: 2 }}
-                />
-                <FormControl sx={{ mr: 2, minWidth: 200 }}>
-                  <InputLabel>Role</InputLabel>
-                  <Select
-                    label="Role"
-                    name="role"
-                    value={newMember.role}
-                    onChange={handleInputChange}
-                  >
-                    <MenuItem value="LEADER">LEADER</MenuItem>
-                    <MenuItem value="BE">BE</MenuItem>
-                    <MenuItem value="FE">FE</MenuItem>
-                    <MenuItem value="PM">PM</MenuItem>
-                    <MenuItem value="BA">BA</MenuItem>
-                  </Select>
-                </FormControl>
-                <Button variant="contained" color="primary" onClick={handleAddOrEditMember}>
-                  {editingMember ? 'Edit Member' : 'Add Member'}
-                </Button>
-              </Box>
-              <Box>
-                <Typography variant="h5" component="h3">Project Members</Typography>
-                <TableContainer component={Paper}>
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Name</TableCell>
-                        <TableCell>Email</TableCell>
-                        <TableCell>Role</TableCell>
-                        <TableCell>Actions</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {members.map((member) => (
-                        <TableRow key={member.id}>
-                          <TableCell>{member.name}</TableCell>
-                          <TableCell>{member.email}</TableCell>
-                          <TableCell>{member.role}</TableCell>
-                          <TableCell>
-                            <IconButton onClick={() => handleEditClick(member)}>
-                              <EditIcon />
-                            </IconButton>
-                            <IconButton onClick={() => handleDeleteMember(member.username)}>
-                              <DeleteIcon />
-                            </IconButton>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </Box>
-            </>
-          ) : (
-            <Typography variant="h6" component="p">Loading project details...</Typography>
-          )}
-        </div>
-      </div>
-    </div>
+      <Row>
+        <Col xs={12} md={3}>
+          <VerticalTabs projectId={projectId} />
+        </Col>
+        <Col xs={12} md={9}>
+          <Card className="mt-4">
+            <Card.Body>
+              {project ? (
+                <>
+                  <Card.Title>{project.name}</Card.Title>
+                  <Card.Text>{project.description}</Card.Text>
+                  <Card.Text><strong>Status:</strong> {project.status}</Card.Text>
+                  <Card.Text><strong>Leader ID:</strong> {project.leaderId}</Card.Text>
+                  {isLeader && (
+                    <>
+                      <Card.Text><strong>Start Date:</strong> 
+                        <FormControl
+                          type="date"
+                          value={startDate}
+                          onChange={(e) => setStartDate(e.target.value)}
+                        />
+                      </Card.Text>
+                      <Card.Text><strong>Expected End Date:</strong>
+                        <FormControl
+                          type="date"
+                          value={expectedEndDate}
+                          onChange={(e) => setExpectedEndDate(e.target.value)}
+                        />
+                      </Card.Text>
+                      <Button variant="primary" className="mt-2" onClick={handleUpdateProjectDates}>
+                        Update Dates
+                      </Button>
+                    </>
+                  )}
+                  <Card.Text><strong>Version:</strong> {project.version}</Card.Text>
+                  <Card.Text><strong>Number of Members:</strong> {project.numberOfMembers}</Card.Text>
+
+                  {isLeader && (
+                    <Card className="mt-4">
+                      <Card.Body>
+                        <Card.Title>Add or Edit Member</Card.Title>
+                        <Form className="d-flex">
+                          <FormControl
+                            placeholder="Username"
+                            name="username"
+                            value={newMember.username}
+                            onChange={handleInputChange}
+                            className="me-2"
+                          />
+                          <FormControl
+                            as="select"
+                            name="role"
+                            value={newMember.role}
+                            onChange={handleInputChange}
+                            className="me-2"
+                          >
+                            <option value="">Select Role</option>
+                            <option value="LEADER">LEADER</option>
+                            <option value="BE">BE</option>
+                            <option value="FE">FE</option>
+                            <option value="PM">PM</option>
+                            <option value="BA">BA</option>
+                          </FormControl>
+                          <Button onClick={handleAddOrEditMember}>
+                            {editingMember ? 'Edit Member' : 'Add Member'}
+                          </Button>
+                        </Form>
+                      </Card.Body>
+                    </Card>
+                  )}
+
+                  <Card className="mt-4">
+                    <Card.Body>
+                      <Card.Title>Project Members</Card.Title>
+                      <Table striped bordered hover>
+                        <thead>
+                          <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {members.map((member) => (
+                            <tr key={member.id}>
+                              <td>{member.name}</td>
+                              <td>{member.email}</td>
+                              <td>{member.role}</td>
+                              <td>
+                                {isLeader && (
+                                  <>
+                                    <Button variant="outline-primary" className="me-2" onClick={() => handleEditClick(member)}>
+                                      <FaEdit />
+                                    </Button>
+                                    <Button variant="outline-danger" onClick={() => handleDeleteMember(member.username)}>
+                                      <FaTrashAlt />
+                                    </Button>
+                                  </>
+                                )}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </Table>
+                    </Card.Body>
+                  </Card>
+                </>
+              ) : (
+                <Card.Text>Loading project details...</Card.Text>
+              )}
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

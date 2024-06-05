@@ -1,0 +1,22 @@
+.project-detail-container {
+    padding: 20px;
+  }
+  
+  .project-detail-content {
+    display: flex;
+  }
+  
+  .project-detail-main {
+    margin-left: 20px;
+    padding: 20px;
+    flex: 1;
+  }
+  
+  .mt-4 {
+    margin-top: 1.5rem;
+  }
+  
+  .me-2 {
+    margin-right: 0.5rem;
+  }
+  
