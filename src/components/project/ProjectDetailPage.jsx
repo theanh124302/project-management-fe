@@ -9,7 +9,7 @@ const ProjectDetailPage = () => {
   const username = localStorage.getItem('username');
 
   return (
-    <div style={{padding: '20px'}}>
+    <div>
       <CustomAppBar username={username} />
       <div style={{ display: 'flex' }}>
         <VerticalTabs projectId={projectId} />

@@ -76,11 +76,11 @@ const ProjectList = () => {
   };
 
   return (
-    <Container>
+    <Container fluid>
       <CustomAppBar />
       <h2 className="my-4">Welcome, {userName}!</h2>
       <div className="text-end mb-3">
-        <Button variant="primary" onClick={() => setShowForm(true)}>
+        <Button variant="success" onClick={() => setShowForm(true)}>
           Add Project
         </Button>
       </div>
@@ -137,7 +137,7 @@ const ProjectList = () => {
           <Button variant="secondary" onClick={handleCloseForm}>
             Cancel
           </Button>
-          <Button variant="primary" onClick={handleAddProject}>
+          <Button variant="success" onClick={handleAddProject}>
             Add Project
           </Button>
         </Modal.Footer>

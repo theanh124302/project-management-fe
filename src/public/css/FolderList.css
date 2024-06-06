@@ -1,3 +1,7 @@
+.folder-list-container {
+  padding: 0px;
+}
+
 .folder-card {
   position: relative;
 }
