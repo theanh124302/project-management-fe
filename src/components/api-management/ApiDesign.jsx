@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Card, Button, ListGroup, Modal, Form } from 'react-bootstrap';
 import CustomAppBar from '../navbar/CustomAppBar';
 import VerticalTabs from '../tabs/VerticalTabs';
@@ -15,11 +15,13 @@ const ApiDesign = () => {
   const [bodies, setBodies] = useState([]);
   const [authRoles, setAuthRoles] = useState([]);
   const [headers, setHeaders] = useState([]);
+  const [api, setApi] = useState(null);
   const [showParamForm, setShowParamForm] = useState(false);
   const [showBodyForm, setShowBodyForm] = useState(false);
   const [showAuthRoleForm, setShowAuthRoleForm] = useState(false);
   const [showHeaderForm, setShowHeaderForm] = useState(false);
   const [showApiForm, setShowApiForm] = useState(false);
+  const [showTaskForm, setShowTaskForm] = useState(false);
   const [currentParam, setCurrentParam] = useState(null);
   const [currentBody, setCurrentBody] = useState(null);
   const [currentAuthRole, setCurrentAuthRole] = useState(null);
@@ -29,6 +31,16 @@ const ApiDesign = () => {
   const [newBody, setNewBody] = useState({ bodyKey: '', type: '', description: '', sample: '' });
   const [newAuthRole, setNewAuthRole] = useState({ role: '' });
   const [newHeader, setNewHeader] = useState({ headerKey: '', type: '', description: '', sample: '' });
+  const [newTask, setNewTask] = useState({
+    name: '',
+    description: '',
+    priority: '',
+    startDate: '',
+    dueDate: '',
+    lifeCycle: 'DESIGN'
+  });
+  const navigate = useNavigate();
+  const userId = localStorage.getItem('userId');
 
   useEffect(() => {
     const fetchParams = async () => {
@@ -71,6 +83,7 @@ const ApiDesign = () => {
       try {
         const response = await axios.get(`${backendUrl}/api/v1/api/findById?id=${apiId}`);
         setApiDetails({ method: response.data.data.method, url: response.data.data.url });
+        setApi(response.data.data);
       } catch (error) {
         console.error('Error fetching API details:', error);
       }
@@ -106,6 +119,11 @@ const ApiDesign = () => {
   const handleHeaderInputChange = (e) => {
     const { name, value } = e.target;
     setNewHeader({ ...newHeader, [name]: value });
+  };
+
+  const handleTaskInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewTask({ ...newTask, [name]: value });
   };
 
   const handleAddParam = async () => {
@@ -153,6 +171,32 @@ const ApiDesign = () => {
       setHeaders(response.data.data);
     } catch (error) {
       console.error('Error adding header:', error);
+    }
+  };
+
+  const handleAddTask = async () => {
+    if (!userId) {
+      console.error('User ID not found');
+      return;
+    }
+
+    const currentDate = new Date().toISOString().split('T')[0]; // Ngày hiện tại
+    const taskName = `Task for ${api.name} on ${currentDate}`; // Tên task dựa trên tiêu đề và ngày hiện tại
+
+    try {
+      await axios.post(`${backendUrl}/api/v1/task/create`, {
+        ...newTask,
+        name: taskName,
+        projectId: projectId,
+        apiId: apiId,
+        createdBy: userId,
+        lifeCycle: 'DESIGN',
+        startDate: currentDate // Ngày tạo task
+      });
+      setShowTaskForm(false);
+      setNewTask({ name: '', description: '', priority: '', startDate: '', dueDate: '', lifeCycle: 'DESIGN' });
+    } catch (error) {
+      console.error('Error adding task:', error);
     }
   };
 
@@ -315,6 +359,15 @@ const ApiDesign = () => {
     setShowApiForm(false);
   };
 
+  const handleCloseTaskForm = () => {
+    setShowTaskForm(false);
+    setNewTask({ name: '', description: '', priority: '', startDate: '', dueDate: '', lifeCycle: 'DESIGN' });
+  };
+
+  if (!api) {
+    return <p>Loading API details...</p>;
+  }
+
   return (
     <Container fluid className="api-design-container">
       <CustomAppBar />
@@ -325,7 +378,7 @@ const ApiDesign = () => {
         <Col xs={12} md={9}>
           <Card className="mt-4">
             <Card.Body>
-              <Card.Title>API Details</Card.Title>
+              <Card.Title>Design: {api.name}</Card.Title>
               <ListGroup className="mb-3">
                 <ListGroup.Item>
                   <div>
@@ -424,6 +477,9 @@ const ApiDesign = () => {
               </ListGroup>
               <Button variant="secondary" onClick={() => setShowAuthRoleForm(true)}>
                 Add Role
+              </Button>
+              <Button variant="secondary" onClick={() => setShowTaskForm(true)} className="me-2">
+                Create Task
               </Button>
               <Modal show={showApiForm} onHide={handleCloseApiForm}>
                 <Modal.Header closeButton>
@@ -650,6 +706,77 @@ const ApiDesign = () => {
                   </Button>
                   <Button variant="primary" onClick={currentHeader ? handleUpdateHeader : handleAddHeader}>
                     {currentHeader ? 'Update Header' : 'Add Header'}
+                  </Button>
+                </Modal.Footer>
+              </Modal>
+              <Modal show={showTaskForm} onHide={handleCloseTaskForm}>
+                <Modal.Header closeButton>
+                  <Modal.Title>Add New Task</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <Form>
+                    <Form.Group controlId="formTaskName" className="mb-3">
+                      <Form.Label>Task Name</Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder="Enter task name"
+                        name="name"
+                        value={newTask.name}
+                        onChange={handleTaskInputChange}
+                        disabled
+                      />
+                    </Form.Group>
+                    <Form.Group controlId="formTaskDescription" className="mb-3">
+                      <Form.Label>Description</Form.Label>
+                      <Form.Control
+                        as="textarea"
+                        rows={3}
+                        placeholder="Enter task description"
+                        name="description"
+                        value={newTask.description}
+                        onChange={handleTaskInputChange}
+                      />
+                    </Form.Group>
+                    <Form.Group controlId="formTaskPriority" className="mb-3">
+                      <Form.Label>Priority</Form.Label>
+                      <Form.Control
+                        as="select"
+                        name="priority"
+                        value={newTask.priority}
+                        onChange={handleTaskInputChange}
+                      >
+                        <option value="Low">Low</option>
+                        <option value="Medium">Medium</option>
+                        <option value="High">High</option>
+                        <option value="Critical">Critical</option>
+                      </Form.Control>
+                    </Form.Group>
+                    <Form.Group controlId="formTaskStartDate" className="mb-3">
+                      <Form.Label>Start Date</Form.Label>
+                      <Form.Control
+                        type="date"
+                        name="startDate"
+                        value={newTask.startDate}
+                        onChange={handleTaskInputChange}
+                      />
+                    </Form.Group>
+                    <Form.Group controlId="formTaskDueDate" className="mb-3">
+                      <Form.Label>Due Date</Form.Label>
+                      <Form.Control
+                        type="date"
+                        name="dueDate"
+                        value={newTask.dueDate}
+                        onChange={handleTaskInputChange}
+                      />
+                    </Form.Group>
+                  </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={handleCloseTaskForm}>
+                    Cancel
+                  </Button>
+                  <Button variant="primary" onClick={handleAddTask}>
+                    Add Task
                   </Button>
                 </Modal.Footer>
               </Modal>
