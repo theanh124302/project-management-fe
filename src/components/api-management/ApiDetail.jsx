@@ -27,7 +27,7 @@ const ApiDetail = () => {
   };
 
   return (
-    <div style={{ padding: '20px' }}>
+    <div fluid>
       <CustomAppBar />
       <div style={{ display: 'flex' }}>
         <VerticalTabs />

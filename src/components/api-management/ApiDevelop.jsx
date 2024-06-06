@@ -35,6 +35,7 @@ const ApiDevelop = () => {
         const response = await axios.get(`${backendUrl}/api/v1/api/findById?id=${apiId}`);
         const data = response.data.data;
         setApiDetails({
+          name: data.name,
           method: data.method,
           url: data.url,
           token: data.token || '',
@@ -94,7 +95,7 @@ const ApiDevelop = () => {
     }
 
     const currentDate = new Date().toISOString().split('T')[0];
-    const taskName = `Task for ${apiDetails.url} on ${currentDate}`;
+    const taskName = `Develop: ${apiDetails.name} on ${currentDate}`;
 
     try {
       await axios.post(`${backendUrl}/api/v1/task/create`, {
@@ -162,12 +163,12 @@ const ApiDevelop = () => {
                 </Form.Group>
                 <Row className="mb-3">
                   <Col xs="auto">
-                    <Button variant="success" onClick={handleSave}>
+                    <Button variant="success" size="sm" onClick={handleSave}>
                       Save
                     </Button>
                   </Col>
                   <Col xs="auto">
-                    <Button variant="primary" onClick={handleSendRequest}>
+                    <Button variant="primary" size="sm" onClick={handleSendRequest}>
                       Send Request
                     </Button>
                   </Col>

@@ -171,7 +171,7 @@ const ApiDefine = () => {
     }
 
     const currentDate = new Date().toISOString().split('T')[0]; // Ngày hiện tại
-    const taskName = `Task for ${api.name} on ${currentDate}`; // Tên task dựa trên tiêu đề và ngày hiện tại
+    const taskName = `Define: ${api.name} on ${currentDate}`; // Tên task dựa trên tiêu đề và ngày hiện tại
 
     try {
       await axios.post(`${backendUrl}/api/v1/task/create`, {
