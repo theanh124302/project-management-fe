@@ -229,7 +229,7 @@ const TaskDetail = () => {
                   <option value="PENDING" className="text-primary">PENDING</option>
                 </Form.Select>
                 {isTaskCreatedByUser && (
-                  <Button variant="primary" className="mt-2" onClick={handleUpdateStatus}>
+                  <Button variant="success" className="mt-2" onClick={handleUpdateStatus}>
                     Update Status
                   </Button>
                 )}
@@ -262,7 +262,7 @@ const TaskDetail = () => {
                       onChange={(e) => setUsername(e.target.value)}
                     />
                   </Form.Group>
-                  <Button variant="primary" onClick={handleAssign}>
+                  <Button variant="success" onClick={handleAssign}>
                     Assign Task
                   </Button>
                   {assignError && <p className="text-danger mt-2">{assignError}</p>}
@@ -270,14 +270,17 @@ const TaskDetail = () => {
               )}
               {isTaskCreatedByUser && (
                 <>
-                  <Button variant="primary" className="mt-3 me-2" onClick={handleEditTask}>
+                  <Button variant="success" className="mt-3 me-2" onClick={handleEditTask}>
                     Edit Task
                   </Button>
-                  <Button variant="danger" className="mt-3" onClick={handleDeleteTask}>
+                  <Button variant="danger" className="mt-3 me-2" onClick={handleDeleteTask}>
                     Delete Task
                   </Button>
                 </>
               )}
+              <Button variant="warning" className="mt-3 me-2" onClick={() => navigate(`/project/${projectId}/task/${taskId}/comment`)}>
+                Comment
+              </Button>
               <Button variant="secondary" className="mt-3" onClick={() => navigate(-1)}>
                 Back to Task List
               </Button>

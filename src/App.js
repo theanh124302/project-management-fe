@@ -9,12 +9,12 @@ import EnvList from './components/env/EnvList';
 import ProjectDetail from './components/project/ProjectDetail';
 import TaskList from './components/task/TaskList';
 import TaskDetail from './components/task/TaskDetail';
+import TaskComments from './components/task/TaskComments'; // Import TaskComments
 import FolderList from './components/api-management/FolderList';
 import ApiList from './components/api-management/ApiList';
 import ApiDefine from './components/api-management/ApiDefine';
 import ApiDesign from './components/api-management/ApiDesign';
-import DesignDocs from './components/api-management/DesignDocs'; // Import DesignDocs
-import ApiDevelop from './components/api-management/ApiDevelop'; // Import ApiDevelop
+import ApiDevelop from './components/api-management/ApiDevelop';
 
 function App() {
   return (
@@ -30,12 +30,12 @@ function App() {
         <Route path='/project/:projectId/detail' element={<ProjectDetail />} />
         <Route path='/project/:projectId/task' element={<TaskList />} />
         <Route path='/project/:projectId/task/:taskId' element={<TaskDetail />} />
+        <Route path='/project/:projectId/task/:taskId/comment' element={<TaskComments />} /> {/* Add TaskComments route */}
         <Route path='/project/:projectId/api' element={<FolderList />} />
         <Route path='/project/:projectId/folder/:folderId/apis' element={<ApiList />} />
         <Route path='/project/:projectId/folder/:folderId/api/:apiId' element={<ApiDefine />} />
         <Route path='/project/:projectId/folder/:folderId/api/:apiId/design' element={<ApiDesign />} />
-        <Route path='/project/:projectId/folder/:folderId/api/:apiId/designDocs' element={<DesignDocs />} /> {/* Route for DesignDocs */}
-        <Route path='/project/:projectId/folder/:folderId/api/:apiId/develop' element={<ApiDevelop />} /> {/* Route for API Develop */}
+        <Route path='/project/:projectId/folder/:folderId/api/:apiId/develop' element={<ApiDevelop />} />
       </Routes>
     </Router>
   );
