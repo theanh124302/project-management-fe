@@ -25,6 +25,7 @@ const TaskDetail = () => {
   const [apiName, setApiName] = useState('');
   const [apiId, setApiId] = useState(null);
   const [folderId, setFolderId] = useState(null);
+  const [lifeCycle, setLifeCycle] = useState('');
   const [username, setUsername] = useState('');
   const [assignError, setAssignError] = useState('');
   const [assignedUsers, setAssignedUsers] = useState([]);
@@ -44,21 +45,23 @@ const TaskDetail = () => {
     const fetchTaskDetail = async () => {
       try {
         const response = await axios.get(`${backendUrl}/api/v1/task/findById?id=${taskId}`);
-        setTask(response.data.data);
-        setNewStatus(response.data.data.status);
+        const taskData = response.data.data;
+        setTask(taskData);
+        setNewStatus(taskData.status);
+        setLifeCycle(taskData.lifeCycle); // Set lifeCycle from task data
         setNewTask({
-          name: response.data.data.name,
-          description: response.data.data.description,
-          priority: response.data.data.priority,
-          startDate: response.data.data.startDate,
-          dueDate: response.data.data.dueDate
+          name: taskData.name,
+          description: taskData.description,
+          priority: taskData.priority,
+          startDate: taskData.startDate,
+          dueDate: taskData.dueDate
         });
         
         // Fetch API details
-        if (response.data.data.apiId) {
-          const apiResponse = await axios.get(`${backendUrl}/api/v1/api/findById?id=${response.data.data.apiId}`);
+        if (taskData.apiId) {
+          const apiResponse = await axios.get(`${backendUrl}/api/v1/api/findById?id=${taskData.apiId}`);
           setApiName(apiResponse.data.data.name);
-          setApiId(response.data.data.apiId);
+          setApiId(taskData.apiId);
           setFolderId(apiResponse.data.data.folderId); // Set folderId from API details
         }
       } catch (error) {
@@ -157,8 +160,31 @@ const TaskDetail = () => {
   };
 
   const handleApiClick = () => {
-    if (apiId && folderId) {
-      navigate(`/project/${projectId}/folder/${folderId}/api/${apiId}`);
+    if (apiId && folderId && lifeCycle) {
+      let path;
+      switch (lifeCycle) {
+        case 'DEFINE':
+          path = '';
+          break;
+        case 'DESIGN':
+          path = 'design';
+          break;
+        case 'DEVELOP':
+          path = 'develop';
+          break;
+        case 'TEST':
+          path = 'test';
+          break;
+        case 'DEPLOY':
+          path = 'deploy';
+          break;
+        case 'MAINTAIN':
+          path = 'maintain';
+          break;
+        default:
+          path = '';
+      }
+      navigate(`/project/${projectId}/folder/${folderId}/api/${apiId}/${path}`);
     }
   };
 

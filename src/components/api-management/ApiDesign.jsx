@@ -565,6 +565,9 @@ const ApiDesign = () => {
               <Button variant="success" className="me-2" onClick={() => setShowDesignResponseForm(true)}>
                 Add Design Response
               </Button>
+              <Button variant="primary" className="me-2" onClick={() => navigate(`/project/${projectId}/folder/${folderId}/api/${apiId}/designDocs`)}>
+                Design Docs
+              </Button>
               <Button variant="warning" onClick={() => setShowTaskForm(true)} className="me-2">
                 Create Task
               </Button>
