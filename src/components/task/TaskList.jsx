@@ -98,7 +98,7 @@ const TaskList = () => {
         </Col>
         <Col xs={12} md={9}>
           <h2>Task List</h2>
-          <Row>
+          <Row className="justify-content-center">
             {tasks.map((task) => (
               <Col key={task.id} xs={12} md={6} lg={4} className="mb-3">
                 <Card onClick={() => handleTaskClick(task.id)} className={`task-card border-${statusColors[task.status]}`} style={{ cursor: 'pointer' }}>
