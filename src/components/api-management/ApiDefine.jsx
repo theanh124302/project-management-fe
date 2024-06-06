@@ -1,3 +1,4 @@
+// Các import không đổi
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -266,7 +267,7 @@ const ApiDefine = () => {
                     type="text"
                     name="useCaseDiagram"
                     value={formData.useCaseDiagram}
-                    onChange={handleInputChange}
+                    disabled
                   />
                 </Form.Group>
                 <Form.Group controlId="formSequenceDiagram" className="mb-3">
@@ -275,7 +276,7 @@ const ApiDefine = () => {
                     type="text"
                     name="sequenceDiagram"
                     value={formData.sequenceDiagram}
-                    onChange={handleInputChange}
+                    disabled
                   />
                 </Form.Group>
                 <Form.Group controlId="formActivityDiagram" className="mb-3">
@@ -284,7 +285,7 @@ const ApiDefine = () => {
                     type="text"
                     name="activityDiagram"
                     value={formData.activityDiagram}
-                    onChange={handleInputChange}
+                    disabled
                   />
                 </Form.Group>
                 <Form.Group controlId="formClassDiagram" className="mb-3">
@@ -293,7 +294,7 @@ const ApiDefine = () => {
                     type="text"
                     name="classDiagram"
                     value={formData.classDiagram}
-                    onChange={handleInputChange}
+                    disabled
                   />
                 </Form.Group>
               </Form>

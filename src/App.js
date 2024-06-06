@@ -13,6 +13,7 @@ import FolderList from './components/api-management/FolderList';
 import ApiList from './components/api-management/ApiList';
 import ApiDefine from './components/api-management/ApiDefine';
 import ApiDesign from './components/api-management/ApiDesign';
+import DesignDocs from './components/api-management/DesignDocs'; // Import DesignDocs
 import ApiDevelop from './components/api-management/ApiDevelop'; // Import ApiDevelop
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
         <Route path='/project/:projectId/folder/:folderId/apis' element={<ApiList />} />
         <Route path='/project/:projectId/folder/:folderId/api/:apiId' element={<ApiDefine />} />
         <Route path='/project/:projectId/folder/:folderId/api/:apiId/design' element={<ApiDesign />} />
+        <Route path='/project/:projectId/folder/:folderId/api/:apiId/designDocs' element={<DesignDocs />} /> {/* Route for DesignDocs */}
         <Route path='/project/:projectId/folder/:folderId/api/:apiId/develop' element={<ApiDevelop />} /> {/* Route for API Develop */}
       </Routes>
     </Router>

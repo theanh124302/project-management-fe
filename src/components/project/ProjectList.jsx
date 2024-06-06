@@ -67,7 +67,7 @@ const ProjectList = () => {
   };
 
   const handleProjectClick = (projectId) => {
-    navigate(`/project/${projectId}?username=${username}`);
+    navigate(`/project/${projectId}/detail`);
   };
 
   const handleCloseForm = () => {
