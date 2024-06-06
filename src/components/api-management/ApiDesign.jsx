@@ -562,11 +562,17 @@ const ApiDesign = () => {
                   </ListGroup.Item>
                 ))}
               </ListGroup>
-              <Button variant="secondary" onClick={() => setShowDesignResponseForm(true)}>
+              <Button variant="secondary" className="me-2" onClick={() => setShowDesignResponseForm(true)}>
                 Add Design Response
               </Button>
               <Button variant="secondary" onClick={() => setShowTaskForm(true)} className="me-2">
                 Create Task
+              </Button>
+              <Button variant="secondary" className="me-2" onClick={() => navigate(`/project/${projectId}/folder/${folderId}/api/${apiId}`)}>
+                Define
+              </Button>
+              <Button variant="secondary" onClick={() => navigate(`/project/${projectId}/folder/${folderId}/api/${apiId}/develop`)}>
+                Develop
               </Button>
               <Modal show={showApiForm} onHide={handleCloseApiForm}>
                 <Modal.Header closeButton>
