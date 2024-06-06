@@ -247,8 +247,12 @@ const ProjectDetail = () => {
                             <option value="">Select Role</option>
                             <option value="BE">BE</option>
                             <option value="FE">FE</option>
-                            <option value="PM">PM</option>
+                            <option value="QA">QA</option>
+
                             <option value="BA">BA</option>
+                            <option value="TL">TL</option>
+                            <option value="TESTER">TESTER</option>
+                            <option value="DEVOPS">DEVOPS</option>
                           </FormControl>
                           <Button onClick={handleAddOrEditMember}>
                             {editingMember ? 'Edit Member' : 'Add Member'}
