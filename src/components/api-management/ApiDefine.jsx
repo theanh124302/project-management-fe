@@ -297,18 +297,18 @@ const ApiDefine = () => {
                   />
                 </Form.Group>
               </Form>
-              <Button variant="primary" onClick={handleUpdateApi} className="me-2">
+              <Button variant="success" onClick={handleUpdateApi} className="me-2">
                 Update API
               </Button>
               <Button variant="danger" onClick={handleDeleteApi} className="me-2">
                 Delete API
               </Button>
-              <Button variant="secondary" onClick={handleNavigateToDesign} className="me-2">
-                Design
-              </Button>
-              <Button variant="secondary" onClick={() => setShowTaskForm(true)} className="me-2">
+              <Button variant="warning" onClick={() => setShowTaskForm(true)} className="me-2">
                 Create Task
               </Button>
+              <Button variant="primary" onClick={handleNavigateToDesign} className="me-2">
+                Design
+              </Button>   
               <h3 className="mt-4">Related Docs</h3>
               <ListGroup className="mb-3">
                 {docs.map((doc) => (
@@ -428,10 +428,10 @@ const ApiDefine = () => {
                   </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                  <Button variant="secondary" onClick={handleCloseTaskForm}>
+                  <Button variant="danger" onClick={handleCloseTaskForm}>
                     Cancel
                   </Button>
-                  <Button variant="primary" onClick={handleAddTask}>
+                  <Button variant="success" onClick={handleAddTask}>
                     Add Task
                   </Button>
                 </Modal.Footer>

@@ -20,6 +20,7 @@ const ProjectDetail = () => {
   const [expectedEndDate, setExpectedEndDate] = useState('');
   const [leaderName, setLeaderName] = useState('');
   const [showForm, setShowForm] = useState(false);
+  const [editingDates, setEditingDates] = useState(false);
   const [newProject, setNewProject] = useState({
     name: '',
     description: '',
@@ -33,8 +34,8 @@ const ProjectDetail = () => {
       try {
         const projectResponse = await axios.get(`${backendUrl}/api/v1/project/findById?id=${projectId}`);
         setProject(projectResponse.data.data);
-        setStartDate(projectResponse.data.data.startDate);
-        setExpectedEndDate(projectResponse.data.data.expectedEndDate);
+        setStartDate(projectResponse.data.data.startDate.split('T')[0]); // Chỉ lấy phần ngày tháng năm
+        setExpectedEndDate(projectResponse.data.data.expectedEndDate.split('T')[0]); // Chỉ lấy phần ngày tháng năm
 
         const leaderResponse = await axios.get(`${backendUrl}/api/v1/user/findById/${projectResponse.data.data.leaderId}`);
         setLeaderName(leaderResponse.data.data.name);
@@ -100,6 +101,7 @@ const ProjectDetail = () => {
         params: { userId }
       });
       setProject(response.data.data);
+      setEditingDates(false);
     } catch (error) {
       console.error('Error updating project dates:', error);
     }
@@ -176,23 +178,38 @@ const ProjectDetail = () => {
                   <Card.Text><strong>Leader:</strong> {leaderName}</Card.Text>
                   {isLeader ? (
                     <>
-                      <Card.Text><strong>Start Date:</strong> 
-                        <FormControl
-                          type="date"
-                          value={startDate}
-                          onChange={(e) => setStartDate(e.target.value)}
-                        />
-                      </Card.Text>
-                      <Card.Text><strong>Expected End Date:</strong>
-                        <FormControl
-                          type="date"
-                          value={expectedEndDate}
-                          onChange={(e) => setExpectedEndDate(e.target.value)}
-                        />
-                      </Card.Text>
-                      <Button variant="primary" className="mt-2" onClick={handleUpdateProjectDates}>
-                        Update Dates
-                      </Button>
+                      {editingDates ? (
+                        <>
+                          <Card.Text><strong>Start Date:</strong> 
+                            <FormControl
+                              type="date"
+                              value={startDate}
+                              onChange={(e) => setStartDate(e.target.value)}
+                            />
+                          </Card.Text>
+                          <Card.Text><strong>Expected End Date:</strong>
+                            <FormControl
+                              type="date"
+                              value={expectedEndDate}
+                              onChange={(e) => setExpectedEndDate(e.target.value)}
+                            />
+                          </Card.Text>
+                          <Button variant="primary" className="mt-2" onClick={handleUpdateProjectDates}>
+                            Save Dates
+                          </Button>
+                          <Button variant="secondary" className="mt-2 ms-2" onClick={() => setEditingDates(false)}>
+                            Cancel
+                          </Button>
+                        </>
+                      ) : (
+                        <>
+                          <Card.Text><strong>Start Date:</strong> {startDate}</Card.Text>
+                          <Card.Text><strong>Expected End Date:</strong> {expectedEndDate}</Card.Text>
+                          <Button variant="primary" className="mt-2" onClick={() => setEditingDates(true)}>
+                            Update Dates
+                          </Button>
+                        </>
+                      )}
                       <Button variant="primary" className="mt-2 ms-2" onClick={handleEditProject}>
                         Edit Project
                       </Button>

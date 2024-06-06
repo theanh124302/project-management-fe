@@ -478,7 +478,7 @@ const ApiDesign = () => {
                   </ListGroup.Item>
                 ))}
               </ListGroup>
-              <Button variant="secondary" onClick={() => setShowParamForm(true)}>
+              <Button variant="success" onClick={() => setShowParamForm(true)}>
                 Add Param
               </Button>
               <Card.Title className="mt-4">API Bodies</Card.Title>
@@ -499,7 +499,7 @@ const ApiDesign = () => {
                   </ListGroup.Item>
                 ))}
               </ListGroup>
-              <Button variant="secondary" onClick={() => setShowBodyForm(true)}>
+              <Button variant="success" onClick={() => setShowBodyForm(true)}>
                 Add Body
               </Button>
               <Card.Title className="mt-4">API Access Roles</Card.Title>
@@ -520,7 +520,7 @@ const ApiDesign = () => {
                   </ListGroup.Item>
                 ))}
               </ListGroup>
-              <Button variant="secondary" onClick={() => setShowAuthRoleForm(true)}>
+              <Button variant="success" onClick={() => setShowAuthRoleForm(true)}>
                 Add Role
               </Button>
               <Card.Title className="mt-4">API Headers</Card.Title>
@@ -541,7 +541,7 @@ const ApiDesign = () => {
                   </ListGroup.Item>
                 ))}
               </ListGroup>
-              <Button variant="secondary" onClick={() => setShowHeaderForm(true)}>
+              <Button variant="success" onClick={() => setShowHeaderForm(true)}>
                 Add Header
               </Button>
               <Card.Title className="mt-4">Design Responses</Card.Title>
@@ -562,16 +562,16 @@ const ApiDesign = () => {
                   </ListGroup.Item>
                 ))}
               </ListGroup>
-              <Button variant="secondary" className="me-2" onClick={() => setShowDesignResponseForm(true)}>
+              <Button variant="success" className="me-2" onClick={() => setShowDesignResponseForm(true)}>
                 Add Design Response
               </Button>
-              <Button variant="secondary" onClick={() => setShowTaskForm(true)} className="me-2">
+              <Button variant="warning" onClick={() => setShowTaskForm(true)} className="me-2">
                 Create Task
               </Button>
-              <Button variant="secondary" className="me-2" onClick={() => navigate(`/project/${projectId}/folder/${folderId}/api/${apiId}`)}>
+              <Button variant="primary" className="me-2" onClick={() => navigate(`/project/${projectId}/folder/${folderId}/api/${apiId}`)}>
                 Define
               </Button>
-              <Button variant="secondary" onClick={() => navigate(`/project/${projectId}/folder/${folderId}/api/${apiId}/develop`)}>
+              <Button variant="primary" onClick={() => navigate(`/project/${projectId}/folder/${folderId}/api/${apiId}/develop`)}>
                 Develop
               </Button>
               <Modal show={showApiForm} onHide={handleCloseApiForm}>
@@ -901,10 +901,10 @@ const ApiDesign = () => {
                   </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                  <Button variant="secondary" onClick={handleCloseTaskForm}>
+                  <Button variant="danger" onClick={handleCloseTaskForm}>
                     Cancel
                   </Button>
-                  <Button variant="primary" onClick={handleAddTask}>
+                  <Button variant="success" onClick={handleAddTask}>
                     Add Task
                   </Button>
                 </Modal.Footer>
