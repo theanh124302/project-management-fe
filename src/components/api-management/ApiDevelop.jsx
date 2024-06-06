@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Card, Button, Form } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Form, Modal } from 'react-bootstrap';
 import CustomAppBar from '../navbar/CustomAppBar';
 import VerticalTabs from '../tabs/VerticalTabs';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -17,7 +17,17 @@ const ApiDevelop = () => {
   const [header, setHeader] = useState('');
   const [param, setParam] = useState('');
   const [body, setBody] = useState('');
+  const [showTaskForm, setShowTaskForm] = useState(false);
+  const [newTask, setNewTask] = useState({
+    name: '',
+    description: '',
+    priority: '',
+    startDate: '',
+    dueDate: '',
+    lifeCycle: 'DEVELOP'
+  });
   const navigate = useNavigate();
+  const userId = localStorage.getItem('userId');
 
   useEffect(() => {
     const fetchApiDetails = async () => {
@@ -72,6 +82,42 @@ const ApiDevelop = () => {
     }
   };
 
+  const handleTaskInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewTask({ ...newTask, [name]: value });
+  };
+
+  const handleAddTask = async () => {
+    if (!userId) {
+      console.error('User ID not found');
+      return;
+    }
+
+    const currentDate = new Date().toISOString().split('T')[0];
+    const taskName = `Task for ${apiDetails.url} on ${currentDate}`;
+
+    try {
+      await axios.post(`${backendUrl}/api/v1/task/create`, {
+        ...newTask,
+        name: taskName,
+        projectId: projectId,
+        apiId: apiId,
+        createdBy: userId,
+        lifeCycle: 'DEVELOP',
+        startDate: currentDate
+      });
+      setShowTaskForm(false);
+      setNewTask({ name: '', description: '', priority: '', startDate: '', dueDate: '', lifeCycle: 'DEVELOP' });
+    } catch (error) {
+      console.error('Error adding task:', error);
+    }
+  };
+
+  const handleCloseTaskForm = () => {
+    setShowTaskForm(false);
+    setNewTask({ name: '', description: '', priority: '', startDate: '', dueDate: '', lifeCycle: 'DEVELOP' });
+  };
+
   return (
     <Container fluid className="api-develop-container">
       <CustomAppBar />
@@ -116,12 +162,12 @@ const ApiDevelop = () => {
                 </Form.Group>
                 <Row className="mb-3">
                   <Col xs="auto">
-                    <Button variant="primary" size="sm" onClick={handleSave}>
+                    <Button variant="success" onClick={handleSave}>
                       Save
                     </Button>
                   </Col>
                   <Col xs="auto">
-                    <Button variant="secondary" size="sm" onClick={handleSendRequest}>
+                    <Button variant="primary" onClick={handleSendRequest}>
                       Send Request
                     </Button>
                   </Col>
@@ -133,10 +179,98 @@ const ApiDevelop = () => {
                   <pre>{typeof response === 'object' ? JSON.stringify(response, null, 2) : response}</pre>
                 </Card.Body>
               </Card>
+              <Row className="mt-4">
+                <Col xs="auto">
+                  <Button variant="warning" onClick={() => setShowTaskForm(true)}>
+                    Create Task
+                  </Button>
+                </Col>
+                <Col xs="auto">
+                  <Button variant="primary" onClick={() => navigate(`/project/${projectId}/folder/${folderId}/api/${apiId}/design`)}>
+                    Design
+                  </Button>
+                </Col>
+                <Col xs="auto">
+                  <Button variant="primary" onClick={() => navigate(`/project/${projectId}/folder/${folderId}/api/${apiId}/test`)}>
+                    Test
+                  </Button>
+                </Col>
+              </Row>
             </Card.Body>
           </Card>
         </Col>
       </Row>
+      <Modal show={showTaskForm} onHide={handleCloseTaskForm}>
+        <Modal.Header closeButton>
+          <Modal.Title>Create Task</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group controlId="formTaskName" className="mb-3">
+              <Form.Label>Task Name</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter task name"
+                name="name"
+                value={newTask.name}
+                onChange={handleTaskInputChange}
+                disabled
+              />
+            </Form.Group>
+            <Form.Group controlId="formTaskDescription" className="mb-3">
+              <Form.Label>Description</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                placeholder="Enter task description"
+                name="description"
+                value={newTask.description}
+                onChange={handleTaskInputChange}
+              />
+            </Form.Group>
+            <Form.Group controlId="formTaskPriority" className="mb-3">
+              <Form.Label>Priority</Form.Label>
+              <Form.Control
+                as="select"
+                name="priority"
+                value={newTask.priority}
+                onChange={handleTaskInputChange}
+              >
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+                <option value="Critical">Critical</option>
+              </Form.Control>
+            </Form.Group>
+            <Form.Group controlId="formTaskStartDate" className="mb-3">
+              <Form.Label>Start Date</Form.Label>
+              <Form.Control
+                type="date"
+                name="startDate"
+                value={newTask.startDate}
+                onChange={handleTaskInputChange}
+              />
+            </Form.Group>
+            <Form.Group controlId="formTaskDueDate" className="mb-3">
+              <Form.Label>Due Date</Form.Label>
+              <Form.Control
+                type="date"
+                name="dueDate"
+                value={newTask.dueDate}
+                onChange={handleTaskInputChange}
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="danger" onClick={handleCloseTaskForm}>
+            Cancel
+          </Button>
+          <Button variant="success" onClick={handleAddTask}>
+            Add Task
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Container>
   );
 };
