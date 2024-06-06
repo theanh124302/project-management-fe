@@ -5,7 +5,7 @@ import { Container, Row, Col, Card, Button, Modal, Form } from 'react-bootstrap'
 import CustomAppBar from '../navbar/CustomAppBar';
 import VerticalTabs from '../tabs/VerticalTabs';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../../public/css/TaskList.css';
+import '../../public/css/FolderList.css';
 
 const backendUrl = 'http://localhost:8080'; // Cập nhật URL backend cố định ở đây
 
@@ -114,14 +114,14 @@ const FolderList = () => {
                   <Card.Body>
                     <Card.Title>{folder.name}</Card.Title>
                     {projectLeaderId === parseInt(userId, 10) && (
-                      <>
+                      <div className="folder-buttons">
                         <Button variant="primary" onClick={(e) => { e.stopPropagation(); handleEditFolder(folder); }} className="me-2">
                           Edit
                         </Button>
                         <Button variant="danger" onClick={(e) => { e.stopPropagation(); handleDeleteFolder(folder.id); }}>
                           Delete
                         </Button>
-                      </>
+                      </div>
                     )}
                   </Card.Body>
                 </Card>
