@@ -13,14 +13,22 @@ const ApiDesign = () => {
   const { projectId, folderId, apiId } = useParams();
   const [params, setParams] = useState([]);
   const [bodies, setBodies] = useState([]);
+  const [authRoles, setAuthRoles] = useState([]);
+  const [headers, setHeaders] = useState([]);
   const [showParamForm, setShowParamForm] = useState(false);
   const [showBodyForm, setShowBodyForm] = useState(false);
-  const [showApiForm, setShowApiForm] = useState(false); // New state for API form
+  const [showAuthRoleForm, setShowAuthRoleForm] = useState(false);
+  const [showHeaderForm, setShowHeaderForm] = useState(false);
+  const [showApiForm, setShowApiForm] = useState(false);
   const [currentParam, setCurrentParam] = useState(null);
   const [currentBody, setCurrentBody] = useState(null);
-  const [apiDetails, setApiDetails] = useState({ method: '', url: '' }); // New state for API details
+  const [currentAuthRole, setCurrentAuthRole] = useState(null);
+  const [currentHeader, setCurrentHeader] = useState(null);
+  const [apiDetails, setApiDetails] = useState({ method: '', url: '' });
   const [newParam, setNewParam] = useState({ paramKey: '', type: '', description: '', sample: '' });
   const [newBody, setNewBody] = useState({ bodyKey: '', type: '', description: '', sample: '' });
+  const [newAuthRole, setNewAuthRole] = useState({ role: '' });
+  const [newHeader, setNewHeader] = useState({ headerKey: '', type: '', description: '', sample: '' });
 
   useEffect(() => {
     const fetchParams = async () => {
@@ -41,6 +49,24 @@ const ApiDesign = () => {
       }
     };
 
+    const fetchAuthRoles = async () => {
+      try {
+        const response = await axios.get(`${backendUrl}/api/v1/auth-role/findByApiId?apiId=${apiId}`);
+        setAuthRoles(response.data.data);
+      } catch (error) {
+        console.error('Error fetching auth roles:', error);
+      }
+    };
+
+    const fetchHeaders = async () => {
+      try {
+        const response = await axios.get(`${backendUrl}/api/v1/header/findByApiId?apiId=${apiId}`);
+        setHeaders(response.data.data);
+      } catch (error) {
+        console.error('Error fetching headers:', error);
+      }
+    };
+
     const fetchApiDetails = async () => {
       try {
         const response = await axios.get(`${backendUrl}/api/v1/api/findById?id=${apiId}`);
@@ -52,6 +78,8 @@ const ApiDesign = () => {
 
     fetchParams();
     fetchBodies();
+    fetchAuthRoles();
+    fetchHeaders();
     fetchApiDetails();
   }, [apiId]);
 
@@ -68,6 +96,16 @@ const ApiDesign = () => {
   const handleApiInputChange = (e) => {
     const { name, value } = e.target;
     setApiDetails({ ...apiDetails, [name]: value });
+  };
+
+  const handleAuthRoleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewAuthRole({ ...newAuthRole, [name]: value });
+  };
+
+  const handleHeaderInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewHeader({ ...newHeader, [name]: value });
   };
 
   const handleAddParam = async () => {
@@ -94,6 +132,30 @@ const ApiDesign = () => {
     }
   };
 
+  const handleAddAuthRole = async () => {
+    try {
+      await axios.post(`${backendUrl}/api/v1/auth-role/create`, { ...newAuthRole, apiId });
+      setShowAuthRoleForm(false);
+      setNewAuthRole({ role: '' });
+      const response = await axios.get(`${backendUrl}/api/v1/auth-role/findByApiId?apiId=${apiId}`);
+      setAuthRoles(response.data.data);
+    } catch (error) {
+      console.error('Error adding auth role:', error);
+    }
+  };
+
+  const handleAddHeader = async () => {
+    try {
+      await axios.post(`${backendUrl}/api/v1/header/create`, { ...newHeader, apiId });
+      setShowHeaderForm(false);
+      setNewHeader({ headerKey: '', type: '', description: '', sample: '' });
+      const response = await axios.get(`${backendUrl}/api/v1/header/findByApiId?apiId=${apiId}`);
+      setHeaders(response.data.data);
+    } catch (error) {
+      console.error('Error adding header:', error);
+    }
+  };
+
   const handleUpdateParam = async () => {
     try {
       await axios.post(`${backendUrl}/api/v1/param/update`, { id: currentParam.id, apiId, ...newParam });
@@ -117,6 +179,32 @@ const ApiDesign = () => {
       setBodies(response.data.data);
     } catch (error) {
       console.error('Error updating body:', error);
+    }
+  };
+
+  const handleUpdateAuthRole = async () => {
+    try {
+      await axios.post(`${backendUrl}/api/v1/auth-role/update`, { id: currentAuthRole.id, apiId, ...newAuthRole });
+      setShowAuthRoleForm(false);
+      setNewAuthRole({ role: '' });
+      setCurrentAuthRole(null);
+      const response = await axios.get(`${backendUrl}/api/v1/auth-role/findByApiId?apiId=${apiId}`);
+      setAuthRoles(response.data.data);
+    } catch (error) {
+      console.error('Error updating auth role:', error);
+    }
+  };
+
+  const handleUpdateHeader = async () => {
+    try {
+      await axios.post(`${backendUrl}/api/v1/header/update`, { id: currentHeader.id, apiId, ...newHeader });
+      setShowHeaderForm(false);
+      setNewHeader({ headerKey: '', type: '', description: '', sample: '' });
+      setCurrentHeader(null);
+      const response = await axios.get(`${backendUrl}/api/v1/header/findByApiId?apiId=${apiId}`);
+      setHeaders(response.data.data);
+    } catch (error) {
+      console.error('Error updating header:', error);
     }
   };
 
@@ -151,6 +239,26 @@ const ApiDesign = () => {
     }
   };
 
+  const handleDeleteAuthRole = async (authRoleId) => {
+    try {
+      await axios.delete(`${backendUrl}/api/v1/auth-role/delete`, { params: { id: authRoleId } });
+      const response = await axios.get(`${backendUrl}/api/v1/auth-role/findByApiId?apiId=${apiId}`);
+      setAuthRoles(response.data.data);
+    } catch (error) {
+      console.error('Error deleting auth role:', error);
+    }
+  };
+
+  const handleDeleteHeader = async (headerId) => {
+    try {
+      await axios.delete(`${backendUrl}/api/v1/header/delete`, { params: { id: headerId } });
+      const response = await axios.get(`${backendUrl}/api/v1/header/findByApiId?apiId=${apiId}`);
+      setHeaders(response.data.data);
+    } catch (error) {
+      console.error('Error deleting header:', error);
+    }
+  };
+
   const handleEditParamClick = (param) => {
     setNewParam({ paramKey: param.paramKey, type: param.type, description: param.description, sample: param.sample });
     setCurrentParam(param);
@@ -161,6 +269,18 @@ const ApiDesign = () => {
     setNewBody({ bodyKey: body.bodyKey, type: body.type, description: body.description, sample: body.sample });
     setCurrentBody(body);
     setShowBodyForm(true);
+  };
+
+  const handleEditAuthRoleClick = (authRole) => {
+    setNewAuthRole({ role: authRole.role });
+    setCurrentAuthRole(authRole);
+    setShowAuthRoleForm(true);
+  };
+
+  const handleEditHeaderClick = (header) => {
+    setNewHeader({ headerKey: header.headerKey, type: header.type, description: header.description, sample: header.sample });
+    setCurrentHeader(header);
+    setShowHeaderForm(true);
   };
 
   const handleEditApiClick = () => {
@@ -177,6 +297,18 @@ const ApiDesign = () => {
     setShowBodyForm(false);
     setCurrentBody(null);
     setNewBody({ bodyKey: '', type: '', description: '', sample: '' });
+  };
+
+  const handleCloseAuthRoleForm = () => {
+    setShowAuthRoleForm(false);
+    setCurrentAuthRole(null);
+    setNewAuthRole({ role: '' });
+  };
+
+  const handleCloseHeaderForm = () => {
+    setShowHeaderForm(false);
+    setCurrentHeader(null);
+    setNewHeader({ headerKey: '', type: '', description: '', sample: '' });
   };
 
   const handleCloseApiForm = () => {
@@ -230,6 +362,27 @@ const ApiDesign = () => {
               <Button variant="secondary" onClick={() => setShowParamForm(true)}>
                 Add Param
               </Button>
+              <Card.Title className="mt-4">API Headers</Card.Title>
+              <ListGroup className="mb-3">
+                {headers.map((header) => (
+                  <ListGroup.Item key={header.id} className="d-flex justify-content-between align-items-center">
+                    <div>
+                      <strong>{header.headerKey}</strong>: {header.description} ({header.type}) - Sample: {header.sample}
+                    </div>
+                    <div>
+                      <Button variant="outline-primary" size="sm" className="me-2" onClick={() => handleEditHeaderClick(header)}>
+                        Edit
+                      </Button>
+                      <Button variant="outline-danger" size="sm" onClick={() => handleDeleteHeader(header.id)}>
+                        Delete
+                      </Button>
+                    </div>
+                  </ListGroup.Item>
+                ))}
+              </ListGroup>
+              <Button variant="secondary" onClick={() => setShowHeaderForm(true)}>
+                Add Header
+              </Button>
               <Card.Title className="mt-4">API Bodies</Card.Title>
               <ListGroup className="mb-3">
                 {bodies.map((body) => (
@@ -250,6 +403,27 @@ const ApiDesign = () => {
               </ListGroup>
               <Button variant="secondary" onClick={() => setShowBodyForm(true)}>
                 Add Body
+              </Button>
+              <Card.Title className="mt-4">API Access Roles</Card.Title>
+              <ListGroup className="mb-3">
+                {authRoles.map((authRole) => (
+                  <ListGroup.Item key={authRole.id} className="d-flex justify-content-between align-items-center">
+                    <div>
+                      <strong>{authRole.role}</strong>
+                    </div>
+                    <div>
+                      <Button variant="outline-primary" size="sm" className="me-2" onClick={() => handleEditAuthRoleClick(authRole)}>
+                        Edit
+                      </Button>
+                      <Button variant="outline-danger" size="sm" onClick={() => handleDeleteAuthRole(authRole.id)}>
+                        Delete
+                      </Button>
+                    </div>
+                  </ListGroup.Item>
+                ))}
+              </ListGroup>
+              <Button variant="secondary" onClick={() => setShowAuthRoleForm(true)}>
+                Add Role
               </Button>
               <Modal show={showApiForm} onHide={handleCloseApiForm}>
                 <Modal.Header closeButton>
@@ -396,6 +570,86 @@ const ApiDesign = () => {
                   </Button>
                   <Button variant="primary" onClick={currentBody ? handleUpdateBody : handleAddBody}>
                     {currentBody ? 'Update Body' : 'Add Body'}
+                  </Button>
+                </Modal.Footer>
+              </Modal>
+              <Modal show={showAuthRoleForm} onHide={handleCloseAuthRoleForm}>
+                <Modal.Header closeButton>
+                  <Modal.Title>{currentAuthRole ? 'Edit Role' : 'Add New Role'}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <Form>
+                    <Form.Group controlId="formAuthRole" className="mb-3">
+                      <Form.Label>Role</Form.Label>
+                      <Form.Control
+                        type="text"
+                        name="role"
+                        value={newAuthRole.role}
+                        onChange={handleAuthRoleInputChange}
+                      />
+                    </Form.Group>
+                  </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={handleCloseAuthRoleForm}>
+                    Cancel
+                  </Button>
+                  <Button variant="primary" onClick={currentAuthRole ? handleUpdateAuthRole : handleAddAuthRole}>
+                    {currentAuthRole ? 'Update Role' : 'Add Role'}
+                  </Button>
+                </Modal.Footer>
+              </Modal>
+              <Modal show={showHeaderForm} onHide={handleCloseHeaderForm}>
+                <Modal.Header closeButton>
+                  <Modal.Title>{currentHeader ? 'Edit Header' : 'Add New Header'}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <Form>
+                    <Form.Group controlId="formHeaderKey" className="mb-3">
+                      <Form.Label>Header Key</Form.Label>
+                      <Form.Control
+                        type="text"
+                        name="headerKey"
+                        value={newHeader.headerKey}
+                        onChange={handleHeaderInputChange}
+                      />
+                    </Form.Group>
+                    <Form.Group controlId="formHeaderType" className="mb-3">
+                      <Form.Label>Type</Form.Label>
+                      <Form.Control
+                        type="text"
+                        name="type"
+                        value={newHeader.type}
+                        onChange={handleHeaderInputChange}
+                      />
+                    </Form.Group>
+                    <Form.Group controlId="formHeaderDescription" className="mb-3">
+                      <Form.Label>Description</Form.Label>
+                      <Form.Control
+                        as="textarea"
+                        rows={3}
+                        name="description"
+                        value={newHeader.description}
+                        onChange={handleHeaderInputChange}
+                      />
+                    </Form.Group>
+                    <Form.Group controlId="formHeaderSample" className="mb-3">
+                      <Form.Label>Sample</Form.Label>
+                      <Form.Control
+                        type="text"
+                        name="sample"
+                        value={newHeader.sample}
+                        onChange={handleHeaderInputChange}
+                      />
+                    </Form.Group>
+                  </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={handleCloseHeaderForm}>
+                    Cancel
+                  </Button>
+                  <Button variant="primary" onClick={currentHeader ? handleUpdateHeader : handleAddHeader}>
+                    {currentHeader ? 'Update Header' : 'Add Header'}
                   </Button>
                 </Modal.Footer>
               </Modal>
