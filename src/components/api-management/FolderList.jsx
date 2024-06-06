@@ -99,7 +99,7 @@ const FolderList = () => {
   };
 
   return (
-    <Container fluid className="folder-list-container">
+    <Container fluid className="folder-list-container" style={{ padding: '20px' }}>
       <CustomAppBar />
       <Row>
         <Col xs={12} md={3}>
