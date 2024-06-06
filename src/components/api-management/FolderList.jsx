@@ -115,10 +115,10 @@ const FolderList = () => {
                     <Card.Title>{folder.name}</Card.Title>
                     {projectLeaderId === parseInt(userId, 10) && (
                       <div className="folder-buttons">
-                        <Button variant="primary" onClick={(e) => { e.stopPropagation(); handleEditFolder(folder); }} className="me-2">
+                        <Button variant="light" onClick={(e) => { e.stopPropagation(); handleEditFolder(folder); }} className="me-2">
                           Edit
                         </Button>
-                        <Button variant="danger" onClick={(e) => { e.stopPropagation(); handleDeleteFolder(folder.id); }}>
+                        <Button variant="light" onClick={(e) => { e.stopPropagation(); handleDeleteFolder(folder.id); }}>
                           Delete
                         </Button>
                       </div>
