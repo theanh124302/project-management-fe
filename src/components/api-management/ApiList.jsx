@@ -16,9 +16,7 @@ const ApiList = () => {
   const [currentApi, setCurrentApi] = useState(null);
   const [newApi, setNewApi] = useState({
     name: '',
-    description: '',
-    url: '',
-    method: ''
+    description: ''
   });
   const [projectLeaderId, setProjectLeaderId] = useState(null);
   const userId = localStorage.getItem('userId');
@@ -61,7 +59,7 @@ const ApiList = () => {
         createdBy: userId
       });
       setShowForm(false);
-      setNewApi({ name: '', description: '', url: '', method: '' });
+      setNewApi({ name: '', description: '' });
       const response = await axios.get(`${backendUrl}/api/v1/api/findByFolderId?folderId=${folderId}`);
       setApis(response.data.data);
     } catch (error) {
@@ -76,7 +74,7 @@ const ApiList = () => {
   const handleCloseForm = () => {
     setShowForm(false);
     setCurrentApi(null);
-    setNewApi({ name: '', description: '', url: '', method: '' });
+    setNewApi({ name: '', description: '' });
   };
 
   return (
@@ -137,28 +135,6 @@ const ApiList = () => {
                     value={newApi.description}
                     onChange={(e) => setNewApi({ ...newApi, description: e.target.value })}
                   />
-                </Form.Group>
-                <Form.Group controlId="formApiUrl" className="mb-3">
-                  <Form.Label>URL</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Enter API URL"
-                    value={newApi.url}
-                    onChange={(e) => setNewApi({ ...newApi, url: e.target.value })}
-                  />
-                </Form.Group>
-                <Form.Group controlId="formApiMethod" className="mb-3">
-                  <Form.Label>Method</Form.Label>
-                  <Form.Control
-                    as="select"
-                    value={newApi.method}
-                    onChange={(e) => setNewApi({ ...newApi, method: e.target.value })}
-                  >
-                    <option value="GET">GET</option>
-                    <option value="POST">POST</option>
-                    <option value="PUT">PUT</option>
-                    <option value="DELETE">DELETE</option>
-                  </Form.Control>
                 </Form.Group>
               </Form>
             </Modal.Body>
