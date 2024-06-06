@@ -16,8 +16,13 @@ const ApiDefine = () => {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    url: '',
-    method: ''
+    userRequirements: '',
+    technicalRequirements: '',
+    businessProcess: '',
+    useCaseDiagram: '',
+    sequenceDiagram: '',
+    activityDiagram: '',
+    classDiagram: ''
   });
   const [showDocForm, setShowDocForm] = useState(false);
   const [currentDoc, setCurrentDoc] = useState(null);
@@ -41,8 +46,13 @@ const ApiDefine = () => {
         setFormData({
           name: response.data.data.name,
           description: response.data.data.description,
-          url: response.data.data.url,
-          method: response.data.data.method
+          userRequirements: response.data.data.userRequirements,
+          technicalRequirements: response.data.data.technicalRequirements,
+          businessProcess: response.data.data.businessProcess,
+          useCaseDiagram: response.data.data.useCaseDiagram,
+          sequenceDiagram: response.data.data.sequenceDiagram,
+          activityDiagram: response.data.data.activityDiagram,
+          classDiagram: response.data.data.classDiagram
         });
       } catch (error) {
         console.error('Error fetching API details:', error);
@@ -192,7 +202,7 @@ const ApiDefine = () => {
         <Col xs={12} md={9}>
           <Card className="mt-4">
             <Card.Body>
-              <Card.Title>{api.name}</Card.Title>
+              <Card.Title>Define: {api.name}</Card.Title>
               <Form>
                 <Form.Group controlId="formApiName" className="mb-3">
                   <Form.Label>API Name</Form.Label>
@@ -213,28 +223,71 @@ const ApiDefine = () => {
                     onChange={handleInputChange}
                   />
                 </Form.Group>
-                <Form.Group controlId="formApiUrl" className="mb-3">
-                  <Form.Label>URL</Form.Label>
+                <Form.Group controlId="formUserRequirements" className="mb-3">
+                  <Form.Label>User Requirements</Form.Label>
                   <Form.Control
-                    type="text"
-                    name="url"
-                    value={formData.url}
+                    as="textarea"
+                    rows={3}
+                    name="userRequirements"
+                    value={formData.userRequirements}
                     onChange={handleInputChange}
                   />
                 </Form.Group>
-                <Form.Group controlId="formApiMethod" className="mb-3">
-                  <Form.Label>Method</Form.Label>
+                <Form.Group controlId="formTechnicalRequirements" className="mb-3">
+                  <Form.Label>Technical Requirements</Form.Label>
                   <Form.Control
-                    as="select"
-                    name="method"
-                    value={formData.method}
+                    as="textarea"
+                    rows={3}
+                    name="technicalRequirements"
+                    value={formData.technicalRequirements}
                     onChange={handleInputChange}
-                  >
-                    <option value="GET">GET</option>
-                    <option value="POST">POST</option>
-                    <option value="PUT">PUT</option>
-                    <option value="DELETE">DELETE</option>
-                  </Form.Control>
+                  />
+                </Form.Group>
+                <Form.Group controlId="formBusinessProcess" className="mb-3">
+                  <Form.Label>Business Process</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    rows={3}
+                    name="businessProcess"
+                    value={formData.businessProcess}
+                    onChange={handleInputChange}
+                  />
+                </Form.Group>
+                <Form.Group controlId="formUseCaseDiagram" className="mb-3">
+                  <Form.Label>Use Case Diagram</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="useCaseDiagram"
+                    value={formData.useCaseDiagram}
+                    onChange={handleInputChange}
+                  />
+                </Form.Group>
+                <Form.Group controlId="formSequenceDiagram" className="mb-3">
+                  <Form.Label>Sequence Diagram</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="sequenceDiagram"
+                    value={formData.sequenceDiagram}
+                    onChange={handleInputChange}
+                  />
+                </Form.Group>
+                <Form.Group controlId="formActivityDiagram" className="mb-3">
+                  <Form.Label>Activity Diagram</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="activityDiagram"
+                    value={formData.activityDiagram}
+                    onChange={handleInputChange}
+                  />
+                </Form.Group>
+                <Form.Group controlId="formClassDiagram" className="mb-3">
+                  <Form.Label>Class Diagram</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="classDiagram"
+                    value={formData.classDiagram}
+                    onChange={handleInputChange}
+                  />
                 </Form.Group>
               </Form>
               <Button variant="primary" onClick={handleUpdateApi} className="me-2">
