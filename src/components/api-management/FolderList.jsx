@@ -77,7 +77,7 @@ const FolderList = () => {
 
   const handleUpdateFolder = async () => {
     try {
-      await axios.post(`${backendUrl}/api/v1/folder/update`, { id: currentFolder.id, name: newFolder.name });
+      await axios.post(`${backendUrl}/api/v1/folder/update`, { id: currentFolder.id, name: newFolder.name, projectId });
       setShowForm(false);
       setNewFolder({ name: '' });
       setCurrentFolder(null);

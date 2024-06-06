@@ -33,7 +33,8 @@ const ApiDefine = () => {
     description: '',
     priority: '',
     startDate: '',
-    dueDate: ''
+    dueDate: '',
+    lifeCycle: 'DEFINE'
   });
   const navigate = useNavigate();
   const userId = localStorage.getItem('userId');
@@ -169,15 +170,21 @@ const ApiDefine = () => {
       return;
     }
 
+    const currentDate = new Date().toISOString().split('T')[0]; // Ngày hiện tại
+    const taskName = `Task for ${api.name} on ${currentDate}`; // Tên task dựa trên tiêu đề và ngày hiện tại
+
     try {
       await axios.post(`${backendUrl}/api/v1/task/create`, {
         ...newTask,
+        name: taskName,
         projectId: projectId,
         apiId: apiId,
         createdBy: userId,
+        lifeCycle: 'DEFINE',
+        startDate: currentDate // Ngày tạo task
       });
       setShowTaskForm(false);
-      setNewTask({ name: '', description: '', priority: '', startDate: '', dueDate: '' });
+      setNewTask({ name: '', description: '', priority: '', startDate: '', dueDate: '', lifeCycle: 'DEFINE' });
     } catch (error) {
       console.error('Error adding task:', error);
     }
@@ -185,7 +192,7 @@ const ApiDefine = () => {
 
   const handleCloseTaskForm = () => {
     setShowTaskForm(false);
-    setNewTask({ name: '', description: '', priority: '', startDate: '', dueDate: '' });
+    setNewTask({ name: '', description: '', priority: '', startDate: '', dueDate: '', lifeCycle: 'DEFINE' });
   };
 
   if (!api) {
@@ -372,6 +379,7 @@ const ApiDefine = () => {
                         name="name"
                         value={newTask.name}
                         onChange={handleTaskInputChange}
+                        disabled
                       />
                     </Form.Group>
                     <Form.Group controlId="formTaskDescription" className="mb-3">
