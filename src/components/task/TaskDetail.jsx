@@ -176,7 +176,7 @@ const TaskDetail = () => {
           <VerticalTabs projectId={projectId} />
         </Col>
         <Col xs={12} md={9}>
-          <Card className="mt-4">
+          <Card className="mt-4 task-card">
             <Card.Body>
               <Card.Title>{task.name}</Card.Title>
               <Card.Text><strong>Description:</strong> {task.description}</Card.Text>

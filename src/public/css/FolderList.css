@@ -1,12 +1,27 @@
+body, html {
+  background-color: #e6f7e6; /* Màu xanh lá rất nhạt */
+  height: 100%;
+  margin: 0;
+}
+
 .folder-list-container {
   padding: 0px;
 }
 
 .folder-card {
   position: relative;
+  border: 1px solid #ffffff; /* Viền trắng */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
 }
 
-.folder-card .folder-buttons {
+.folder-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.folder-buttons {
   display: none;
   position: absolute;
   top: 10px;
@@ -14,5 +29,5 @@
 }
 
 .folder-card:hover .folder-buttons {
-  display: block;
+  display: flex;
 }

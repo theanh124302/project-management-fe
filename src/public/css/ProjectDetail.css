@@ -1,22 +1,16 @@
 .project-detail-container {
-    padding: 0px;
-  }
-  
-  .project-detail-content {
-    display: flex;
-  }
-  
-  .project-detail-main {
-    margin-left: 20px;
-    padding: 20px;
-    flex: 1;
-  }
-  
-  .mt-4 {
-    margin-top: 1.5rem;
-  }
-  
-  .me-2 {
-    margin-right: 0.5rem;
-  }
-  
+  background-color: #e6f7e6; /* Màu xanh lá rất nhạt */
+  padding: 0px;
+}
+
+.project-card {
+  border: 1px solid #ffffff; /* Viền trắng */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.project-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}

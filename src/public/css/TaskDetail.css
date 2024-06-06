@@ -1,26 +1,16 @@
 .task-detail-container {
+  background-color: #e6f7e6; /* Màu xanh lá rất nhạt */
   padding: 0px;
 }
 
-.task-detail-container .card {
-  margin-top: 20px;
+.task-card {
+  border: 1px solid #ffffff; /* Viền trắng */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
 }
 
-.task-detail-container .card-body {
-  padding: 20px;
-}
-
-.task-detail-container .list-group-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.task-detail-container .form-control {
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-
-.task-detail-container .btn {
-  margin-right: 10px;
+.task-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
