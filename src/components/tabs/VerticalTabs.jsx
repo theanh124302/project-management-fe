@@ -53,14 +53,15 @@ const VerticalTabs = () => {
         navigate(`/project/${projectId}/api`);
         break;
       case 2:
-        navigate(`/project/${projectId}/env`);
-        break;
-      case 3:
         navigate(`/project/${projectId}/task`);
         break;
-      case 4:
+      case 3:
         navigate(`/project/${projectId}/detail`);
         break;
+      case 4:
+        navigate(`/project/${projectId}/env`);
+        break;
+
       default:
         break;
     }
@@ -82,9 +83,9 @@ const VerticalTabs = () => {
           <ArrowBackIcon />
         </CustomIconButton>
         <CustomTab label="API" />
-        <CustomTab label="ENV" />
         <CustomTab label="TASK" />
         <CustomTab label="DETAIL" />
+        {/* <CustomTab label="ENV" /> */}
       </CustomTabs>
     </Box>
   );

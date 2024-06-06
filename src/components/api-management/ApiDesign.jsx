@@ -15,8 +15,10 @@ const ApiDesign = () => {
   const [bodies, setBodies] = useState([]);
   const [showParamForm, setShowParamForm] = useState(false);
   const [showBodyForm, setShowBodyForm] = useState(false);
+  const [showApiForm, setShowApiForm] = useState(false); // New state for API form
   const [currentParam, setCurrentParam] = useState(null);
   const [currentBody, setCurrentBody] = useState(null);
+  const [apiDetails, setApiDetails] = useState({ method: '', url: '' }); // New state for API details
   const [newParam, setNewParam] = useState({ paramKey: '', type: '', description: '', sample: '' });
   const [newBody, setNewBody] = useState({ bodyKey: '', type: '', description: '', sample: '' });
 
@@ -39,8 +41,18 @@ const ApiDesign = () => {
       }
     };
 
+    const fetchApiDetails = async () => {
+      try {
+        const response = await axios.get(`${backendUrl}/api/v1/api/findById?id=${apiId}`);
+        setApiDetails({ method: response.data.data.method, url: response.data.data.url });
+      } catch (error) {
+        console.error('Error fetching API details:', error);
+      }
+    };
+
     fetchParams();
     fetchBodies();
+    fetchApiDetails();
   }, [apiId]);
 
   const handleParamInputChange = (e) => {
@@ -51,6 +63,11 @@ const ApiDesign = () => {
   const handleBodyInputChange = (e) => {
     const { name, value } = e.target;
     setNewBody({ ...newBody, [name]: value });
+  };
+
+  const handleApiInputChange = (e) => {
+    const { name, value } = e.target;
+    setApiDetails({ ...apiDetails, [name]: value });
   };
 
   const handleAddParam = async () => {
@@ -103,6 +120,17 @@ const ApiDesign = () => {
     }
   };
 
+  const handleUpdateApiDetails = async () => {
+    try {
+      await axios.post(`${backendUrl}/api/v1/api/updateUrlAndMethod`, null, {
+        params: { id: apiId, url: apiDetails.url, method: apiDetails.method },
+      });
+      setShowApiForm(false);
+    } catch (error) {
+      console.error('Error updating API details:', error);
+    }
+  };
+
   const handleDeleteParam = async (paramId) => {
     try {
       await axios.delete(`${backendUrl}/api/v1/param/delete`, { params: { id: paramId } });
@@ -135,6 +163,10 @@ const ApiDesign = () => {
     setShowBodyForm(true);
   };
 
+  const handleEditApiClick = () => {
+    setShowApiForm(true);
+  };
+
   const handleCloseParamForm = () => {
     setShowParamForm(false);
     setCurrentParam(null);
@@ -147,6 +179,10 @@ const ApiDesign = () => {
     setNewBody({ bodyKey: '', type: '', description: '', sample: '' });
   };
 
+  const handleCloseApiForm = () => {
+    setShowApiForm(false);
+  };
+
   return (
     <Container fluid className="api-design-container">
       <CustomAppBar />
@@ -157,7 +193,23 @@ const ApiDesign = () => {
         <Col xs={12} md={9}>
           <Card className="mt-4">
             <Card.Body>
-              <Card.Title>API Params</Card.Title>
+              <Card.Title>API Details</Card.Title>
+              <ListGroup className="mb-3">
+                <ListGroup.Item>
+                  <div>
+                    <strong>Method:</strong> {apiDetails.method}
+                  </div>
+                </ListGroup.Item>
+                <ListGroup.Item>
+                  <div>
+                    <strong>URL:</strong> {apiDetails.url}
+                  </div>
+                </ListGroup.Item>
+                <Button variant="outline-primary" size="sm" onClick={handleEditApiClick}>
+                  Edit API Details
+                </Button>
+              </ListGroup>
+              <Card.Title className="mt-4">API Params</Card.Title>
               <ListGroup className="mb-3">
                 {params.map((param) => (
                   <ListGroup.Item key={param.id} className="d-flex justify-content-between align-items-center">
@@ -199,6 +251,46 @@ const ApiDesign = () => {
               <Button variant="secondary" onClick={() => setShowBodyForm(true)}>
                 Add Body
               </Button>
+              <Modal show={showApiForm} onHide={handleCloseApiForm}>
+                <Modal.Header closeButton>
+                  <Modal.Title>Edit API Details</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <Form>
+                    <Form.Group controlId="formApiMethod" className="mb-3">
+                      <Form.Label>Method</Form.Label>
+                      <Form.Control
+                        as="select"
+                        name="method"
+                        value={apiDetails.method}
+                        onChange={handleApiInputChange}
+                      >
+                        <option value="GET">GET</option>
+                        <option value="POST">POST</option>
+                        <option value="PUT">PUT</option>
+                        <option value="DELETE">DELETE</option>
+                      </Form.Control>
+                    </Form.Group>
+                    <Form.Group controlId="formApiUrl" className="mb-3">
+                      <Form.Label>URL</Form.Label>
+                      <Form.Control
+                        type="text"
+                        name="url"
+                        value={apiDetails.url}
+                        onChange={handleApiInputChange}
+                      />
+                    </Form.Group>
+                  </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={handleCloseApiForm}>
+                    Cancel
+                  </Button>
+                  <Button variant="primary" onClick={handleUpdateApiDetails}>
+                    Update API Details
+                  </Button>
+                </Modal.Footer>
+              </Modal>
               <Modal show={showParamForm} onHide={handleCloseParamForm}>
                 <Modal.Header closeButton>
                   <Modal.Title>{currentParam ? 'Edit Param' : 'Add New Param'}</Modal.Title>
