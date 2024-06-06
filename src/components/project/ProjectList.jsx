@@ -76,7 +76,7 @@ const ProjectList = () => {
   };
 
   return (
-    <Container fluid >
+    <Container fluid className="project-list-container">
       <CustomAppBar />
       <h2 className="my-4">Welcome, {userName}!</h2>
       <div className="text-end mb-3">
@@ -87,7 +87,7 @@ const ProjectList = () => {
       <Row>
         {projects.map((project) => (
           <Col key={project.id} xs={12} sm={6} md={4} className="mb-4">
-            <Card onClick={() => handleProjectClick(project.id)} style={{ cursor: 'pointer' }}>
+            <Card className="project-card" onClick={() => handleProjectClick(project.id)} style={{ cursor: 'pointer' }}>
               <Card.Img variant="top" src={project.coverImage || 'https://via.placeholder.com/150'} />
               <Card.Body>
                 <Card.Title>{project.name}</Card.Title>
