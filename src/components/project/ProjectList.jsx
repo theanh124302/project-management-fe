@@ -76,7 +76,7 @@ const ProjectList = () => {
   };
 
   return (
-    <Container fluid>
+    <Container fluid >
       <CustomAppBar />
       <h2 className="my-4">Welcome, {userName}!</h2>
       <div className="text-end mb-3">
