@@ -15,22 +15,26 @@ const ApiDesign = () => {
   const [bodies, setBodies] = useState([]);
   const [authRoles, setAuthRoles] = useState([]);
   const [headers, setHeaders] = useState([]);
+  const [designResponses, setDesignResponses] = useState([]);
   const [api, setApi] = useState(null);
   const [showParamForm, setShowParamForm] = useState(false);
   const [showBodyForm, setShowBodyForm] = useState(false);
   const [showAuthRoleForm, setShowAuthRoleForm] = useState(false);
   const [showHeaderForm, setShowHeaderForm] = useState(false);
+  const [showDesignResponseForm, setShowDesignResponseForm] = useState(false);
   const [showApiForm, setShowApiForm] = useState(false);
   const [showTaskForm, setShowTaskForm] = useState(false);
   const [currentParam, setCurrentParam] = useState(null);
   const [currentBody, setCurrentBody] = useState(null);
   const [currentAuthRole, setCurrentAuthRole] = useState(null);
   const [currentHeader, setCurrentHeader] = useState(null);
+  const [currentDesignResponse, setCurrentDesignResponse] = useState(null);
   const [apiDetails, setApiDetails] = useState({ method: '', url: '' });
   const [newParam, setNewParam] = useState({ paramKey: '', type: '', description: '', sample: '' });
   const [newBody, setNewBody] = useState({ bodyKey: '', type: '', description: '', sample: '' });
   const [newAuthRole, setNewAuthRole] = useState({ role: '' });
   const [newHeader, setNewHeader] = useState({ headerKey: '', type: '', description: '', sample: '' });
+  const [newDesignResponse, setNewDesignResponse] = useState({ description: '', value: '' });
   const [newTask, setNewTask] = useState({
     name: '',
     description: '',
@@ -79,6 +83,15 @@ const ApiDesign = () => {
       }
     };
 
+    const fetchDesignResponses = async () => {
+      try {
+        const response = await axios.get(`${backendUrl}/api/v1/design-response/findByApiId?apiId=${apiId}`);
+        setDesignResponses(response.data.data);
+      } catch (error) {
+        console.error('Error fetching design responses:', error);
+      }
+    };
+
     const fetchApiDetails = async () => {
       try {
         const response = await axios.get(`${backendUrl}/api/v1/api/findById?id=${apiId}`);
@@ -93,6 +106,7 @@ const ApiDesign = () => {
     fetchBodies();
     fetchAuthRoles();
     fetchHeaders();
+    fetchDesignResponses();
     fetchApiDetails();
   }, [apiId]);
 
@@ -119,6 +133,11 @@ const ApiDesign = () => {
   const handleHeaderInputChange = (e) => {
     const { name, value } = e.target;
     setNewHeader({ ...newHeader, [name]: value });
+  };
+
+  const handleDesignResponseInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewDesignResponse({ ...newDesignResponse, [name]: value });
   };
 
   const handleTaskInputChange = (e) => {
@@ -171,6 +190,18 @@ const ApiDesign = () => {
       setHeaders(response.data.data);
     } catch (error) {
       console.error('Error adding header:', error);
+    }
+  };
+
+  const handleAddDesignResponse = async () => {
+    try {
+      await axios.post(`${backendUrl}/api/v1/design-response/create`, { ...newDesignResponse, apiId });
+      setShowDesignResponseForm(false);
+      setNewDesignResponse({ description: '', value: '' });
+      const response = await axios.get(`${backendUrl}/api/v1/design-response/findByApiId?apiId=${apiId}`);
+      setDesignResponses(response.data.data);
+    } catch (error) {
+      console.error('Error adding design response:', error);
     }
   };
 
@@ -252,6 +283,19 @@ const ApiDesign = () => {
     }
   };
 
+  const handleUpdateDesignResponse = async () => {
+    try {
+      await axios.post(`${backendUrl}/api/v1/design-response/update`, { id: currentDesignResponse.id, apiId, ...newDesignResponse });
+      setShowDesignResponseForm(false);
+      setNewDesignResponse({ description: '', value: '' });
+      setCurrentDesignResponse(null);
+      const response = await axios.get(`${backendUrl}/api/v1/design-response/findByApiId?apiId=${apiId}`);
+      setDesignResponses(response.data.data);
+    } catch (error) {
+      console.error('Error updating design response:', error);
+    }
+  };
+
   const handleUpdateApiDetails = async () => {
     try {
       await axios.post(`${backendUrl}/api/v1/api/updateUrlAndMethod`, null, {
@@ -303,6 +347,16 @@ const ApiDesign = () => {
     }
   };
 
+  const handleDeleteDesignResponse = async (designResponseId) => {
+    try {
+      await axios.delete(`${backendUrl}/api/v1/design-response/delete`, { params: { id: designResponseId } });
+      const response = await axios.get(`${backendUrl}/api/v1/design-response/findByApiId?apiId=${apiId}`);
+      setDesignResponses(response.data.data);
+    } catch (error) {
+      console.error('Error deleting design response:', error);
+    }
+  };
+
   const handleEditParamClick = (param) => {
     setNewParam({ paramKey: param.paramKey, type: param.type, description: param.description, sample: param.sample });
     setCurrentParam(param);
@@ -325,6 +379,12 @@ const ApiDesign = () => {
     setNewHeader({ headerKey: header.headerKey, type: header.type, description: header.description, sample: header.sample });
     setCurrentHeader(header);
     setShowHeaderForm(true);
+  };
+
+  const handleEditDesignResponseClick = (designResponse) => {
+    setNewDesignResponse({ description: designResponse.description, value: designResponse.value });
+    setCurrentDesignResponse(designResponse);
+    setShowDesignResponseForm(true);
   };
 
   const handleEditApiClick = () => {
@@ -353,6 +413,12 @@ const ApiDesign = () => {
     setShowHeaderForm(false);
     setCurrentHeader(null);
     setNewHeader({ headerKey: '', type: '', description: '', sample: '' });
+  };
+
+  const handleCloseDesignResponseForm = () => {
+    setShowDesignResponseForm(false);
+    setCurrentDesignResponse(null);
+    setNewDesignResponse({ description: '', value: '' });
   };
 
   const handleCloseApiForm = () => {
@@ -415,27 +481,6 @@ const ApiDesign = () => {
               <Button variant="secondary" onClick={() => setShowParamForm(true)}>
                 Add Param
               </Button>
-              <Card.Title className="mt-4">API Headers</Card.Title>
-              <ListGroup className="mb-3">
-                {headers.map((header) => (
-                  <ListGroup.Item key={header.id} className="d-flex justify-content-between align-items-center">
-                    <div>
-                      <strong>{header.headerKey}</strong>: {header.description} ({header.type}) - Sample: {header.sample}
-                    </div>
-                    <div>
-                      <Button variant="outline-primary" size="sm" className="me-2" onClick={() => handleEditHeaderClick(header)}>
-                        Edit
-                      </Button>
-                      <Button variant="outline-danger" size="sm" onClick={() => handleDeleteHeader(header.id)}>
-                        Delete
-                      </Button>
-                    </div>
-                  </ListGroup.Item>
-                ))}
-              </ListGroup>
-              <Button variant="secondary" onClick={() => setShowHeaderForm(true)}>
-                Add Header
-              </Button>
               <Card.Title className="mt-4">API Bodies</Card.Title>
               <ListGroup className="mb-3">
                 {bodies.map((body) => (
@@ -477,6 +522,48 @@ const ApiDesign = () => {
               </ListGroup>
               <Button variant="secondary" onClick={() => setShowAuthRoleForm(true)}>
                 Add Role
+              </Button>
+              <Card.Title className="mt-4">API Headers</Card.Title>
+              <ListGroup className="mb-3">
+                {headers.map((header) => (
+                  <ListGroup.Item key={header.id} className="d-flex justify-content-between align-items-center">
+                    <div>
+                      <strong>{header.headerKey}</strong>: {header.description} ({header.type}) - Sample: {header.sample}
+                    </div>
+                    <div>
+                      <Button variant="outline-primary" size="sm" className="me-2" onClick={() => handleEditHeaderClick(header)}>
+                        Edit
+                      </Button>
+                      <Button variant="outline-danger" size="sm" onClick={() => handleDeleteHeader(header.id)}>
+                        Delete
+                      </Button>
+                    </div>
+                  </ListGroup.Item>
+                ))}
+              </ListGroup>
+              <Button variant="secondary" onClick={() => setShowHeaderForm(true)}>
+                Add Header
+              </Button>
+              <Card.Title className="mt-4">Design Responses</Card.Title>
+              <ListGroup className="mb-3">
+                {designResponses.map((designResponse) => (
+                  <ListGroup.Item key={designResponse.id} className="d-flex justify-content-between align-items-center">
+                    <div>
+                      <strong>{designResponse.description}</strong>: {designResponse.value}
+                    </div>
+                    <div>
+                      <Button variant="outline-primary" size="sm" className="me-2" onClick={() => handleEditDesignResponseClick(designResponse)}>
+                        Edit
+                      </Button>
+                      <Button variant="outline-danger" size="sm" onClick={() => handleDeleteDesignResponse(designResponse.id)}>
+                        Delete
+                      </Button>
+                    </div>
+                  </ListGroup.Item>
+                ))}
+              </ListGroup>
+              <Button variant="secondary" onClick={() => setShowDesignResponseForm(true)}>
+                Add Design Response
               </Button>
               <Button variant="secondary" onClick={() => setShowTaskForm(true)} className="me-2">
                 Create Task
@@ -631,7 +718,7 @@ const ApiDesign = () => {
               </Modal>
               <Modal show={showAuthRoleForm} onHide={handleCloseAuthRoleForm}>
                 <Modal.Header closeButton>
-                  <Modal.Title>{currentAuthRole ? 'Edit Role' : 'Add New Role'}</Modal.Title>
+                  <Modal.Title>{currentAuthRole ? 'Edit Auth Role' : 'Add New Auth Role'}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                   <Form>
@@ -651,7 +738,7 @@ const ApiDesign = () => {
                     Cancel
                   </Button>
                   <Button variant="primary" onClick={currentAuthRole ? handleUpdateAuthRole : handleAddAuthRole}>
-                    {currentAuthRole ? 'Update Role' : 'Add Role'}
+                    {currentAuthRole ? 'Update Auth Role' : 'Add Auth Role'}
                   </Button>
                 </Modal.Footer>
               </Modal>
@@ -706,6 +793,42 @@ const ApiDesign = () => {
                   </Button>
                   <Button variant="primary" onClick={currentHeader ? handleUpdateHeader : handleAddHeader}>
                     {currentHeader ? 'Update Header' : 'Add Header'}
+                  </Button>
+                </Modal.Footer>
+              </Modal>
+              <Modal show={showDesignResponseForm} onHide={handleCloseDesignResponseForm}>
+                <Modal.Header closeButton>
+                  <Modal.Title>{currentDesignResponse ? 'Edit Design Response' : 'Add New Design Response'}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <Form>
+                    <Form.Group controlId="formDesignResponseDescription" className="mb-3">
+                      <Form.Label>Description</Form.Label>
+                      <Form.Control
+                        type="text"
+                        name="description"
+                        value={newDesignResponse.description}
+                        onChange={handleDesignResponseInputChange}
+                      />
+                    </Form.Group>
+                    <Form.Group controlId="formDesignResponseValue" className="mb-3">
+                      <Form.Label>Value</Form.Label>
+                      <Form.Control
+                        as="textarea"
+                        rows={3}
+                        name="value"
+                        value={newDesignResponse.value}
+                        onChange={handleDesignResponseInputChange}
+                      />
+                    </Form.Group>
+                  </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={handleCloseDesignResponseForm}>
+                    Cancel
+                  </Button>
+                  <Button variant="primary" onClick={currentDesignResponse ? handleUpdateDesignResponse : handleAddDesignResponse}>
+                    {currentDesignResponse ? 'Update Design Response' : 'Add Design Response'}
                   </Button>
                 </Modal.Footer>
               </Modal>
