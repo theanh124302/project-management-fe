@@ -1,4 +1,3 @@
-// CustomAppBar.jsx
 import * as React from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
@@ -20,9 +19,9 @@ import '../../public/css/CustomAppBar.css';
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  backgroundColor: alpha(theme.palette.common.black, 0.15),
   '&:hover': {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
+    backgroundColor: alpha(theme.palette.common.black, 0.25),
   },
   marginRight: theme.spacing(2),
   marginLeft: 0,
@@ -108,14 +107,14 @@ export default function CustomAppBar() {
   return (
     <Box sx={{ flexGrow: 1 }}>
       {renderMenu}
-      <AppBar position="static" color="default" sx={{ backgroundColor: '#F8F9FA', boxShadow: 'none' }}>
+      <AppBar position="static" sx={{ backgroundColor: '#FFFFFF', boxShadow: 'none' }}>
         <Toolbar>
           <IconButton
             size="large"
             edge="start"
             color="inherit"
             aria-label="open drawer"
-            sx={{ mr: 2 }}
+            sx={{ mr: 2, color: 'gray' }}
             onClick={handleADMClick}
           >
             <ApiIcon />
@@ -123,7 +122,7 @@ export default function CustomAppBar() {
           </IconButton>
           <Search>
             <SearchIconWrapper>
-              <SearchIcon />
+              <SearchIcon sx={{ color: 'gray' }} />
             </SearchIconWrapper>
             <StyledInputBase
               placeholder="Search…"
@@ -134,7 +133,7 @@ export default function CustomAppBar() {
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <IconButton size="large" aria-label="show 4 new mails" color="inherit">
               <Badge badgeContent={4} color="error">
-                <MailIcon />
+                <MailIcon sx={{ color: 'gray' }} />
               </Badge>
             </IconButton>
             <IconButton
@@ -143,7 +142,7 @@ export default function CustomAppBar() {
               color="inherit"
             >
               <Badge badgeContent={17} color="error">
-                <NotificationsIcon />
+                <NotificationsIcon sx={{ color: 'gray' }} />
               </Badge>
             </IconButton>
             <IconButton
@@ -155,7 +154,7 @@ export default function CustomAppBar() {
               onClick={handleProfileMenuOpen}
               color="inherit"
             >
-              <AccountCircle />
+              <AccountCircle sx={{ color: 'gray' }} />
             </IconButton>
           </Box>
         </Toolbar>

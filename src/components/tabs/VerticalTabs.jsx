@@ -1,44 +1,6 @@
-import * as React from 'react';
-import { useState } from 'react';
-import Box from '@mui/material/Box';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import IconButton from '@mui/material/IconButton';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { styled } from '@mui/system';
-
-const CustomTabs = styled(Tabs)({
-  borderRight: '1px solid #ddd',
-  width: 220,
-  marginTop: '20px',
-  backgroundColor: '#f5f5f5',
-  boxShadow: '0px 2px 10px rgba(0, 0, 0, 0.1)',
-  borderRadius: '8px',
-});
-
-const CustomTab = styled(Tab)({
-  textTransform: 'none',
-  fontWeight: 'bold',
-  fontSize: '16px',
-  color: '#555',
-  '&.Mui-selected': {
-    color: '#1976d2',
-  },
-  '&:hover': {
-    color: '#1976d2',
-    backgroundColor: '#e3f2fd',
-  },
-  padding: '12px 24px',
-});
-
-const CustomIconButton = styled(IconButton)({
-  margin: '10px',
-  color: '#1976d2',
-  '&:hover': {
-    backgroundColor: '#e3f2fd',
-  },
-});
+import { FaArrowLeft, FaTasks, FaInfoCircle, FaCogs } from 'react-icons/fa';
 
 const VerticalTabs = () => {
   const [selectedTab, setSelectedTab] = useState(0);
@@ -46,9 +8,9 @@ const VerticalTabs = () => {
   const { projectId } = useParams();
   const username = localStorage.getItem('username');
 
-  const handleTabChange = (event, newValue) => {
-    setSelectedTab(newValue);
-    switch (newValue) {
+  const handleTabChange = (tabIndex) => {
+    setSelectedTab(tabIndex);
+    switch (tabIndex) {
       case 1:
         navigate(`/project/${projectId}/api`);
         break;
@@ -58,10 +20,6 @@ const VerticalTabs = () => {
       case 3:
         navigate(`/project/${projectId}/detail`);
         break;
-      case 4:
-        navigate(`/project/${projectId}/env`);
-        break;
-
       default:
         break;
     }
@@ -72,22 +30,34 @@ const VerticalTabs = () => {
   };
 
   return (
-    <Box sx={{ display: 'flex' }}>
-      <CustomTabs
-        orientation="vertical"
-        variant="scrollable"
-        value={selectedTab}
-        onChange={handleTabChange}
-      >
-        <CustomIconButton onClick={handleBackClick}>
-          <ArrowBackIcon />
-        </CustomIconButton>
-        <CustomTab label="API" />
-        <CustomTab label="TASK" />
-        <CustomTab label="DETAIL" />
-        {/* <CustomTab label="ENV" /> */}
-      </CustomTabs>
-    </Box>
+    <div className="d-flex flex-column vh-100 bg-success p-3" style={{ width: '220px' }}>
+      <button className="btn btn-light mb-3" onClick={handleBackClick}>
+        <FaArrowLeft /> Back
+      </button>
+      <nav className="nav flex-column">
+        <a
+          className={`nav-link text-white ${selectedTab === 1 ? 'active' : ''}`}
+          href="#"
+          onClick={() => handleTabChange(1)}
+        >
+          <FaTasks className="mr-2" /> API
+        </a>
+        <a
+          className={`nav-link text-white ${selectedTab === 2 ? 'active' : ''}`}
+          href="#"
+          onClick={() => handleTabChange(2)}
+        >
+          <FaTasks className="mr-2" /> TASK
+        </a>
+        <a
+          className={`nav-link text-white ${selectedTab === 3 ? 'active' : ''}`}
+          href="#"
+          onClick={() => handleTabChange(3)}
+        >
+          <FaInfoCircle className="mr-2" /> DETAIL
+        </a>
+      </nav>
+    </div>
   );
 };
 
