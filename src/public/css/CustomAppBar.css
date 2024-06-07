@@ -1,0 +1,22 @@
+/* CustomAppBar.css */
+.app-bar {
+    background-color: #ffffff !important; /* Màu trắng */
+    box-shadow: none;
+  }
+  
+  .icon-button {
+    color: #28a745 !important; /* Màu success của Bootstrap cho các icon */
+  }
+  
+  .search-bar {
+    background-color: rgba(0, 0, 0, 0.15); /* Màu đen bán trong suốt */
+  }
+  
+  .search-bar:hover {
+    background-color: rgba(0, 0, 0, 0.25); /* Hơi trong suốt hơn khi hover */
+  }
+  
+  input::placeholder {
+    color: #000000; /* Màu chữ đen cho placeholder */
+  }
+  

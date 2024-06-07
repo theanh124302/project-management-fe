@@ -8,11 +8,7 @@ import InputBase from '@mui/material/InputBase';
 import Badge from '@mui/material/Badge';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-import ApiIcon from '@mui/icons-material/Api';
-import SearchIcon from '@mui/icons-material/Search';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import MailIcon from '@mui/icons-material/Mail';
-import NotificationsIcon from '@mui/icons-material/Notifications';
+import { FaSearch, FaUserCircle, FaEnvelope, FaBell, FaCogs } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import '../../public/css/CustomAppBar.css';
 
@@ -107,22 +103,22 @@ export default function CustomAppBar() {
   return (
     <Box sx={{ flexGrow: 1 }}>
       {renderMenu}
-      <AppBar position="fixed" sx={{ backgroundColor: '#FFFFFF', boxShadow: 'none', zIndex: 1000 }}>
+      <AppBar position="fixed" className="app-bar">
         <Toolbar>
           <IconButton
             size="large"
             edge="start"
-            color="inherit"
+            className="icon-button"
             aria-label="open drawer"
-            sx={{ mr: 2, color: 'gray' }}
+            sx={{ mr: 2 }}
             onClick={handleADMClick}
           >
-            <ApiIcon />
+            <FaCogs />
             ADM
           </IconButton>
-          <Search>
+          <Search className="search-bar">
             <SearchIconWrapper>
-              <SearchIcon sx={{ color: 'gray' }} />
+              <FaSearch />
             </SearchIconWrapper>
             <StyledInputBase
               placeholder="Search…"
@@ -131,18 +127,18 @@ export default function CustomAppBar() {
           </Search>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <IconButton size="large" aria-label="show 4 new mails" color="inherit">
+            <IconButton size="large" aria-label="show 4 new mails" className="icon-button">
               <Badge badgeContent={4} color="error">
-                <MailIcon sx={{ color: 'gray' }} />
+                <FaEnvelope />
               </Badge>
             </IconButton>
             <IconButton
               size="large"
               aria-label="show 17 new notifications"
-              color="inherit"
+              className="icon-button"
             >
               <Badge badgeContent={17} color="error">
-                <NotificationsIcon sx={{ color: 'gray' }} />
+                <FaBell />
               </Badge>
             </IconButton>
             <IconButton
@@ -152,9 +148,9 @@ export default function CustomAppBar() {
               aria-controls={menuId}
               aria-haspopup="true"
               onClick={handleProfileMenuOpen}
-              color="inherit"
+              className="icon-button"
             >
-              <AccountCircle sx={{ color: 'gray' }} />
+              <FaUserCircle />
             </IconButton>
           </Box>
         </Toolbar>
