@@ -116,7 +116,7 @@ const TaskList = () => {
         <Col xs={12} md={3}>
           <VerticalTabs projectId={projectId} />
         </Col>
-        <Col xs={12} md={9} className='config'>
+        <Col xs={12} md={9} className="task-content">
           <h2>Task List</h2>
           <div className="d-flex justify-content-end mb-3">
             <Form.Group controlId="formStatusFilter" className="d-flex align-items-center">

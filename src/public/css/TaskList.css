@@ -15,6 +15,16 @@
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
+.task-content {
+  border: 2px solid #ddd; /* Bo viền cho toàn bộ nội dung trong TaskList */
+  border-radius: 8px; /* Bo tròn các góc */
+  padding: 15px; /* Khoảng cách bên trong */
+  background-color: #fff; /* Màu nền trắng */
+  margin-top: 15px; /* Khoảng cách phía trên */
+  transform: translateX(-45px);
+}
+
+
 .config{
   transform: translateX(-20px);
 }
