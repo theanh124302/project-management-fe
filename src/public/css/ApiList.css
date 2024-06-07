@@ -1,6 +1,4 @@
-.api-list-container {
-  display: flex;
-  height: calc(100vh - px); /* Adjust based on your header height */
+.api-list-container {/* Adjust based on your header height */
 }
 
 .api-content {
@@ -8,7 +6,7 @@
   border-radius: 8px; /* Bo tròn các góc */
   padding: 15px; /* Khoảng cách bên trong */
   background-color: #fff; /* Màu nền trắng */
-  margin-top: 100px; /* Tăng khoảng cách phía trên để hạ nội dung xuống */
+  margin-top: 40px; /* Tăng khoảng cách phía trên để hạ nội dung xuống */
   margin-bottom: 50px;
   transform: translateX(-45px);
 }

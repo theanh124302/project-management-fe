@@ -2,6 +2,7 @@
 .app-bar {
     background-color: #ffffff !important; /* Màu trắng */
     box-shadow: none;
+    z-index: 1300;
   }
   
   .icon-button {
