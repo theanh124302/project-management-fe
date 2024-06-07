@@ -10,6 +10,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
+import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 import '../../public/css/UserProfile.css';
 
 const UserProfile = () => {
@@ -165,6 +166,7 @@ const UserProfile = () => {
             </Button>
           </Box>
         </Box>
+
       </Container>
     </div>
   );
