@@ -85,6 +85,13 @@ const VerticalTabs = () => {
         >
           <FaInfoCircle className="mr-2" /> Detail
         </a>
+        <a
+          className={`nav-link text-white ${selectedTab === 6 ? 'active' : ''}`}
+          href="#"
+          onClick={() => handleTabChange(6, `/project/${projectId}/file`)}
+        >
+          <FaInfoCircle className="mr-2" /> File
+        </a>
       </nav>
     </div>
   );
