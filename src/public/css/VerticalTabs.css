@@ -1,7 +1,15 @@
 .vertical-tabs {
-    position: fixed;
-    left: 0;
-    height: 100vh;
-    width: 220px;
-  }
-  
+  position: fixed;
+  left: 0;
+  height: 100vh;
+  width: 220px;
+}
+
+.nav-link {
+  font-weight: normal;
+  transition: font-weight 0.3s ease;
+}
+
+.nav-link.active {
+  font-weight: bold;
+}
