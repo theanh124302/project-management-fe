@@ -142,7 +142,7 @@ const TaskList = () => {
                       <strong>Status:</strong> <span className={`text-${statusColors[task.status]}`}>{task.status}</span>
                     </Card.Text>
                     <Card.Text>
-                      <strong>Due Date:</strong> {task.dueDate}
+                      <strong>Due Date:</strong> {new Date(task.dueDate).toLocaleString()}
                     </Card.Text>
                     <Card.Text>
                       <strong>Priority:</strong> {task.priority}

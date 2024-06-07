@@ -266,9 +266,9 @@ const TaskDetail = () => {
                 )}
               </Card.Text>
               <Card.Text><strong>Priority:</strong> {task.priority}</Card.Text>
-              <Card.Text><strong>Start Date:</strong> {task.startDate}</Card.Text>
-              <Card.Text><strong>Due Date:</strong> {task.dueDate}</Card.Text>
-              <Card.Text><strong>Created By:</strong> {task.createdBy}</Card.Text>
+              <Card.Text><strong>Start Date:</strong> {new Date(task.startDate).toLocaleString()}</Card.Text>
+              <Card.Text><strong>Due Date:</strong> {new Date(task.dueDate).toLocaleString()}</Card.Text> 
+              <Card.Text><strong>Created By:</strong> {task.createdBy}</Card.Text> 
               <Card.Text><strong>Assignees:</strong></Card.Text>
               <ListGroup className="mb-3">
                 {assignedUsers.map(user => (
