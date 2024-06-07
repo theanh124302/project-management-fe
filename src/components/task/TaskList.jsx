@@ -34,29 +34,40 @@ const TaskList = () => {
   const [projectLeaderId, setProjectLeaderId] = useState(null);
   const userId = localStorage.getItem('userId');
   const navigate = useNavigate();
+  const [statusFilter, setStatusFilter] = useState('');
 
   useEffect(() => {
-    const fetchProjectDetails = async () => {
-      try {
-        const response = await axios.get(`${backendUrl}/api/v1/project/findById?id=${projectId}`);
-        setProjectLeaderId(response.data.data.leaderId);
-      } catch (error) {
-        console.error('Error fetching project details:', error);
-      }
-    };
-
-    const fetchTasks = async () => {
-      try {
-        const response = await axios.get(`${backendUrl}/api/v1/task/findByProjectId?projectId=${projectId}`);
-        setTasks(response.data.data);
-      } catch (error) {
-        console.error('Error fetching tasks:', error);
-      }
-    };
-
     fetchProjectDetails();
     fetchTasks();
   }, [projectId]);
+
+  const fetchProjectDetails = async () => {
+    try {
+      const response = await axios.get(`${backendUrl}/api/v1/project/findById?id=${projectId}`);
+      setProjectLeaderId(response.data.data.leaderId);
+    } catch (error) {
+      console.error('Error fetching project details:', error);
+    }
+  };
+
+  const fetchTasks = async () => {
+    try {
+      const response = await axios.get(`${backendUrl}/api/v1/task/findByProjectId?projectId=${projectId}`);
+      setTasks(response.data.data);
+    } catch (error) {
+      console.error('Error fetching tasks:', error);
+    }
+  };
+
+  const fetchTasksByStatus = async (status) => {
+    try {
+      const response = await axios.get(`${backendUrl}/api/v1/task/findByProjectIdAndStatus?projectId=${projectId}&status=${status}`);
+      setTasks(response.data.data);
+    } catch (error) {
+     
+      console.error('Error fetching tasks by status:', error);
+    }
+  };
 
   const handleAddTask = async () => {
     if (!userId) {
@@ -72,8 +83,7 @@ const TaskList = () => {
       });
       setShowForm(false);
       setNewTask({ name: '', description: '', priority: '', startDate: '', dueDate: '' });
-      const response = await axios.get(`${backendUrl}/api/v1/task/findByProjectId?projectId=${projectId}`);
-      setTasks(response.data.data);
+      fetchTasks();
     } catch (error) {
       console.error('Error adding task:', error);
     }
@@ -89,6 +99,16 @@ const TaskList = () => {
     setNewTask({ name: '', description: '', priority: '', startDate: '', dueDate: '' });
   };
 
+  const handleStatusFilterChange = (e) => {
+    const selectedStatus = e.target.value;
+    setStatusFilter(selectedStatus);
+    if (selectedStatus === '') {
+      fetchTasks();
+    } else {
+      fetchTasksByStatus(selectedStatus);
+    }
+  };
+
   return (
     <Container fluid className="task-list-container">
       <CustomAppBar />
@@ -98,6 +118,19 @@ const TaskList = () => {
         </Col>
         <Col xs={12} md={9}>
           <h2>Task List</h2>
+          <div className="d-flex justify-content-end mb-3">
+            <Form.Group controlId="formStatusFilter" className="d-flex align-items-center">
+              <Form.Label className="me-2">Filter by Status:</Form.Label>
+              <Form.Control as="select" value={statusFilter} onChange={handleStatusFilterChange} className="w-auto">
+                <option value="">All</option>
+                {Object.keys(statusColors).map((status) => (
+                  <option key={status} value={status}>
+                    {status}
+                  </option>
+                ))}
+              </Form.Control>
+            </Form.Group>
+          </div>
           <Row className="justify-content-center">
             {tasks.map((task) => (
               <Col key={task.id} xs={12} md={6} lg={4} className="mb-3">
