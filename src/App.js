@@ -16,16 +16,10 @@ import ApiDesign from './components/api-management/ApiDesign';
 import ApiDevelop from './components/api-management/ApiDevelop';
 import DefineTaskRequest from './components/request-done/DefineTaskRequest';
 import DesignDocs from './components/api-management/DesignDocs';
-import IssueList from './components/project-issue/IssueList'
+import IssueList from './components/project-issue/IssueList';
 import IssueDetail from './components/project-issue/IssueDetail';
 import Dashboard from './components/project-dashboard/ProjectDashboard';
-
-
-// import DesignTaskRequest from './components/request-done/DesignTaskRequest';
-// import DevelopTaskRequest from './components/request-done/DevelopTaskRequest';
-// import TestTaskRequest from './components/request-done/TestTaskRequest';
-// import DeployTaskRequest from './components/request-done/DeployTaskRequest';
-// import MaintainTaskRequest from './components/request-done/MaintainTaskRequest';
+import DatabaseServerList from './components/database-server/DatabaseServerList'; // Import DatabaseServerList
 
 function App() {
   return (
@@ -52,6 +46,7 @@ function App() {
         <Route path='/project/:projectId/issue' element={<IssueList />} />  
         <Route path='/project/:projectId/issue/:issueId' element={<IssueDetail />} />
         <Route path='/project/:projectId/dashboard' element={<Dashboard />} />
+        <Route path='/project/:projectId/database' element={<DatabaseServerList />} /> {/* Add DatabaseServerList route */}
         {/* <Route path='/project/:projectId/task/:taskId/request-done/design' element={<DesignTaskRequest />} />
         <Route path='/project/:projectId/task/:taskId/request-done/develop' element={<DevelopTaskRequest />} />
         <Route path='/project/:projectId/task/:taskId/request-done/test' element={<TestTaskRequest />} />

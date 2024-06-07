@@ -1,0 +1,31 @@
+.server-list-container {
+    background-color: #e6f7e6; /* Màu xanh lá rất nhạt */
+    padding: 0px;
+  }
+  
+  .server-card {
+    border: 1px solid #ffffff; /* Viền trắng */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .server-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+  
+  .server-content {
+    border: 2px solid #ddd; /* Bo viền cho toàn bộ nội dung trong DatabaseServerList */
+    border-radius: 8px; /* Bo tròn các góc */
+    padding: 15px; /* Khoảng cách bên trong */
+    background-color: #fff; /* Màu nền trắng */
+    margin-top: 50px; /* Khoảng cách phía trên */
+    margin-bottom: 50px;
+    transform: translateX(-45px);
+  }
+  
+  .config {
+    transform: translateX(-20px);
+  }
+  
