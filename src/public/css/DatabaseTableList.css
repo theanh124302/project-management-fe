@@ -1,0 +1,31 @@
+.table-list-container {
+    background-color: #e6f7e6; /* Very light green */
+    padding: 0px;
+  }
+  
+  .table-card {
+    border: 1px solid #ffffff; /* White border */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .table-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+  
+  .table-content {
+    border: 2px solid #ddd; /* Border for the whole content */
+    border-radius: 8px; /* Rounded corners */
+    padding: 15px; /* Inner padding */
+    background-color: #fff; /* White background */
+    margin-top: 50px; /* Top margin */
+    margin-bottom: 50px;
+    transform: translateX(-45px);
+  }
+  
+  .config {
+    transform: translateX(-20px);
+  }
+  

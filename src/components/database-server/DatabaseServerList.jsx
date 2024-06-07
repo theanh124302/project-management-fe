@@ -58,8 +58,8 @@ const DatabaseServerList = () => {
     }
   };
 
-  const handleServerClick = (serverId) => {
-    navigate(`/project/${projectId}/database-server/${serverId}`);
+  const handleServerClick = (server) => {
+    navigate(`/project/${projectId}/database-server/${server.id}/tables`, { state: { typeColor: typeColors[server.type] || typeColors['MySQL'] } });
   };
 
   const handleCloseForm = () => {
@@ -80,7 +80,7 @@ const DatabaseServerList = () => {
             {servers.map((server) => (
               <Col key={server.id} xs={12} md={6} lg={4} className="mb-3">
                 <Card
-                  onClick={() => handleServerClick(server.id)}
+                  onClick={() => handleServerClick(server)}
                   className="server-card"
                   style={{ 
                     cursor: 'pointer', 

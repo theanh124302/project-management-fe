@@ -219,7 +219,7 @@ const TaskList = () => {
               <Button variant="secondary" onClick={handleCloseForm}>
                 Cancel
               </Button>
-              <Button variant="primary" onClick={handleAddTask}>
+              <Button variant="success" onClick={handleAddTask}>
                 {currentTask ? 'Update Task' : 'Add Task'}
               </Button>
             </Modal.Footer>
