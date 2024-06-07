@@ -1,9 +1,4 @@
-/* CustomAppBar.css */
-.app-bar {
-    background-color: #ffffff !important; /* Màu trắng */
-    box-shadow: none;
-    z-index: 1300;
-  }
+
   
   .icon-button {
     color: #28a745 !important; /* Màu success của Bootstrap cho các icon */

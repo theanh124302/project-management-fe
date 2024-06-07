@@ -103,7 +103,7 @@ export default function CustomAppBar() {
   return (
     <Box sx={{ flexGrow: 1 }}>
       {renderMenu}
-      <AppBar position="fixed" className="app-bar" sx={{ backgroundColor: '#FFFFFF', boxShadow: 'none', zIndex: 1000 }}>
+      <AppBar position="fixed" className="app-bar" sx={{ backgroundColor: '#FFFFFF', boxShadow: 'none', zIndex: 500 }}>
         <Toolbar>
           <IconButton
             size="large"
