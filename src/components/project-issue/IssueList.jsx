@@ -126,7 +126,7 @@ const IssueList = () => {
         </Col>
         <Col xs={12} md={9} className='config'>
           <h2>Issue List</h2>
-          <Row className="justify-content-center">
+          <Row>
             {issues.map((issue) => (
               <Col key={issue.id} xs={12} md={6} lg={4} className="mb-3">
                 <Card onClick={() => handleIssueClick(issue.id)} className={`issue-card border-${statusColors[issue.status]}`} style={{ cursor: 'pointer' }}>
