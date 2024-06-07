@@ -1,3 +1,39 @@
-.config{
+body, html {
+    background-color: #e6f7e6; /* Màu xanh lá rất nhạt */
+    height: 100%;
+    margin: 0;
+  }
+  
+.issue-list-container {
+    padding: 0px;
+  }
+  
+.issue-card {
+    position: relative;
+    border: 1px solid #ffffff; /* Viền trắng */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+  }
+  
+.issue-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+  
+.add-issue-card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    cursor: pointer;
+  }
+  
+.issue-content {
+    border: 2px solid #ddd; /* Bo viền cho toàn bộ nội dung trong IssueList */
+    border-radius: 8px; /* Bo tròn các góc */
+    padding: 15px; /* Khoảng cách bên trong */
+    background-color: #fff; /* Màu nền trắng */
+    margin-top: 30px; /* Tăng khoảng cách phía trên để hạ nội dung xuống */
     transform: translateX(-45px);
   }

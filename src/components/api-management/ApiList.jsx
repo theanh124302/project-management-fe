@@ -78,18 +78,18 @@ const ApiList = () => {
   };
 
   return (
-    <Container fluid className="task-list-container">
+    <Container fluid className="api-list-container">
       <CustomAppBar />
       <Row>
         <Col xs={12} md={3}>
           <VerticalTabs projectId={projectId} />
         </Col>
-        <Col xs={12} md={9} className='config'>
+        <Col xs={12} md={9} className='api-content'>
           <h2>API List</h2>
           <Row>
             {apis.map((api) => (
               <Col key={api.id} xs={12} md={6} lg={4} className="mb-3">
-                <Card onClick={() => handleApiClick(api.id)} className="task-card" style={{ cursor: 'pointer' }}>
+                <Card onClick={() => handleApiClick(api.id)} className="api-card" style={{ cursor: 'pointer' }}>
                   <Card.Body>
                     <Card.Title>{api.name}</Card.Title>
                     <Card.Text>{api.description}</Card.Text>
@@ -104,7 +104,7 @@ const ApiList = () => {
               </Col>
             ))}
             <Col xs={12} md={6} lg={4} className="mb-3">
-              <Card onClick={() => setShowForm(true)} className="task-card add-task-card" style={{ cursor: 'pointer' }}>
+              <Card onClick={() => setShowForm(true)} className="api-card add-api-card" style={{ cursor: 'pointer' }}>
                 <Card.Body className="d-flex justify-content-center align-items-center">
                   <h1>+</h1>
                 </Card.Body>

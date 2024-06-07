@@ -124,7 +124,7 @@ const IssueList = () => {
         <Col xs={12} md={3}>
           <VerticalTabs projectId={projectId} />
         </Col>
-        <Col xs={12} md={9} className='config'>
+        <Col xs={12} md={9} className='issue-content'>
           <h2>Issue List</h2>
           <Row>
             {issues.map((issue) => (

@@ -20,7 +20,8 @@
   border-radius: 8px; /* Bo tròn các góc */
   padding: 15px; /* Khoảng cách bên trong */
   background-color: #fff; /* Màu nền trắng */
-  margin-top: 15px; /* Khoảng cách phía trên */
+  margin-top: 50px; /* Khoảng cách phía trên */
+  margin-bottom: 50px;
   transform: translateX(-45px);
 }
 

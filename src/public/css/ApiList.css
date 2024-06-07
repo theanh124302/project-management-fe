@@ -1,37 +1,35 @@
-/* src/public/css/ApiList.css */
 .api-list-container {
   display: flex;
-  height: calc(100vh - 64px); /* Adjust based on your header height */
+  height: calc(100vh - px); /* Adjust based on your header height */
 }
 
-.api-list-content {
+.api-content {
+  border: 2px solid #ddd; /* Bo viền cho toàn bộ nội dung trong ApiList */
+  border-radius: 8px; /* Bo tròn các góc */
+  padding: 15px; /* Khoảng cách bên trong */
+  background-color: #fff; /* Màu nền trắng */
+  margin-top: 100px; /* Tăng khoảng cách phía trên để hạ nội dung xuống */
+  margin-bottom: 50px;
+  transform: translateX(-45px);
+}
+
+.api-card {
+  position: relative;
+  border: 1px solid #ffffff; /* Viền trắng */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.api-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.add-api-card {
   display: flex;
-  flex-direction: column;
-  flex: 1;
-  padding: 20px;
-  margin-left: 20px; /* Space between tabs and content */
-}
-
-.api-list-table {
-  margin-top: 20px;
-  width: 100%;
-}
-
-.api-list-table th, .api-list-table td {
-  padding: 10px;
-  text-align: left;
-}
-
-.api-list-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-}
-
-.add-api-button {
-  margin-bottom: 10px;
-}
-
-.config{
-  transform: translateX(-20px);
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  cursor: pointer;
 }
