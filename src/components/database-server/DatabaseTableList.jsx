@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { Container, Row, Col, Card, Button, Modal, Form } from 'react-bootstrap';
 import CustomAppBar from '../navbar/CustomAppBar';
 import VerticalTabs from '../tabs/VerticalTabs';
@@ -9,8 +9,21 @@ import '../../public/css/DatabaseTableList.css';
 
 const backendUrl = 'http://localhost:8080'; // Update to your backend URL
 
+const lightenColor = (color, percent) => {
+  const num = parseInt(color.replace('#', ''), 16),
+    amt = Math.round(2.55 * percent),
+    R = (num >> 16) + amt,
+    G = (num >> 8 & 0x00FF) + amt,
+    B = (num & 0x0000FF) + amt;
+  return `#${(0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 + (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 + (B < 255 ? B < 1 ? 0 : B : 255)).toString(16).slice(1)}`;
+};
+
 const DatabaseTableList = () => {
   const { projectId, serverId } = useParams();
+  const location = useLocation();
+  const typeColor = location.state?.typeColor || '#ffffff'; // Default to white if no color is provided
+  const lightTypeColor = lightenColor(typeColor, 80); // Lighten the color by 80%
+
   const [tables, setTables] = useState([]);
   const [serverDetails, setServerDetails] = useState(null);
   const [showForm, setShowForm] = useState(false);
@@ -92,7 +105,7 @@ const DatabaseTableList = () => {
   };
 
   const handleTableClick = (tableId) => {
-    navigate(`/project/${projectId}/database-server/${serverId}/table/${tableId}/fields`);
+    navigate(`/project/${projectId}/database-server/${serverId}/table/${tableId}/fields`, { state: { typeColor: lightTypeColor } });
   };
 
   const handleCloseForm = () => {
@@ -105,13 +118,13 @@ const DatabaseTableList = () => {
   };
 
   return (
-    <Container fluid className="table-list-container">
+    <Container fluid className="table-list-container" >
       <CustomAppBar />
       <Row>
         <Col xs={12} md={3}>
           <VerticalTabs projectId={projectId} />
         </Col>
-        <Col xs={12} md={9} className="table-content">
+        <Col xs={12} md={9} className="table-content" style={{ backgroundColor: lightTypeColor }}>
           <h2>Database Table List</h2>
           {serverDetails && (
             <Card className="mb-3">
