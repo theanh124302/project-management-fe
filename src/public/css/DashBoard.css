@@ -1,0 +1,9 @@
+.content {
+    border: 2px solid #ddd; /* Bo viền cho toàn bộ nội dung trong FolderList */
+    border-radius: 8px; /* Bo tròn các góc */
+    padding: 15px; /* Khoảng cách bên trong */
+    background-color: #fff; /* Màu nền trắng */ /* Khoảng cách phía trên */
+    transform: translateX(-45px);
+    margin-top: 50px;
+    margin-bottom: 50px;
+  }

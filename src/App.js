@@ -19,6 +19,7 @@ import DefineTaskRequest from './components/request-done/DefineTaskRequest';
 import DesignDocs from './components/api-management/DesignDocs';
 import IssueList from './components/project-issue/IssueList'
 import IssueDetail from './components/project-issue/IssueDetail';
+import Dashboard from './components/project-dashboard/ProjectDashboard';
 
 
 // import DesignTaskRequest from './components/request-done/DesignTaskRequest';
@@ -51,6 +52,7 @@ function App() {
         <Route path='/project/:projectId/task/:taskId/request-done/define' element={<DefineTaskRequest />} />
         <Route path='/project/:projectId/issue' element={<IssueList />} />  
         <Route path='/project/:projectId/issue/:issueId' element={<IssueDetail />} />
+        <Route path='/project/:projectId/dashboard' element={<Dashboard />} />
         {/* <Route path='/project/:projectId/task/:taskId/request-done/design' element={<DesignTaskRequest />} />
         <Route path='/project/:projectId/task/:taskId/request-done/develop' element={<DevelopTaskRequest />} />
         <Route path='/project/:projectId/task/:taskId/request-done/test' element={<TestTaskRequest />} />
