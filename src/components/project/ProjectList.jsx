@@ -67,7 +67,7 @@ const ProjectList = () => {
   };
 
   const handleProjectClick = (projectId) => {
-    navigate(`/project/${projectId}/detail`);
+    navigate(`/project/${projectId}/dashboard`);
   };
 
   const handleCloseForm = () => {
