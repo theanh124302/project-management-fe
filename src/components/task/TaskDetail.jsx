@@ -56,7 +56,7 @@ const TaskDetail = () => {
           startDate: taskData.startDate,
           dueDate: taskData.dueDate
         });
-        
+
         // Fetch API details
         if (taskData.apiId) {
           const apiResponse = await axios.get(`${backendUrl}/api/v1/api/findById?id=${taskData.apiId}`);
@@ -188,6 +188,37 @@ const TaskDetail = () => {
     }
   };
 
+  const handleRequestDone = () => {
+    if (lifeCycle) {
+      let requestDonePath;
+      switch (lifeCycle) {
+        case 'DEFINE':
+          requestDonePath = 'request-done/define';
+          break;
+        case 'DESIGN':
+          requestDonePath = 'request-done/design';
+          break;
+        case 'DEVELOP':
+          requestDonePath = 'request-done/develop';
+          break;
+        case 'TEST':
+          requestDonePath = 'request-done/test';
+          break;
+        case 'DEPLOY':
+          requestDonePath = 'request-done/deploy';
+          break;
+        case 'MAINTAIN':
+          requestDonePath = 'request-done/maintain';
+          break;
+        default:
+          requestDonePath = '';
+      }
+      navigate(`/project/${projectId}/task/${taskId}/${requestDonePath}`);
+    }
+  };
+
+  const isTaskAssignedToUser = assignedUsers.some(user => user.id.toString() === userId);
+
   if (!task) {
     return <p>Loading task details...</p>;
   }
@@ -278,10 +309,15 @@ const TaskDetail = () => {
                   </Button>
                 </>
               )}
-              <Button variant="warning" className="mt-3 me-2" onClick={() => navigate(`/project/${projectId}/task/${taskId}/comment`)}>
+              <Button variant="primary" className="mt-3 me-2" onClick={() => navigate(`/project/${projectId}/task/${taskId}/comment`)}>
                 Comment
               </Button>
-              <Button variant="secondary" className="mt-3" onClick={() => navigate(-1)}>
+              {isTaskAssignedToUser && (
+                <Button variant="warning" className="mt-3 me-2" onClick={handleRequestDone}>
+                  Request Done
+                </Button>
+              )}
+              <Button variant="secondary" className="mt-3 me-2" onClick={() => navigate(-1)}>
                 Back to Task List
               </Button>
             </Card.Body>

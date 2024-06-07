@@ -194,7 +194,7 @@ const ProjectDetail = () => {
                               onChange={(e) => setExpectedEndDate(e.target.value)}
                             />
                           </Card.Text>
-                          <Button variant="primary" className="mt-2" onClick={handleUpdateProjectDates}>
+                          <Button variant="success" className="mt-2" onClick={handleUpdateProjectDates}>
                             Save Dates
                           </Button>
                           <Button variant="secondary" className="mt-2 ms-2" onClick={() => setEditingDates(false)}>
@@ -205,12 +205,12 @@ const ProjectDetail = () => {
                         <>
                           <Card.Text><strong>Start Date:</strong> {startDate}</Card.Text>
                           <Card.Text><strong>Expected End Date:</strong> {expectedEndDate}</Card.Text>
-                          <Button variant="primary" className="mt-2" onClick={() => setEditingDates(true)}>
+                          <Button variant="success" className="mt-2" onClick={() => setEditingDates(true)}>
                             Update Dates
                           </Button>
                         </>
                       )}
-                      <Button variant="primary" className="mt-2 ms-2" onClick={handleEditProject}>
+                      <Button variant="success" className="mt-2 ms-2" onClick={handleEditProject}>
                         Edit Project
                       </Button>
                       <Button variant="danger" className="mt-2 ms-2" onClick={handleDeleteProject}>
@@ -254,7 +254,7 @@ const ProjectDetail = () => {
                             <option value="TESTER">TESTER</option>
                             <option value="DEVOPS">DEVOPS</option>
                           </FormControl>
-                          <Button onClick={handleAddOrEditMember}>
+                          <Button variant="success" onClick={handleAddOrEditMember}>
                             {editingMember ? 'Edit Member' : 'Add Member'}
                           </Button>
                         </Form>
@@ -283,7 +283,7 @@ const ProjectDetail = () => {
                               <td>
                                 {isLeader && (
                                   <>
-                                    <Button variant="outline-primary" className="me-2" onClick={() => handleEditClick(member)}>
+                                    <Button variant="outline-success" className="me-2" onClick={() => handleEditClick(member)}>
                                       <FaEdit />
                                     </Button>
                                     <Button variant="outline-danger" onClick={() => handleDeleteMember(member.username)}>
