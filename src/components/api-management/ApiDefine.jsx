@@ -242,7 +242,7 @@ const ApiDefine = () => {
                   />
                 </Form.Group>
                 <Form.Group controlId="formTechnicalRequirements" className="mb-3">
-                  <Form.Label>Technical Requirements</Form.Label>
+                  <Form.Label>Functional Requirements & Non-Functional Requirements</Form.Label>
                   <Form.Control
                     as="textarea"
                     rows={3}
