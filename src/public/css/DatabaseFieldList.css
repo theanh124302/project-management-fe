@@ -1,18 +1,6 @@
 .field-list-container {
   background-color: #e6f7e6; /* Màu xanh lá rất nhạt */
-  padding: 0px;
-}
-
-.field-card {
-  border: 1px solid #ffffff; /* Viền trắng */
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease-in-out;
-}
-
-.field-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  padding: 20px; /* Thêm khoảng cách bên trong */
 }
 
 .field-content {
@@ -21,10 +9,11 @@
   padding: 15px; /* Khoảng cách bên trong */
   background-color: #fff; /* Màu nền trắng */
   margin-top: 50px; /* Khoảng cách phía trên */
-  margin-bottom: 50px;
+  margin-bottom: 50px; /* Khoảng cách phía dưới */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Đổ bóng */
   transform: translateX(-45px);
 }
 
-.config {
-  transform: translateX(-20px);
+.table-hover tbody tr:hover {
+  background-color: #f1f1f1; /* Màu nền khi hover trên hàng bảng */
 }

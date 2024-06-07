@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
-import { Container, Row, Col, Card, Button, Modal, Form } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Modal, Form, Table } from 'react-bootstrap';
 import CustomAppBar from '../navbar/CustomAppBar';
 import VerticalTabs from '../tabs/VerticalTabs';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../public/css/DatabaseFieldList.css';
 
-const backendUrl = 'http://localhost:8080'; // Cập nhật URL backend của bạn
+const backendUrl = 'http://localhost:8080'; // Update your backend URL
 
 const lightenColor = (color, percent) => {
   const num = parseInt(color.replace('#', ''), 16),
@@ -20,7 +20,7 @@ const lightenColor = (color, percent) => {
 
 const DatabaseFieldList = () => {
   const location = useLocation();
-  const typeColor = location.state?.typeColor
+  const typeColor = location.state?.typeColor;
   const { projectId, serverId, tableId } = useParams();
   const [fields, setFields] = useState([]);
   const [showForm, setShowForm] = useState(false);
@@ -42,7 +42,7 @@ const DatabaseFieldList = () => {
       const response = await axios.get(`${backendUrl}/api/v1/database-field/findByDatabaseTableId?databaseTableId=${tableId}&page=0&size=100`);
       setFields(response.data.data);
     } catch (error) {
-      console.error('Lỗi khi lấy dữ liệu các trường:', error);
+      console.error('Error fetching fields:', error);
     }
   };
 
@@ -55,13 +55,12 @@ const DatabaseFieldList = () => {
       setNewField({ fieldName: '', type: '', description: '', databaseTableId: tableId, sample: '' });
       fetchFields();
     } catch (error) {
-      console.error('Lỗi khi thêm trường:', error);
+      console.error('Error adding field:', error);
     }
   };
 
   const handleFieldClick = (fieldId) => {
-    // Thêm logic khi nhấn vào một trường, nếu cần thiết
-    console.log(`Xem chi tiết của trường: ${fieldId}`);
+    console.log(`Viewing details of field: ${fieldId}`);
   };
 
   const handleCloseForm = () => {
@@ -70,7 +69,7 @@ const DatabaseFieldList = () => {
   };
 
   return (
-    <Container fluid className="field-list-container" >
+    <Container fluid className="field-list-container">
       <CustomAppBar />
       <Row>
         <Col xs={12} md={3}>
@@ -78,31 +77,31 @@ const DatabaseFieldList = () => {
         </Col>
         <Col xs={12} md={9} className="field-content" style={{ backgroundColor: typeColor }}>
           <h2>Field List</h2>
-          <Row>
-            {fields.map((field) => (
-              <Col key={field.id} xs={12} md={6} lg={4} className="mb-3">
-                <Card
-                  onClick={() => handleFieldClick(field.id)}
-                  className="field-card"
-                  style={{ cursor: 'pointer' }}
-                >
-                  <Card.Body>
-                    <Card.Title>{field.fieldName}</Card.Title>
-                    <Card.Text>{field.description}</Card.Text>
-                    <Card.Text><strong>Type:</strong> {field.type}</Card.Text>
-                    <Card.Text><strong>Sample:</strong> {field.sample}</Card.Text>
-                  </Card.Body>
-                </Card>
-              </Col>
-            ))}
-            <Col xs={12} md={6} lg={4} className="mb-3">
-              <Card onClick={() => setShowForm(true)} className="field-card add-field-card" style={{ cursor: 'pointer' }}>
-                <Card.Body className="d-flex justify-content-center align-items-center">
-                  <h1>+</h1>
-                </Card.Body>
-              </Card>
-            </Col>
-          </Row>
+          <Button variant="success" onClick={() => setShowForm(true)} className="mb-3">
+            Add Field
+          </Button>
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Field Name</th>
+                <th>Type</th>
+                <th>Description</th>
+                <th>Sample</th>
+              </tr>
+            </thead>
+            <tbody>
+              {fields.map((field, index) => (
+                <tr key={field.id} onClick={() => handleFieldClick(field.id)} style={{ cursor: 'pointer' }}>
+                  <td>{index + 1}</td>
+                  <td>{field.fieldName}</td>
+                  <td>{field.type}</td>
+                  <td>{field.description}</td>
+                  <td>{field.sample}</td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
           <Modal show={showForm} onHide={handleCloseForm}>
             <Modal.Header closeButton>
               <Modal.Title>Add Field</Modal.Title>
@@ -113,7 +112,7 @@ const DatabaseFieldList = () => {
                   <Form.Label>Field Name</Form.Label>
                   <Form.Control
                     type="text"
-                    placeholder="Nhập tên trường"
+                    placeholder="Enter field name"
                     value={newField.fieldName}
                     onChange={(e) => setNewField({ ...newField, fieldName: e.target.value })}
                   />
@@ -122,7 +121,7 @@ const DatabaseFieldList = () => {
                   <Form.Label>Type</Form.Label>
                   <Form.Control
                     type="text"
-                    placeholder="Nhập loại trường"
+                    placeholder="Enter field type"
                     value={newField.type}
                     onChange={(e) => setNewField({ ...newField, type: e.target.value })}
                   />
@@ -132,7 +131,7 @@ const DatabaseFieldList = () => {
                   <Form.Control
                     as="textarea"
                     rows={3}
-                    placeholder="Nhập mô tả trường"
+                    placeholder="Enter field description"
                     value={newField.description}
                     onChange={(e) => setNewField({ ...newField, description: e.target.value })}
                   />
@@ -141,7 +140,7 @@ const DatabaseFieldList = () => {
                   <Form.Label>Sample</Form.Label>
                   <Form.Control
                     type="text"
-                    placeholder="Nhập mẫu dữ liệu"
+                    placeholder="Enter field sample data"
                     value={newField.sample}
                     onChange={(e) => setNewField({ ...newField, sample: e.target.value })}
                   />
