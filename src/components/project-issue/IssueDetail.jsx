@@ -167,7 +167,7 @@ const IssueDetail = () => {
         <Col xs={12} md={3}>
           <VerticalTabs projectId={projectId} />
         </Col>
-        <Col xs={12} md={9}>
+        <Col xs={12} md={9}  className='config'>
           <Card className="mt-4 issue-card">
             <Card.Body>
               <Card.Title>{issue.description}</Card.Title>

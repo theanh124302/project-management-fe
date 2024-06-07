@@ -31,7 +31,7 @@ const ApiDetail = () => {
       <CustomAppBar />
       <div style={{ display: 'flex' }}>
         <VerticalTabs />
-        <div style={{ flex: 1, padding: '20px' }}>
+        <div  className='config' >
           <AppBar position="static">
             <Tabs value={selectedTab} onChange={handleTabChange} aria-label="api management tabs">
               <Tab label="DEF" />

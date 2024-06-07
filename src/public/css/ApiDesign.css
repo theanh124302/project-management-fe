@@ -1,3 +1,7 @@
 .api-design-container {
     padding: 0px;
   }
+
+.config{
+    transform: translateX(-20px);
+  }

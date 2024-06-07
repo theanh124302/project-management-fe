@@ -124,7 +124,7 @@ const IssueList = () => {
         <Col xs={12} md={3}>
           <VerticalTabs projectId={projectId} />
         </Col>
-        <Col xs={12} md={9}>
+        <Col xs={12} md={9} className='config'>
           <h2>Issue List</h2>
           <Row className="justify-content-center">
             {issues.map((issue) => (

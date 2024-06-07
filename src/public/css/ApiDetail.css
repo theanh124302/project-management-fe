@@ -43,3 +43,6 @@
     padding: 20px;
   }
   
+  .config{
+    transform: translateX(-40px);
+  }

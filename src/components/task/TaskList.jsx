@@ -116,7 +116,7 @@ const TaskList = () => {
         <Col xs={12} md={3}>
           <VerticalTabs projectId={projectId} />
         </Col>
-        <Col xs={12} md={9}>
+        <Col xs={12} md={9} className='config'>
           <h2>Task List</h2>
           <div className="d-flex justify-content-end mb-3">
             <Form.Group controlId="formStatusFilter" className="d-flex align-items-center">
@@ -131,7 +131,7 @@ const TaskList = () => {
               </Form.Control>
             </Form.Group>
           </div>
-          <Row className="justify-content-center">
+          <Row>
             {tasks.map((task) => (
               <Col key={task.id} xs={12} md={6} lg={4} className="mb-3">
                 <Card onClick={() => handleTaskClick(task.id)} className={`task-card border-${statusColors[task.status]}`} style={{ cursor: 'pointer' }}>

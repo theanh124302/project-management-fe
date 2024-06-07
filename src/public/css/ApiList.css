@@ -31,3 +31,7 @@
 .add-api-button {
   margin-bottom: 10px;
 }
+
+.config{
+  transform: translateX(-20px);
+}
