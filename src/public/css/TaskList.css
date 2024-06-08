@@ -1,10 +1,10 @@
 .task-list-container {
-  background-color: #e6f7e6; /* Màu xanh lá rất nhạt */
+  background-color: #e6f7e6;
   padding: 0px;
 }
 
 .task-card {
-  border: 1px solid #ffffff; /* Viền trắng */
+  border: 1px solid #ffffff;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease-in-out;
@@ -16,11 +16,11 @@
 }
 
 .task-content {
-  border: 2px solid #ddd; /* Bo viền cho toàn bộ nội dung trong TaskList */
-  border-radius: 8px; /* Bo tròn các góc */
-  padding: 15px; /* Khoảng cách bên trong */
-  background-color: #fff; /* Màu nền trắng */
-  margin-top: 50px; /* Khoảng cách phía trên */
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  background-color: #fff;
+  margin-top: 50px;
   margin-bottom: 50px;
   transform: translateX(-45px);
 }
