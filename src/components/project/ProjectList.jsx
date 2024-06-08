@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Modal, Button, Form, Card, Container, Row, Col } from 'react-bootstrap';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, CartesianGrid } from 'recharts';
 import CustomAppBar from '../navbar/CustomAppBar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../public/css/ProjectList.css';
@@ -18,6 +19,7 @@ const ProjectList = () => {
   });
   const [leaderId, setLeaderId] = useState(null);
   const [userName, setUserName] = useState('');
+  const [dueDateTasks, setDueDateTasks] = useState([]);
   const username = localStorage.getItem('username');
   const userId = localStorage.getItem('userId');
   const navigate = useNavigate();
@@ -42,9 +44,21 @@ const ProjectList = () => {
       }
     };
 
+    const fetchDueDateTasks = async () => {
+      try {
+        const response = await axios.get(`${backendUrl}/api/v1/task/countDueDateByDayAndUserId`, {
+          params: { userId }
+        });
+        setDueDateTasks(response.data.data);
+      } catch (error) {
+        console.error('Error fetching due date tasks:', error);
+      }
+    };
+
     fetchProjects();
     fetchUserInfo();
-  }, [username]);
+    fetchDueDateTasks();
+  }, [username, userId]);
 
   const handleAddProject = async () => {
     if (!leaderId) {
@@ -84,6 +98,15 @@ const ProjectList = () => {
           Add Project
         </Button>
       </div>
+      <BarChart width={600} height={400} data={dueDateTasks}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="number" />
+        <YAxis />
+        <Tooltip />
+        <Legend />
+        <Bar dataKey="value" fill="#8884d8" />
+      </BarChart>
+
       <Row>
         {projects.map((project) => (
           <Col key={project.id} xs={12} sm={6} md={4} className="mb-4">
