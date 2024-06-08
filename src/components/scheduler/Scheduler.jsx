@@ -39,16 +39,7 @@ const Schedule = () => {
   }, [projectId]);
 
   const currentDate = new Date().toISOString().split('T')[0];
-  //const currentDate = '2024-06-08';
 
-  const appointments1 = [
-    {
-      title: 'Website Re-Design Plan',
-      startDate: '2024-06-17',
-      endDate: '2024-06-18',
-    }
-  ];
-  
 
   return (
     <Container fluid className="dashboard-container">
@@ -63,7 +54,7 @@ const Schedule = () => {
               <Card.Title>Schedule</Card.Title>
               <Paper>
                 <Scheduler data={appointments}>
-                  {/* <ViewState currentDate={currentDate} /> */}
+                  <ViewState currentDate={currentDate} />
                   <MonthView />
                   <Appointments />
                 </Scheduler>
