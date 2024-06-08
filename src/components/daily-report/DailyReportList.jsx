@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Card, Button, Modal, Form } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Modal, Form, InputGroup, FormControl } from 'react-bootstrap';
 import CustomAppBar from '../navbar/CustomAppBar';
 import VerticalTabs from '../tabs/VerticalTabs';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -21,6 +21,7 @@ const DailyReportList = () => {
   });
   const [projectLeaderId, setProjectLeaderId] = useState(null);
   const [userName, setUserName] = useState('');
+  const [searchName, setSearchName] = useState('');
   const userId = localStorage.getItem('userId');
   const navigate = useNavigate();
 
@@ -39,9 +40,11 @@ const DailyReportList = () => {
     }
   };
 
-  const fetchDailyReports = async () => {
+  const fetchDailyReports = async (name = '') => {
     try {
-      const response = await axios.get(`${backendUrl}/api/v1/daily-report/findAllByProjectId?projectId=${projectId}`);
+      const response = await axios.get(`${backendUrl}/api/v1/daily-report/findAllByProjectIdAndName`, {
+        params: { projectId, name }
+      });
       setDailyReports(response.data.data);
     } catch (error) {
       console.error('Error fetching daily reports:', error);
@@ -125,6 +128,11 @@ const DailyReportList = () => {
     setCurrentReport(null);
   };
 
+  const handleSearchChange = (e) => {
+    setSearchName(e.target.value);
+    fetchDailyReports(e.target.value);
+  };
+
   return (
     <Container fluid className="daily-report-list-container">
       <CustomAppBar />
@@ -134,6 +142,13 @@ const DailyReportList = () => {
         </Col>
         <Col xs={12} md={9} className="daily-report-content">
           <h2>Daily Report List</h2>
+          <InputGroup className="mb-3">
+            <FormControl
+              placeholder="Search by report name"
+              value={searchName}
+              onChange={handleSearchChange}
+            />
+          </InputGroup>
           <Row>
             {dailyReports.map((report) => (
               <Col key={report.id} xs={12} md={6} lg={4} className="mb-3">
