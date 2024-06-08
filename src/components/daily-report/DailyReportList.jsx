@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Card, Button, Modal, Form } from 'react-bootstrap';
 import CustomAppBar from '../navbar/CustomAppBar';
 import VerticalTabs from '../tabs/VerticalTabs';
@@ -13,19 +13,21 @@ const DailyReportList = () => {
   const { projectId } = useParams();
   const [dailyReports, setDailyReports] = useState([]);
   const [showForm, setShowForm] = useState(false);
+  const [showDetail, setShowDetail] = useState(false);
   const [currentReport, setCurrentReport] = useState(null);
   const [newReport, setNewReport] = useState({
-    name: '',
     description: '',
     date: ''
   });
   const [projectLeaderId, setProjectLeaderId] = useState(null);
+  const [userName, setUserName] = useState('');
   const userId = localStorage.getItem('userId');
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchProjectDetails();
     fetchDailyReports();
+    fetchUserName();
   }, [projectId]);
 
   const fetchProjectDetails = async () => {
@@ -46,20 +48,34 @@ const DailyReportList = () => {
     }
   };
 
+  const fetchUserName = async () => {
+    try {
+      const response = await axios.get(`${backendUrl}/api/v1/user/findById/${userId}`);
+      setUserName(response.data.data.name);
+    } catch (error) {
+      console.error('Error fetching user name:', error);
+    }
+  };
+
   const handleAddReport = async () => {
     if (!userId) {
       console.error('User ID not found');
       return;
     }
 
+    const currentDate = new Date().toISOString().split('T')[0];
+    const reportName = `${currentDate} - ${userName}`;
+
     try {
       await axios.post(`${backendUrl}/api/v1/daily-report/create`, {
         ...newReport,
+        name: reportName,
+        date: currentDate,
         projectId: projectId,
         createdBy: userId,
       });
       setShowForm(false);
-      setNewReport({ name: '', description: '', date: '' });
+      setNewReport({ description: '', date: '' });
       fetchDailyReports();
     } catch (error) {
       console.error('Error adding daily report:', error);
@@ -77,7 +93,7 @@ const DailyReportList = () => {
 
   const handleEditReport = (report) => {
     setCurrentReport(report);
-    setNewReport({ name: report.name, description: report.description, date: report.date });
+    setNewReport({ description: report.description, date: report.date });
     setShowForm(true);
   };
 
@@ -85,7 +101,7 @@ const DailyReportList = () => {
     try {
       await axios.post(`${backendUrl}/api/v1/daily-report/update`, { id: currentReport.id, ...newReport, projectId });
       setShowForm(false);
-      setNewReport({ name: '', description: '', date: '' });
+      setNewReport({ description: '', date: '' });
       setCurrentReport(null);
       fetchDailyReports();
     } catch (error) {
@@ -93,14 +109,20 @@ const DailyReportList = () => {
     }
   };
 
-  const handleReportClick = (reportId) => {
-    navigate(`/project/${projectId}/daily-report/${reportId}`);
+  const handleReportClick = (report) => {
+    setCurrentReport(report);
+    setShowDetail(true);
   };
 
   const handleCloseForm = () => {
     setShowForm(false);
     setCurrentReport(null);
-    setNewReport({ name: '', description: '', date: '' });
+    setNewReport({ description: '', date: '' });
+  };
+
+  const handleCloseDetail = () => {
+    setShowDetail(false);
+    setCurrentReport(null);
   };
 
   return (
@@ -115,7 +137,7 @@ const DailyReportList = () => {
           <Row>
             {dailyReports.map((report) => (
               <Col key={report.id} xs={12} md={6} lg={4} className="mb-3">
-                <Card onClick={() => handleReportClick(report.id)} className="daily-report-card" style={{ cursor: 'pointer' }}>
+                <Card onClick={() => handleReportClick(report)} className="daily-report-card" style={{ cursor: 'pointer' }}>
                   <Card.Body>
                     <Card.Title>{report.name}</Card.Title>
                     <Card.Text>{report.description}</Card.Text>
@@ -150,15 +172,6 @@ const DailyReportList = () => {
             </Modal.Header>
             <Modal.Body>
               <Form>
-                <Form.Group controlId="formDailyReportName" className="mb-3">
-                  <Form.Label>Daily Report Name</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Enter daily report name"
-                    value={newReport.name}
-                    onChange={(e) => setNewReport({ ...newReport, name: e.target.value })}
-                  />
-                </Form.Group>
                 <Form.Group controlId="formDailyReportDescription" className="mb-3">
                   <Form.Label>Description</Form.Label>
                   <Form.Control
@@ -169,14 +182,6 @@ const DailyReportList = () => {
                     onChange={(e) => setNewReport({ ...newReport, description: e.target.value })}
                   />
                 </Form.Group>
-                <Form.Group controlId="formDailyReportDate" className="mb-3">
-                  <Form.Label>Date</Form.Label>
-                  <Form.Control
-                    type="date"
-                    value={newReport.date}
-                    onChange={(e) => setNewReport({ ...newReport, date: e.target.value })}
-                  />
-                </Form.Group>
               </Form>
             </Modal.Body>
             <Modal.Footer>
@@ -185,6 +190,26 @@ const DailyReportList = () => {
               </Button>
               <Button variant="primary" onClick={currentReport ? handleUpdateReport : handleAddReport}>
                 {currentReport ? 'Update Daily Report' : 'Add Daily Report'}
+              </Button>
+            </Modal.Footer>
+          </Modal>
+
+          <Modal show={showDetail} onHide={handleCloseDetail}>
+            <Modal.Header closeButton>
+              <Modal.Title>Daily Report Details</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              {currentReport && (
+                <>
+                  <p><strong>Name:</strong> {currentReport.name}</p>
+                  <p><strong>Description:</strong> {currentReport.description}</p>
+                  <p><strong>Date:</strong> {new Date(currentReport.date).toLocaleString()}</p>
+                </>
+              )}
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={handleCloseDetail}>
+                Close
               </Button>
             </Modal.Footer>
           </Modal>
