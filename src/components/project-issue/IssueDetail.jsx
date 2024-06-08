@@ -182,7 +182,7 @@ const IssueDetail = () => {
                 >
                   <option value="OPEN" className="text-danger">OPEN</option>
                   <option value="IN_PROGRESS" className="text-warning">IN_PROGRESS</option>
-                  <option value="RESOLVED" className="text-success">RESOLVED</option>
+                  <option value="SOLVED" className="text-success">SOLVED</option>
                   <option value="CLOSED" className="text-secondary">CLOSED</option>
                 </Form.Select>
                 <Button variant="success" className="mt-2" onClick={handleUpdateStatus}>
@@ -256,7 +256,7 @@ const IssueDetail = () => {
               >
                 <option value="OPEN">Open</option>
                 <option value="IN_PROGRESS">In Progress</option>
-                <option value="RESOLVED">Resolved</option>
+                <option value="SOLVED">Resolved</option>
                 <option value="CLOSED">Closed</option>
               </Form.Control>
             </Form.Group>
