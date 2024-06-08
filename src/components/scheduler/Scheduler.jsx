@@ -8,7 +8,7 @@ import CustomAppBar from '../navbar/CustomAppBar';
 import VerticalTabs from '../tabs/VerticalTabs';
 import { Container, Row, Col, Card, Button, Modal, Form } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../../public/css/Dashboard.css'; // Sử dụng cùng một CSS để duy trì định dạng giống nhau
+import '../../public/css/Scheduler.css'; // Sử dụng cùng một CSS để duy trì định dạng giống nhau
 
 const backendUrl = 'http://localhost:8080';
 
@@ -67,7 +67,7 @@ const Schedule = () => {
   };
 
   return (
-    <Container fluid className="dashboard-container">
+    <Container fluid>
       <CustomAppBar />
       <Row>
         <Col xs={12} md={3}>
@@ -84,7 +84,7 @@ const Schedule = () => {
                   <Appointments />
                 </Scheduler>
               </Paper>
-              <Button variant="primary" onClick={() => setShowForm(true)} className="mt-3">
+              <Button variant="success" onClick={() => setShowForm(true)} className="mt-3">
                 Add Event
               </Button>
             </Card.Body>
