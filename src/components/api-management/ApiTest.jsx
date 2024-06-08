@@ -11,9 +11,8 @@ const backendUrl = 'http://localhost:8080';
 
 const ApiTest = () => {
   const { projectId, folderId, apiId } = useParams();
-  const [apiDetails, setApiDetails] = useState({ name: '', method: '', url: '' });
+  const [apiDetails, setApiDetails] = useState({ name: '', method: '', url: '', installationGuide: '' });
   const [showTaskForm, setShowTaskForm] = useState(false);
-  const [showIssueForm, setShowIssueForm] = useState(false);
   const [newTask, setNewTask] = useState({
     name: '',
     description: '',
@@ -22,6 +21,7 @@ const ApiTest = () => {
     dueDate: '',
     lifeCycle: 'TEST'
   });
+  const [showIssueForm, setShowIssueForm] = useState(false);
   const [newIssue, setNewIssue] = useState({
     description: '',
     content: '',
@@ -41,6 +41,7 @@ const ApiTest = () => {
           name: data.name,
           method: data.method,
           url: data.url,
+          installationGuide: data.installationGuide || ''
         });
       } catch (error) {
         console.error('Error fetching API details:', error);
@@ -49,6 +50,11 @@ const ApiTest = () => {
 
     fetchApiDetails();
   }, [apiId]);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setApiDetails({ ...apiDetails, [name]: value });
+  };
 
   const handleTaskInputChange = (e) => {
     const { name, value } = e.target;
@@ -111,6 +117,20 @@ const ApiTest = () => {
     setNewIssue({ description: '', content: '', url: '', status: 'OPEN', priority: 'Low' });
   };
 
+  const handleUpdateApi = async () => {
+    try {
+      await axios.post(`${backendUrl}/api/v1/api/updateInstallationGuide`, null, {
+        params: {
+          id: apiId,
+          installationGuide: apiDetails.installationGuide
+        }
+      });
+      alert('Installation Guide updated successfully');
+    } catch (error) {
+      console.error('Error updating Installation Guide:', error);
+    }
+  };
+
   return (
     <Container fluid className="api-test-container">
       <CustomAppBar />
@@ -122,6 +142,21 @@ const ApiTest = () => {
           <Card className="mt-4">
             <Card.Body>
               <Card.Title>Test: {apiDetails.name}</Card.Title>
+              <Form>
+                <Form.Group controlId="formInstallationGuide" className="mb-3">
+                  <Form.Label>Installation Guide</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    rows={3}
+                    name="installationGuide"
+                    value={apiDetails.installationGuide}
+                    onChange={handleInputChange}
+                  />
+                </Form.Group>
+              </Form>
+              <Button variant="success" onClick={handleUpdateApi} className="me-2">
+                Update Installation Guide
+              </Button>
               <Row className="mt-4">
                 <Col xs="auto">
                   <Button variant="warning" onClick={() => setShowTaskForm(true)}>
@@ -129,13 +164,13 @@ const ApiTest = () => {
                   </Button>
                 </Col>
                 <Col xs="auto">
-                  <Button variant="primary" onClick={() => navigate(`/project/${projectId}/folder/${folderId}/api/${apiId}/develop`)}>
-                    Develop
+                  <Button variant="danger" onClick={() => setShowIssueForm(true)}>
+                    Create Issue
                   </Button>
                 </Col>
                 <Col xs="auto">
-                  <Button variant="danger" onClick={() => setShowIssueForm(true)}>
-                    Create Issue
+                  <Button variant="primary" onClick={() => navigate(`/project/${projectId}/folder/${folderId}/api/${apiId}/develop`)}>
+                    Develop
                   </Button>
                 </Col>
               </Row>

@@ -20,6 +20,7 @@ import DesignDocs from './components/api-management/DesignDocs';
 import IssueList from './components/project-issue/IssueList';
 import IssueDetail from './components/project-issue/IssueDetail';
 import Dashboard from './components/project-dashboard/ProjectDashboard';
+import Schedule from './components/scheduler/Scheduler';
 import DatabaseServerList from './components/database-server/DatabaseServerList';
 import DatabaseTableList from './components/database-server/DatabaseTableList';
 import DatabaseFieldList from './components/database-server/DatabaseFieldList';
@@ -51,6 +52,7 @@ function App() {
         <Route path='/project/:projectId/issue' element={<IssueList />} />  
         <Route path='/project/:projectId/issue/:issueId' element={<IssueDetail />} />
         <Route path='/project/:projectId/dashboard' element={<Dashboard />} />
+        <Route path='/project/:projectId/schedule' element={<Schedule />} />
         <Route path='/project/:projectId/database' element={<DatabaseServerList />} />
         <Route path='/project/:projectId/database-server/:serverId/tables' element={<DatabaseTableList />} />
         <Route path='/project/:projectId/database-server/:serverId/table/:tableId/fields' element={<DatabaseFieldList />} />
