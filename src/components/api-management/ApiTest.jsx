@@ -13,6 +13,7 @@ const ApiTest = () => {
   const { projectId, folderId, apiId } = useParams();
   const [apiDetails, setApiDetails] = useState({ name: '', method: '', url: '' });
   const [showTaskForm, setShowTaskForm] = useState(false);
+  const [showIssueForm, setShowIssueForm] = useState(false);
   const [newTask, setNewTask] = useState({
     name: '',
     description: '',
@@ -20,6 +21,13 @@ const ApiTest = () => {
     startDate: '',
     dueDate: '',
     lifeCycle: 'TEST'
+  });
+  const [newIssue, setNewIssue] = useState({
+    description: '',
+    content: '',
+    url: '',
+    status: 'OPEN',
+    priority: 'Low',
   });
   const navigate = useNavigate();
   const userId = localStorage.getItem('userId');
@@ -45,6 +53,11 @@ const ApiTest = () => {
   const handleTaskInputChange = (e) => {
     const { name, value } = e.target;
     setNewTask({ ...newTask, [name]: value });
+  };
+
+  const handleIssueInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewIssue({ ...newIssue, [name]: value });
   };
 
   const handleAddTask = async () => {
@@ -73,9 +86,29 @@ const ApiTest = () => {
     }
   };
 
+  const handleAddIssue = async () => {
+    try {
+      await axios.post(`${backendUrl}/api/v1/issue/create`, {
+        ...newIssue,
+        projectId,
+        apiId,
+        createdBy: userId,
+      });
+      setShowIssueForm(false);
+      setNewIssue({ description: '', content: '', url: '', status: 'OPEN', priority: 'Low' });
+    } catch (error) {
+      console.error('Error adding issue:', error);
+    }
+  };
+
   const handleCloseTaskForm = () => {
     setShowTaskForm(false);
     setNewTask({ name: '', description: '', priority: '', startDate: '', dueDate: '', lifeCycle: 'TEST' });
+  };
+
+  const handleCloseIssueForm = () => {
+    setShowIssueForm(false);
+    setNewIssue({ description: '', content: '', url: '', status: 'OPEN', priority: 'Low' });
   };
 
   return (
@@ -98,6 +131,11 @@ const ApiTest = () => {
                 <Col xs="auto">
                   <Button variant="primary" onClick={() => navigate(`/project/${projectId}/folder/${folderId}/api/${apiId}/develop`)}>
                     Develop
+                  </Button>
+                </Col>
+                <Col xs="auto">
+                  <Button variant="danger" onClick={() => setShowIssueForm(true)}>
+                    Create Issue
                   </Button>
                 </Col>
               </Row>
@@ -173,6 +211,82 @@ const ApiTest = () => {
           </Button>
           <Button variant="success" onClick={handleAddTask}>
             Add Task
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <Modal show={showIssueForm} onHide={handleCloseIssueForm}>
+        <Modal.Header closeButton>
+          <Modal.Title>Create Issue</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group controlId="formIssueDescription" className="mb-3">
+              <Form.Label>Description</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter issue description"
+                name="description"
+                value={newIssue.description}
+                onChange={handleIssueInputChange}
+              />
+            </Form.Group>
+            <Form.Group controlId="formIssueContent" className="mb-3">
+              <Form.Label>Content</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                placeholder="Enter issue content"
+                name="content"
+                value={newIssue.content}
+                onChange={handleIssueInputChange}
+              />
+            </Form.Group>
+            <Form.Group controlId="formIssueUrl" className="mb-3">
+              <Form.Label>URL</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter issue URL"
+                name="url"
+                value={newIssue.url}
+                onChange={handleIssueInputChange}
+              />
+            </Form.Group>
+            <Form.Group controlId="formIssueStatus" className="mb-3">
+              <Form.Label>Status</Form.Label>
+              <Form.Control
+                as="select"
+                name="status"
+                value={newIssue.status}
+                onChange={handleIssueInputChange}
+              >
+                <option value="OPEN">Open</option>
+                <option value="IN_PROGRESS">In Progress</option>
+                <option value="RESOLVED">Resolved</option>
+                <option value="CLOSED">Closed</option>
+              </Form.Control>
+            </Form.Group>
+            <Form.Group controlId="formIssuePriority" className="mb-3">
+              <Form.Label>Priority</Form.Label>
+              <Form.Control
+                as="select"
+                name="priority"
+                value={newIssue.priority}
+                onChange={handleIssueInputChange}
+              >
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+                <option value="Critical">Critical</option>
+              </Form.Control>
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="danger" onClick={handleCloseIssueForm}>
+            Cancel
+          </Button>
+          <Button variant="success" onClick={handleAddIssue}>
+            Add Issue
           </Button>
         </Modal.Footer>
       </Modal>
