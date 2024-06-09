@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Container, Row, Col, Card, Button, Modal, Form } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Modal, Form, InputGroup, FormControl } from 'react-bootstrap';
 import CustomAppBar from '../navbar/CustomAppBar';
 import VerticalTabs from '../tabs/VerticalTabs';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -35,6 +35,7 @@ const TaskList = () => {
   const userId = localStorage.getItem('userId');
   const navigate = useNavigate();
   const [statusFilter, setStatusFilter] = useState('');
+  const [searchName, setSearchName] = useState('');
 
   useEffect(() => {
     fetchProjectDetails();
@@ -50,9 +51,11 @@ const TaskList = () => {
     }
   };
 
-  const fetchTasks = async () => {
+  const fetchTasks = async (name = '') => {
     try {
-      const response = await axios.get(`${backendUrl}/api/v1/task/findByProjectId?projectId=${projectId}`);
+      const response = await axios.get(`${backendUrl}/api/v1/task/findByProjectIdAndName`, {
+        params: { projectId, name }
+      });
       setTasks(response.data.data);
     } catch (error) {
       console.error('Error fetching tasks:', error);
@@ -64,7 +67,6 @@ const TaskList = () => {
       const response = await axios.get(`${backendUrl}/api/v1/task/findByProjectIdAndStatus?projectId=${projectId}&status=${status}`);
       setTasks(response.data.data);
     } catch (error) {
-     
       console.error('Error fetching tasks by status:', error);
     }
   };
@@ -109,6 +111,11 @@ const TaskList = () => {
     }
   };
 
+  const handleSearchChange = (e) => {
+    setSearchName(e.target.value);
+    fetchTasks(e.target.value);
+  };
+
   return (
     <Container fluid className="task-list-container">
       <CustomAppBar />
@@ -119,7 +126,7 @@ const TaskList = () => {
         <Col xs={12} md={9} className="task-content">
           <h2>Task List</h2>
           <div className="d-flex justify-content-end mb-3">
-            <Form.Group controlId="formStatusFilter" className="d-flex align-items-center">
+            <Form.Group controlId="formStatusFilter" className="d-flex align-items-center me-3">
               <Form.Label className="me-2">Filter by Status:</Form.Label>
               <Form.Control as="select" value={statusFilter} onChange={handleStatusFilterChange} className="w-auto">
                 <option value="">All</option>
@@ -130,6 +137,13 @@ const TaskList = () => {
                 ))}
               </Form.Control>
             </Form.Group>
+            <InputGroup className="mb-3">
+              <FormControl
+                placeholder="Search by task name"
+                value={searchName}
+                onChange={handleSearchChange}
+              />
+            </InputGroup>
           </div>
           <Row>
             {tasks.map((task) => (
