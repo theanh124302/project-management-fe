@@ -13,7 +13,6 @@ const DatabaseTableList = () => {
   const { projectId, serverId } = useParams();
   const location = useLocation();
   const typeColor = location.state?.typeColor || '#ffffff';
-
   const [tables, setTables] = useState([]);
   const [serverDetails, setServerDetails] = useState(null);
   const [showForm, setShowForm] = useState(false);
@@ -115,12 +114,10 @@ const DatabaseTableList = () => {
           <VerticalTabs projectId={projectId} />
         </Col>
         <Col xs={12} md={9} className="table-content" style={{ backgroundColor: typeColor }}>
-          <h2>Database Table List</h2>
           {serverDetails && (
             <Card className="mb-3">
               <Card.Body>
-                <Card.Title>Database Server Details</Card.Title>
-                <Card.Text><strong>Name:</strong> {serverDetails.name}</Card.Text>
+                <Card.Title><strong>{serverDetails.name}</strong></Card.Title>
                 <Card.Text><strong>Description:</strong> {serverDetails.description}</Card.Text>
                 <Card.Text><strong>Type:</strong> {serverDetails.type}</Card.Text>
                 <Card.Text><strong>URL:</strong> {serverDetails.url}</Card.Text>
