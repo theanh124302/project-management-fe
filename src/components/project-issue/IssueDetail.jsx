@@ -254,7 +254,7 @@ const IssueDetail = () => {
               />
             </Form.Group>
             <Form.Group controlId="formIssueUrl" className="mb-3">
-              <Form.Label>URL</Form.Label>
+              <Form.Label>Detail</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Enter issue URL"
