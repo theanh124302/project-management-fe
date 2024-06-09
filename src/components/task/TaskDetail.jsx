@@ -312,7 +312,7 @@ const TaskDetail = () => {
               <Button variant="primary" className="mt-3 me-2" onClick={() => navigate(`/project/${projectId}/task/${taskId}/comment`)}>
                 Comment
               </Button>
-              {isTaskAssignedToUser && (
+              {(isTaskAssignedToUser || isTaskCreatedByUser) && (
                 <Button variant="warning" className="mt-3 me-2" onClick={handleRequestDone}>
                   Request Done
                 </Button>
