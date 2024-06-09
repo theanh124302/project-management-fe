@@ -9,20 +9,12 @@ import '../../public/css/DatabaseFieldList.css';
 
 const backendUrl = 'http://localhost:8080'; // Update your backend URL
 
-const lightenColor = (color, percent) => {
-  const num = parseInt(color.replace('#', ''), 16),
-    amt = Math.round(2.55 * percent),
-    R = (num >> 16) + amt,
-    G = (num >> 8 & 0x00FF) + amt,
-    B = (num & 0x0000FF) + amt;
-  return `#${(0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 + (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 + (B < 255 ? B < 1 ? 0 : B : 255)).toString(16).slice(1)}`;
-};
-
 const DatabaseFieldList = () => {
   const location = useLocation();
   const typeColor = location.state?.typeColor;
   const { projectId, serverId, tableId } = useParams();
   const [fields, setFields] = useState([]);
+  const [tableData, setTableData] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [newField, setNewField] = useState({
     fieldName: '',
@@ -35,6 +27,7 @@ const DatabaseFieldList = () => {
 
   useEffect(() => {
     fetchFields();
+    fetchTable();
   }, [tableId]);
 
   const fetchFields = async () => {
@@ -43,6 +36,15 @@ const DatabaseFieldList = () => {
       setFields(response.data.data);
     } catch (error) {
       console.error('Error fetching fields:', error);
+    }
+  };
+
+  const fetchTable = async () => {
+    try {
+      const response = await axios.get(`${backendUrl}/api/v1/database-table/findById?id=${tableId}`);
+      setTableData(response.data.data);
+    } catch (error) {
+      console.error('Error fetching table:', error);
     }
   };
 
@@ -76,87 +78,90 @@ const DatabaseFieldList = () => {
           <VerticalTabs projectId={projectId} />
         </Col>
         <Col xs={12} md={9} className="field-content" style={{ backgroundColor: typeColor }}>
-          <h2>Field List</h2>
-          <Button variant="success" onClick={() => setShowForm(true)} className="mb-3">
-            Add Field
-          </Button>
-          <Table striped bordered hover>
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Field Name</th>
-                <th>Type</th>
-                <th>Description</th>
-                <th>Sample</th>
-              </tr>
-            </thead>
-            <tbody>
-              {fields.map((field, index) => (
-                <tr key={field.id} onClick={() => handleFieldClick(field.id)} style={{ cursor: 'pointer' }}>
-                  <td>{index + 1}</td>
-                  <td>{field.fieldName}</td>
-                  <td>{field.type}</td>
-                  <td>{field.description}</td>
-                  <td>{field.sample}</td>
+          <div style={{ backgroundColor: '#fff', borderRadius: '8px', padding: '15px', boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}>
+            <h2 class="title-background">{tableData.name}</h2>
+            <Button variant="success" onClick={() => setShowForm(true)} className="mb-3">
+              Add Field
+            </Button>
+            <Table striped bordered hover>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Field Name</th>
+                  <th>Type</th>
+                  <th>Description</th>
+                  <th>Sample</th>
                 </tr>
-              ))}
-            </tbody>
-          </Table>
-          <Modal show={showForm} onHide={handleCloseForm}>
-            <Modal.Header closeButton>
-              <Modal.Title>Add Field</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <Form>
-                <Form.Group controlId="formFieldName" className="mb-3">
-                  <Form.Label>Field Name</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Enter field name"
-                    value={newField.fieldName}
-                    onChange={(e) => setNewField({ ...newField, fieldName: e.target.value })}
-                  />
-                </Form.Group>
-                <Form.Group controlId="formFieldType" className="mb-3">
-                  <Form.Label>Type</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Enter field type"
-                    value={newField.type}
-                    onChange={(e) => setNewField({ ...newField, type: e.target.value })}
-                  />
-                </Form.Group>
-                <Form.Group controlId="formFieldDescription" className="mb-3">
-                  <Form.Label>Description</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={3}
-                    placeholder="Enter field description"
-                    value={newField.description}
-                    onChange={(e) => setNewField({ ...newField, description: e.target.value })}
-                  />
-                </Form.Group>
-                <Form.Group controlId="formFieldSample" className="mb-3">
-                  <Form.Label>Sample</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Enter field sample data"
-                    value={newField.sample}
-                    onChange={(e) => setNewField({ ...newField, sample: e.target.value })}
-                  />
-                </Form.Group>
-              </Form>
-            </Modal.Body>
-            <Modal.Footer>
-              <Button variant="secondary" onClick={handleCloseForm}>
-                Cancel
-              </Button>
-              <Button variant="success" onClick={handleAddField}>
-                Add Field
-              </Button>
-            </Modal.Footer>
-          </Modal>
+              </thead>
+              <tbody>
+                {fields.map((field, index) => (
+                  <tr key={field.id} onClick={() => handleFieldClick(field.id)} style={{ cursor: 'pointer' }}>
+                    <td>{index + 1}</td>
+                    <td>{field.fieldName}</td>
+                    <td>{field.type}</td>
+                    <td>{field.description}</td>
+                    <td>{field.sample}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+            <Modal show={showForm} onHide={handleCloseForm}>
+              <Modal.Header closeButton>
+                <Modal.Title>Add Field</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <Form>
+                  <Form.Group controlId="formFieldName" className="mb-3">
+                    <Form.Label>Field Name</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="Enter field name"
+                      value={newField.fieldName}
+                      onChange={(e) => setNewField({ ...newField, fieldName: e.target.value })}
+                    />
+                  </Form.Group>
+                  <Form.Group controlId="formFieldType" className="mb-3">
+                    <Form.Label>Type</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="Enter field type"
+                      value={newField.type}
+                      onChange={(e) => setNewField({ ...newField, type: e.target.value })}
+                    />
+                  </Form.Group>
+                  <Form.Group controlId="formFieldDescription" className="mb-3">
+                    <Form.Label>Description</Form.Label>
+                    <Form.Control
+                      as="textarea"
+                      rows={3}
+                      placeholder="Enter field description"
+                      value={newField.description}
+                      onChange={(e) => setNewField({ ...newField, description: e.target.value })}
+                    />
+                  </Form.Group>
+                  <Form.Group controlId="formFieldSample" className="mb-3">
+                    <Form.Label>Sample</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="Enter field sample data"
+                      value={newField.sample}
+                      onChange={(e) => setNewField({ ...newField, sample: e.target.value })}
+                    />
+                  </Form.Group>
+                </Form>
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant="secondary" onClick={handleCloseForm}>
+                  Cancel
+                </Button>
+                <Button variant="success" onClick={handleAddField}>
+                  Add Field
+                </Button>
+              </Modal.Footer>
+            </Modal>
+          </div>
         </Col>
+
       </Row>
     </Container>
   );

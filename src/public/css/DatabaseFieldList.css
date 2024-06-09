@@ -17,3 +17,17 @@
 .table-hover tbody tr:hover {
   background-color: #f1f1f1; /* Màu nền khi hover trên hàng bảng */
 }
+
+
+.title-background {
+  background-color: white;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.white-background-button {
+  background-color: white;
+  padding: 10px;
+  border-radius: 5px;
+  display: inline-block;
+}
