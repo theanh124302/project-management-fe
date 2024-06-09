@@ -15,7 +15,7 @@ import ApiDefine from './components/api-management/ApiDefine';
 import ApiDesign from './components/api-management/ApiDesign';
 import ApiDevelop from './components/api-management/ApiDevelop';
 import ApiTest from './components/api-management/ApiTest';
-import DefineTaskRequest from './components/request-done/DefineTaskRequest';
+import TaskRequest from './components/request-done/TaskRequest';
 import DesignDocs from './components/api-management/DesignDocs';
 import IssueList from './components/project-issue/IssueList';
 import IssueDetail from './components/project-issue/IssueDetail';
@@ -49,7 +49,7 @@ function App() {
         <Route path='/project/:projectId/folder/:folderId/api/:apiId/designDocs' element={<DesignDocs />} />
         <Route path='/project/:projectId/folder/:folderId/api/:apiId/develop' element={<ApiDevelop />} />
         <Route path='/project/:projectId/folder/:folderId/api/:apiId/test' element={<ApiTest />} />
-        <Route path='/project/:projectId/task/:taskId/request-done/define' element={<DefineTaskRequest />} />
+        <Route path='/project/:projectId/task/:taskId/request-done/*' element={<TaskRequest />} />
         <Route path='/project/:projectId/issue' element={<IssueList />} />  
         <Route path='/project/:projectId/issue/:issueId' element={<IssueDetail />} />
         <Route path='/project/:projectId/dashboard' element={<Dashboard />} />
