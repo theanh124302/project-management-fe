@@ -159,7 +159,7 @@ const DailyReportList = () => {
                     <Card.Text>
                       <strong>Date:</strong> {new Date(report.date).toLocaleString()}
                     </Card.Text>
-                    {projectLeaderId === parseInt(userId, 10) && (
+                    {report.createdBy === parseInt(userId, 10) && (
                       <div className="daily-report-buttons">
                         <Button variant="light" onClick={(e) => { e.stopPropagation(); handleEditReport(report); }} className="me-2">
                           Edit
