@@ -18,6 +18,7 @@ const statusColors = {
 
 const IssueList = () => {
   const { projectId } = useParams();
+  const [projectLeaderId, setProjectLeaderId] = useState(null);
   const [issues, setIssues] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [currentIssue, setCurrentIssue] = useState(null);
@@ -42,7 +43,15 @@ const IssueList = () => {
         console.error('Error fetching issues:', error);
       }
     };
-
+    const fetchProjectDetails = async () => {
+      try {
+        const response = await axios.get(`${backendUrl}/api/v1/project/findById?id=${projectId}`);
+        setProjectLeaderId(response.data.data.leaderId);
+      } catch (error) {
+        console.error('Error fetching project details:', error);
+      }
+    };
+    fetchProjectDetails();
     fetchIssues();
   }, [projectId]);
 
@@ -144,11 +153,15 @@ const IssueList = () => {
               </Col>
             ))}
             <Col xs={12} md={6} lg={4} className="mb-3">
-              <Card onClick={() => setShowForm(true)} className="issue-card add-issue-card" style={{ cursor: 'pointer' }}>
-                <Card.Body className="d-flex justify-content-center align-items-center">
-                  <h1>+</h1>
-                </Card.Body>
-              </Card>
+              {projectLeaderId === parseInt(userId, 10) && (
+                <div>
+                  <Card onClick={() => setShowForm(true)} className="issue-card add-issue-card" style={{ cursor: 'pointer' }}>
+                    <Card.Body className="d-flex justify-content-center align-items-center">
+                      <h1>+</h1>
+                    </Card.Body>
+                  </Card>
+                </div>
+              )}
             </Col>
           </Row>
           <Modal show={showForm} onHide={handleCloseForm}>
@@ -179,7 +192,7 @@ const IssueList = () => {
                   />
                 </Form.Group>
                 <Form.Group controlId="formIssueUrl" className="mb-3">
-                  <Form.Label>URL</Form.Label>
+                  <Form.Label>Detail</Form.Label>
                   <Form.Control
                     type="text"
                     placeholder="Enter issue URL"
@@ -222,14 +235,9 @@ const IssueList = () => {
               <Button variant="secondary" onClick={handleCloseForm}>
                 Cancel
               </Button>
-              <Button variant="primary" onClick={handleFormSubmit}>
-                {currentIssue ? 'Update Issue' : 'Add Issue'}
+              <Button variant="success" onClick={handleFormSubmit}>
+                Add Issue
               </Button>
-              {currentIssue && (
-                <Button variant="danger" onClick={() => handleDeleteIssue(currentIssue.id)}>
-                  Delete Issue
-                </Button>
-              )}
             </Modal.Footer>
           </Modal>
         </Col>

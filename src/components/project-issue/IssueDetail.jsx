@@ -61,7 +61,7 @@ const IssueDetail = () => {
         console.error('Error fetching issue detail:', error);
       }
     };
-
+    fetchIssueDetail();
     const fetchProjectDetails = async () => {
       try {
         const response = await axios.get(`${backendUrl}/api/v1/project/findById?id=${projectId}`);
@@ -70,8 +70,6 @@ const IssueDetail = () => {
         console.error('Error fetching project details:', error);
       }
     };
-
-    fetchIssueDetail();
     fetchProjectDetails();
   }, [issueId, projectId]);
 
@@ -299,7 +297,7 @@ const IssueDetail = () => {
           <Button variant="secondary" onClick={handleCloseForm}>
             Cancel
           </Button>
-          <Button variant="primary" onClick={handleUpdateIssue}>
+          <Button variant="success" onClick={handleUpdateIssue}>
             Update Issue
           </Button>
         </Modal.Footer>
