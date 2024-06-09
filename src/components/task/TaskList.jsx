@@ -127,7 +127,7 @@ const TaskList = () => {
           <h2>Task List</h2>
           <div className="d-flex justify-content-end mb-3">
             <Form.Group controlId="formStatusFilter" className="d-flex align-items-center me-3">
-              <Form.Label className="me-2">Filter by Status:</Form.Label>
+              <Form.Label className="mb-3">Filter by Status:</Form.Label>
               <Form.Control as="select" value={statusFilter} onChange={handleStatusFilterChange} className="w-auto">
                 <option value="">All</option>
                 {Object.keys(statusColors).map((status) => (
@@ -166,11 +166,15 @@ const TaskList = () => {
               </Col>
             ))}
             <Col xs={12} md={6} lg={4} className="mb-3">
-              <Card onClick={() => setShowForm(true)} className="task-card add-task-card" style={{ cursor: 'pointer' }}>
-                <Card.Body className="d-flex justify-content-center align-items-center">
-                  <h1>+</h1>
-                </Card.Body>
-              </Card>
+              {projectLeaderId === parseInt(userId, 10) && (
+                <div>
+                  <Card onClick={() => setShowForm(true)} className="task-card add-task-card" style={{ cursor: 'pointer' }}>
+                    <Card.Body className="d-flex justify-content-center align-items-center">
+                      <h1>+</h1>
+                    </Card.Body>
+                  </Card>
+                </div>
+              )}
             </Col>
           </Row>
           <Modal show={showForm} onHide={handleCloseForm}>

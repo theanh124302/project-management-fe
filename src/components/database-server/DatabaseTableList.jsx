@@ -10,7 +10,9 @@ import '../../public/css/DatabaseTableList.css';
 const backendUrl = 'http://localhost:8080'; // Update to your backend URL
 
 const DatabaseTableList = () => {
+  const userId = localStorage.getItem('userId');
   const { projectId, serverId } = useParams();
+  const [projectLeaderId, setProjectLeaderId] = useState(null);
   const location = useLocation();
   const typeColor = location.state?.typeColor || '#ffffff';
   const [tables, setTables] = useState([]);
@@ -35,7 +37,17 @@ const DatabaseTableList = () => {
   useEffect(() => {
     fetchTables();
     fetchServerDetails();
-  }, [serverId]);
+    fetchProjectDetails();
+  }, [serverId, projectId]);
+
+  const fetchProjectDetails = async () => {
+    try {
+      const response = await axios.get(`${backendUrl}/api/v1/project/findById?id=${projectId}`);
+      setProjectLeaderId(response.data.data.leaderId);
+    } catch (error) {
+      console.error('Error fetching project details:', error);
+    }
+  };
 
   const fetchTables = async () => {
     try {
@@ -122,8 +134,12 @@ const DatabaseTableList = () => {
                 <Card.Text><strong>Type:</strong> {serverDetails.type}</Card.Text>
                 <Card.Text><strong>URL:</strong> {serverDetails.url}</Card.Text>
                 <Card.Text><strong>Username:</strong> {serverDetails.username}</Card.Text>
-                <Button variant="success" className="me-2" onClick={() => setEditForm(true)}>Edit</Button>
-                <Button variant="danger" onClick={handleDeleteServer}>Delete</Button>
+                {projectLeaderId === parseInt(userId, 10) && (
+                  <div>
+                    <Button variant="success" className="me-2" onClick={() => setEditForm(true)}>Edit</Button>
+                    <Button variant="danger" onClick={handleDeleteServer}>Delete</Button>
+                  </div>
+                )}
               </Card.Body>
             </Card>
           )}
@@ -143,11 +159,15 @@ const DatabaseTableList = () => {
               </Col>
             ))}
             <Col xs={12} md={6} lg={4} className="mb-3">
-              <Card onClick={() => setShowForm(true)} className="table-card add-table-card" style={{ cursor: 'pointer' }}>
-                <Card.Body className="d-flex justify-content-center align-items-center">
-                  <h1>+</h1>
-                </Card.Body>
-              </Card>
+              {projectLeaderId === parseInt(userId, 10) && (
+                <div>
+                  <Card onClick={() => setShowForm(true)} className="table-card add-table-card" style={{ cursor: 'pointer' }}>
+                    <Card.Body className="d-flex justify-content-center align-items-center">
+                      <h1>+</h1>
+                    </Card.Body>
+                  </Card>
+                </div>
+              )}
             </Col>
           </Row>
           <Modal show={showForm} onHide={handleCloseForm}>

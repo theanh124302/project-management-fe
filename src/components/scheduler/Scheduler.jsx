@@ -97,11 +97,11 @@ const Schedule = () => {
                 </Scheduler>
               </Paper>
               {projectLeaderId === parseInt(userId, 10) && (
-                      <div>
-                        <Button variant="success" onClick={() => setShowForm(true)} className="mt-3">
-                          Add Event
-                        </Button>
-                      </div>
+                <div>
+                  <Button variant="success" onClick={() => setShowForm(true)} className="mt-3">
+                    Add Event
+                  </Button>
+                </div>
               )}
             </Card.Body>
           </Card>
