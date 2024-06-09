@@ -17,6 +17,7 @@ const statusColors = {
 };
 
 const IssueDetail = () => {
+  const [projectLeaderId, setProjectLeaderId] = useState(null);
   const { issueId, projectId } = useParams();
   const [issue, setIssue] = useState(null);
   const [newStatus, setNewStatus] = useState('');
@@ -61,8 +62,18 @@ const IssueDetail = () => {
       }
     };
 
+    const fetchProjectDetails = async () => {
+      try {
+        const response = await axios.get(`${backendUrl}/api/v1/project/findById?id=${projectId}`);
+        setProjectLeaderId(response.data.data.leaderId);
+      } catch (error) {
+        console.error('Error fetching project details:', error);
+      }
+    };
+
     fetchIssueDetail();
-  }, [issueId]);
+    fetchProjectDetails();
+  }, [issueId, projectId]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -185,23 +196,31 @@ const IssueDetail = () => {
                   <option value="SOLVED" className="text-success">SOLVED</option>
                   <option value="CLOSED" className="text-secondary">CLOSED</option>
                 </Form.Select>
-                <Button variant="success" className="mt-2" onClick={handleUpdateStatus}>
-                  Update Status
-                </Button>
+                {projectLeaderId === parseInt(userId, 10) && (
+                  <div>
+                    <Button variant="success" className="mt-2" onClick={handleUpdateStatus}>
+                      Update Status
+                    </Button>
+                  </div>
+                )}
               </Card.Text>
               <Card.Text><strong>Priority:</strong> {issue.priority}</Card.Text>
               <Card.Text><strong>Created By:</strong> {issue.createdBy}</Card.Text>
               <Card.Text><strong>Created At:</strong> {formatDate(issue.createdAt)}</Card.Text>
               <Card.Text><strong>Solved At:</strong> {issue.solvedAt ? formatDate(issue.solvedAt) : 'N/A'}</Card.Text>
-              <Button variant="success" className="mt-3 me-2" onClick={handleEditIssue}>
-                Edit Issue
-              </Button>
-              <Button variant="danger" className="mt-3 me-2" onClick={handleDeleteIssue}>
-                Delete Issue
-              </Button>
-              <Button variant="warning" className="mt-3 me-2" onClick={() => setShowTaskForm(true)}>
-                Create Task
-              </Button>
+              {projectLeaderId === parseInt(userId, 10) && (
+                  <div>
+                    <Button variant="success" className="mt-3 me-2" onClick={handleEditIssue}>
+                      Edit Issue
+                    </Button>
+                    <Button variant="danger" className="mt-3 me-2" onClick={handleDeleteIssue}>
+                      Delete Issue
+                    </Button>
+                    <Button variant="warning" className="mt-3 me-2" onClick={() => setShowTaskForm(true)}>
+                      Create Task
+                    </Button>
+                  </div>
+                )}
               <Button variant="secondary" className="mt-3 me-2" onClick={() => navigate(`/project/${projectId}/issue`)}>
                 Back to Issue List
               </Button>
