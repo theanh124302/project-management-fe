@@ -10,7 +10,7 @@ import '../../public/css/DatabaseServerList.css';
 const backendUrl = 'http://localhost:8080'; // Update to your backend URL
 
 const typeColors = {
-  MySQL: '#ff5722',
+  MySQL: '#ffc107',
   PostgreSQL: '#007bff',
   MongoDB: '#28a745',
   Oracle: '#dc3545',
