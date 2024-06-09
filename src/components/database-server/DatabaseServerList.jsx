@@ -19,6 +19,8 @@ const typeColors = {
 
 const DatabaseServerList = () => {
   const { projectId } = useParams();
+  const [projectLeaderId, setProjectLeaderId] = useState(null);
+  const userId = localStorage.getItem('userId');
   const [servers, setServers] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [newServer, setNewServer] = useState({
@@ -33,7 +35,17 @@ const DatabaseServerList = () => {
 
   useEffect(() => {
     fetchServers();
+    fetchProjectDetails();
   }, [projectId]);
+
+  const fetchProjectDetails = async () => {
+    try {
+      const response = await axios.get(`${backendUrl}/api/v1/project/findById?id=${projectId}`);
+      setProjectLeaderId(response.data.data.leaderId);
+    } catch (error) {
+      console.error('Error fetching project details:', error);
+    }
+  };
 
   const fetchServers = async () => {
     try {
@@ -104,11 +116,15 @@ const DatabaseServerList = () => {
               </Col>
             ))}
             <Col xs={12} md={6} lg={4} className="mb-3">
-              <Card onClick={() => setShowForm(true)} className="server-card add-server-card" style={{ cursor: 'pointer' }}>
-                <Card.Body className="d-flex justify-content-center align-items-center">
-                  <h1>+</h1>
-                </Card.Body>
-              </Card>
+              {projectLeaderId === parseInt(userId, 10) && (
+                <div>
+                  <Card onClick={() => setShowForm(true)} className="server-card add-server-card" style={{ cursor: 'pointer' }}>
+                    <Card.Body className="d-flex justify-content-center align-items-center">
+                      <h1>+</h1>
+                    </Card.Body>
+                  </Card>
+                </div>
+              )}
             </Col>
           </Row>
           <Modal show={showForm} onHide={handleCloseForm}>
