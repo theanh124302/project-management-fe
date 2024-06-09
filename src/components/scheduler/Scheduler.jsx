@@ -13,6 +13,8 @@ import '../../public/css/Scheduler.css'; // Sử dụng cùng một CSS để du
 const backendUrl = 'http://localhost:8080';
 
 const Schedule = () => {
+  const userId = localStorage.getItem('userId');
+  const [projectLeaderId, setProjectLeaderId] = useState(null);
   const { projectId } = useParams();
   const [appointments, setAppointments] = useState([]);
   const [showForm, setShowForm] = useState(false);
@@ -23,6 +25,15 @@ const Schedule = () => {
     startDate: '',
     endDate: ''
   });
+
+  const fetchProjectDetails = async () => {
+    try {
+      const response = await axios.get(`${backendUrl}/api/v1/project/findById?id=${projectId}`);
+      setProjectLeaderId(response.data.data.leaderId);
+    } catch (error) {
+      console.error('Error fetching project details:', error);
+    }
+  };
 
   const fetchEvents = async () => {
     try {
@@ -42,6 +53,7 @@ const Schedule = () => {
   };
 
   useEffect(() => {
+    fetchProjectDetails();
     fetchEvents();
   }, [projectId]);
 
@@ -84,9 +96,13 @@ const Schedule = () => {
                   <Appointments />
                 </Scheduler>
               </Paper>
-              <Button variant="success" onClick={() => setShowForm(true)} className="mt-3">
-                Add Event
-              </Button>
+              {projectLeaderId === parseInt(userId, 10) && (
+                      <div>
+                        <Button variant="success" onClick={() => setShowForm(true)} className="mt-3">
+                          Add Event
+                        </Button>
+                      </div>
+              )}
             </Card.Body>
           </Card>
         </Col>
