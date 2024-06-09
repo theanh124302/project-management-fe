@@ -92,25 +92,27 @@ const ProjectList = () => {
   return (
     <Container fluid className="project-list-container">
       <CustomAppBar />
-      <h2 className="my-4">Welcome, {userName}!</h2>
       <div className="text-end mb-3">
         <Button variant="success" onClick={() => setShowForm(true)}>
           Add Project
         </Button>
       </div>
-      <BarChart width={600} height={400} data={dueDateTasks}>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="number" />
-        <YAxis />
-        <Tooltip />
-        <Legend />
-        <Bar dataKey="value" fill="#8884d8" />
-      </BarChart>
-
+      <div className="d-flex justify-content-center mb-4">
+        <div style={{ backgroundColor: 'white', padding: '10px', borderRadius: '10px' }}>
+          <BarChart width={600} height={400} data={dueDateTasks}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="number" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Bar dataKey="value" fill="#8884d8" />
+          </BarChart>
+        </div>
+      </div>
       <Row>
         {projects.map((project) => (
           <Col key={project.id} xs={12} sm={6} md={4} className="mb-4">
-            <Card className="project-card" onClick={() => handleProjectClick(project.id)} style={{ cursor: 'pointer' }}>
+            <Card className="project-card" onClick={() => handleProjectClick(project.id)} style={{ cursor: 'pointer', border: '1px solid white' }}>
               <Card.Img variant="top" src={project.coverImage || 'https://via.placeholder.com/150'} />
               <Card.Body>
                 <Card.Title>{project.name}</Card.Title>
