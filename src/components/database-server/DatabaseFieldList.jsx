@@ -16,6 +16,7 @@ const DatabaseFieldList = () => {
   const [fields, setFields] = useState([]);
   const [tableData, setTableData] = useState([]);
   const [showForm, setShowForm] = useState(false);
+  const [showDeleteTableModal, setShowDeleteTableModal] = useState(false);
   const [newField, setNewField] = useState({
     fieldName: '',
     type: '',
@@ -61,6 +62,24 @@ const DatabaseFieldList = () => {
     }
   };
 
+  const handleDeleteField = async (fieldId) => {
+    try {
+      await axios.delete(`${backendUrl}/api/v1/database-field/delete`, { params: { id: fieldId } });
+      fetchFields();
+    } catch (error) {
+      console.error('Error deleting field:', error);
+    }
+  };
+
+  const handleDeleteTable = async () => {
+    try {
+      await axios.delete(`${backendUrl}/api/v1/database-table/delete`, { params: { id: tableId } });
+      navigate(`/project/${projectId}`);
+    } catch (error) {
+      console.error('Error deleting table:', error);
+    }
+  };
+
   const handleFieldClick = (fieldId) => {
     console.log(`Viewing details of field: ${fieldId}`);
   };
@@ -83,6 +102,9 @@ const DatabaseFieldList = () => {
             <Button variant="success" onClick={() => setShowForm(true)} className="mb-3">
               Add Field
             </Button>
+            <Button variant="danger" onClick={() => setShowDeleteTableModal(true)} className="mb-3 ms-2">
+              Delete Table
+            </Button>
             <Table striped bordered hover>
               <thead>
                 <tr>
@@ -91,16 +113,22 @@ const DatabaseFieldList = () => {
                   <th>Type</th>
                   <th>Description</th>
                   <th>Sample</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {fields.map((field, index) => (
-                  <tr key={field.id} onClick={() => handleFieldClick(field.id)} style={{ cursor: 'pointer' }}>
+                  <tr key={field.id} style={{ cursor: 'pointer' }}>
                     <td>{index + 1}</td>
                     <td>{field.fieldName}</td>
                     <td>{field.type}</td>
                     <td>{field.description}</td>
                     <td>{field.sample}</td>
+                    <td>
+                      <Button variant="outline-danger" size="sm" onClick={() => handleDeleteField(field.id)}>
+                        Delete
+                      </Button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -159,9 +187,24 @@ const DatabaseFieldList = () => {
                 </Button>
               </Modal.Footer>
             </Modal>
+            <Modal show={showDeleteTableModal} onHide={() => setShowDeleteTableModal(false)}>
+              <Modal.Header closeButton>
+                <Modal.Title>Delete Table</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                Are you sure you want to delete this table?
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant="secondary" onClick={() => setShowDeleteTableModal(false)}>
+                  Cancel
+                </Button>
+                <Button variant="danger" onClick={handleDeleteTable}>
+                  Delete
+                </Button>
+              </Modal.Footer>
+            </Modal>
           </div>
         </Col>
-
       </Row>
     </Container>
   );
