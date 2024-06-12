@@ -106,7 +106,7 @@ const DatabaseTableList = () => {
   };
 
   const handleTableClick = (tableId) => {
-    navigate(`/project/${projectId}/database-server/${serverId}/table/${tableId}/fields`, { state: { typeColor: typeColor } });
+    navigate(`/project/${projectId}/database-server/table/${tableId}/fields`, { state: { typeColor: typeColor } });
   };
 
   const handleCloseForm = () => {

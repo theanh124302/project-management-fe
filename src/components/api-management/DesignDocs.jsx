@@ -19,10 +19,13 @@ const DesignDocs = () => {
   });
   const [docs, setDocs] = useState([]);
   const [impacts, setImpacts] = useState([]);
+  const [relatedTables, setRelatedTables] = useState([]);
   const [showImpactForm, setShowImpactForm] = useState(false);
-  const [currentImpact, setCurrentImpact] = useState(null);
+  const [showTableForm, setShowTableForm] = useState(false);
   const [showImpactDetail, setShowImpactDetail] = useState(false);
   const [showDocForm, setShowDocForm] = useState(false);
+  const [currentImpact, setCurrentImpact] = useState(null);
+  const [currentTable, setCurrentTable] = useState(null);
   const [currentDoc, setCurrentDoc] = useState(null);
   const [newDoc, setNewDoc] = useState({ description: '', url: '' });
   const [newImpact, setNewImpact] = useState({
@@ -33,6 +36,7 @@ const DesignDocs = () => {
     impactPriority: '',
     solution: ''
   });
+  const [newTable, setNewTable] = useState({ description: '', databaseTableUuid: '' });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -71,9 +75,21 @@ const DesignDocs = () => {
       }
     };
 
+    const fetchRelatedTables = async () => {
+      try {
+        const response = await axios.get(`${backendUrl}/api/v1/relatedDatabaseTable/findByApiId`, {
+          params: { apiId }
+        });
+        setRelatedTables(response.data.data);
+      } catch (error) {
+        console.error('Error fetching related database tables:', error);
+      }
+    };
+
     fetchApiDetails();
     fetchApiImpacts();
     fetchDocs();
+    fetchRelatedTables();
   }, [apiId]);
 
   const handleInputChange = (e) => {
@@ -89,6 +105,11 @@ const DesignDocs = () => {
   const handleDocInputChange = (e) => {
     const { name, value } = e.target;
     setNewDoc({ ...newDoc, [name]: value });
+  };
+
+  const handleTableInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewTable({ ...newTable, [name]: value });
   };
 
   const handleSubmit = async () => {
@@ -242,6 +263,59 @@ const DesignDocs = () => {
     setNewDoc({ description: '', url: '' });
   };
 
+  const handleAddTable = async () => {
+    try {
+      await axios.post(`${backendUrl}/api/v1/relatedDatabaseTable/create`, { ...newTable, apiId });
+      setShowTableForm(false);
+      setNewTable({ description: '', databaseTableUuid: '' });
+      const response = await axios.get(`${backendUrl}/api/v1/relatedDatabaseTable/findByApiId`, {
+        params: { apiId }
+      });
+      setRelatedTables(response.data.data);
+    } catch (error) {
+      console.error('Error adding related table:', error);
+    }
+  };
+
+  const handleUpdateTable = async () => {
+    try {
+      await axios.post(`${backendUrl}/api/v1/relatedDatabaseTable/update`, { id: currentTable.id, ...newTable, apiId });
+      setShowTableForm(false);
+      setCurrentTable(null);
+      setNewTable({ description: '', databaseTableUuid: '' });
+      const response = await axios.get(`${backendUrl}/api/v1/relatedDatabaseTable/findByApiId`, {
+        params: { apiId }
+      });
+      setRelatedTables(response.data.data);
+    } catch (error) {
+      console.error('Error updating related table:', error);
+    }
+  };
+
+  const handleDeleteTable = async (tableId) => {
+    try {
+      await axios.delete(`${backendUrl}/api/v1/relatedDatabaseTable/delete`, { params: { id: tableId } });
+      const response = await axios.get(`${backendUrl}/api/v1/relatedDatabaseTable/findByApiId`, {
+        params: { apiId }
+      });
+      setRelatedTables(response.data.data);
+    } catch (error) {
+      console.error('Error deleting related table:', error);
+    }
+  };
+
+  const handleEditTableClick = (table) => {
+    setNewTable({ description: table.description, databaseTableUuid: table.databaseTableUuid });
+    setCurrentTable(table);
+    setShowTableForm(true);
+  };
+
+  const handleCloseTableForm = () => {
+    setShowTableForm(false);
+    setCurrentTable(null);
+    setNewTable({ description: '', databaseTableUuid: '' });
+  };
+
   const getFormattedUrl = (url) => {
     if (!/^https?:\/\//i.test(url)) {
       return `http://${url}`;
@@ -327,26 +401,30 @@ const DesignDocs = () => {
               <Button variant="success" onClick={() => setShowImpactForm(true)}>
                 Add Impact
               </Button>
-              <Card.Title className="mt-4">Related Docs</Card.Title>
-              <ListGroup className="mb-3">
-                {docs.map((doc) => (
-                  <ListGroup.Item key={doc.id} className="d-flex justify-content-between align-items-center">
-                    <a href={getFormattedUrl(doc.url)} target="_blank" rel="noopener noreferrer">
-                      {doc.description}
-                    </a>
-                    <div>
-                      <Button variant="outline-primary" size="sm" className="me-2" onClick={() => handleEditDocClick(doc)}>
-                        Edit
-                      </Button>
-                      <Button variant="outline-danger" size="sm" onClick={() => handleDeleteDoc(doc.id)}>
-                        Delete
-                      </Button>
-                    </div>
-                  </ListGroup.Item>
+              <Card.Title className="mt-4">Related Database Tables</Card.Title>
+              <Row>
+                {relatedTables.map((table) => (
+                  <Col xs={12} md={6} lg={4} key={table.id} className="mb-3">
+                    <Card>
+                      <Card.Body>
+                        <Card.Title>{table.databaseTableName}</Card.Title>
+                        <Card.Text>Description: {table.description}</Card.Text>
+                        <Button variant="outline-primary" size="sm" className="me-2" onClick={() => handleEditTableClick(table)}>
+                          Edit
+                        </Button>
+                        <Button variant="outline-danger" size="sm" onClick={() => handleDeleteTable(table.id)}>
+                          Delete
+                        </Button>
+                        <Button variant="outline-secondary" size="sm" onClick={() => navigate(`/project/${projectId}/database-server/table/${table.databaseTableId}/fields`)}>
+                          Database Table Details
+                        </Button>
+                      </Card.Body>
+                    </Card>
+                  </Col>
                 ))}
-              </ListGroup>
-              <Button variant="secondary" onClick={() => setShowDocForm(true)}>
-                Add Doc
+              </Row>
+              <Button variant="secondary" onClick={() => setShowTableForm(true)}>
+                Add Table
               </Button>
               <Modal show={showDocForm} onHide={handleCloseDocForm}>
                 <Modal.Header closeButton>
@@ -461,6 +539,41 @@ const DesignDocs = () => {
                   </Button>
                   <Button variant="primary" onClick={currentImpact ? handleUpdateImpact : handleAddImpact}>
                     {currentImpact ? 'Update Impact' : 'Add Impact'}
+                  </Button>
+                </Modal.Footer>
+              </Modal>
+              <Modal show={showTableForm} onHide={handleCloseTableForm}>
+                <Modal.Header closeButton>
+                  <Modal.Title>{currentTable ? 'Edit Table' : 'Add New Table'}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <Form>
+                    <Form.Group controlId="formTableDescription" className="mb-3">
+                      <Form.Label>Description</Form.Label>
+                      <Form.Control
+                        type="text"
+                        name="description"
+                        value={newTable.description}
+                        onChange={handleTableInputChange}
+                      />
+                    </Form.Group>
+                    <Form.Group controlId="formTableUuid" className="mb-3">
+                      <Form.Label>Database Table UUID</Form.Label>
+                      <Form.Control
+                        type="text"
+                        name="databaseTableUuid"
+                        value={newTable.databaseTableUuid}
+                        onChange={handleTableInputChange}
+                      />
+                    </Form.Group>
+                  </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={handleCloseTableForm}>
+                    Cancel
+                  </Button>
+                  <Button variant="primary" onClick={currentTable ? handleUpdateTable : handleAddTable}>
+                    {currentTable ? 'Update Table' : 'Add Table'}
                   </Button>
                 </Modal.Footer>
               </Modal>
