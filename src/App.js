@@ -57,7 +57,7 @@ function App() {
         <Route path='/project/:projectId/daily-report' element={<DailyReportList />} />
         <Route path='/project/:projectId/database' element={<DatabaseServerList />} />
         <Route path='/project/:projectId/database-server/:serverId/tables' element={<DatabaseTableList />} />
-        <Route path='/project/:projectId/database-server/:serverId/table/:tableId/fields' element={<DatabaseFieldList />} />
+        <Route path='/project/:projectId/database-server/table/:tableId/fields' element={<DatabaseFieldList />} />
         {/* <Route path='/project/:projectId/task/:taskId/request-done/design' element={<DesignTaskRequest />} />
         <Route path='/project/:projectId/task/:taskId/request-done/develop' element={<DevelopTaskRequest />} />
         <Route path='/project/:projectId/task/:taskId/request-done/test' element={<TestTaskRequest />} />
