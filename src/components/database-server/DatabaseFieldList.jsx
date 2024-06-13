@@ -99,6 +99,7 @@ const DatabaseFieldList = () => {
         <Col xs={12} md={9} className="field-content" style={{ backgroundColor: typeColor }}>
           <div style={{ backgroundColor: '#fff', borderRadius: '8px', padding: '15px', boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}>
             <h2 class="title-background">{tableData.name}</h2>
+            <h6>{tableData.uuid}</h6>
             <Button variant="success" onClick={() => setShowForm(true)} className="mb-3">
               Add Field
             </Button>
