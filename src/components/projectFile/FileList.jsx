@@ -97,7 +97,7 @@ const FileList = () => {
         <Col xs={12} md={9} className='config'>
           <Card className="mt-4 project-card">
             <Card.Body>
-              <Button variant="primary" onClick={handleShowUploadModal}>Add File</Button>
+              <Button variant="success" onClick={handleShowUploadModal}>Add File</Button>
               <Table striped bordered hover className="mt-3">
                 <thead>
                   <tr>
@@ -116,11 +116,11 @@ const FileList = () => {
                       <td>{file.description}</td>
                       <td>{file.type}</td>
                       <td>
-                        <Button variant="danger" onClick={() => handleDelete(file.id)}>
-                          Delete
-                        </Button>
-                        <Button variant="info" onClick={() => handleShowModal(file)} className="ms-2">
+                        <Button variant="success" onClick={() => handleShowModal(file)} className="me-2">
                           View
+                        </Button>
+                        <Button variant="danger" className="me-2" onClick={() => handleDelete(file.id)}>
+                          Delete
                         </Button>
                       </td>
                     </tr>
