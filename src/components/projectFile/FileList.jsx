@@ -101,7 +101,6 @@ const FileList = () => {
               <Table striped bordered hover className="mt-3">
                 <thead>
                   <tr>
-                    <th>ID</th>
                     <th>Name</th>
                     <th>Description</th>
                     <th>Type</th>
@@ -111,7 +110,6 @@ const FileList = () => {
                 <tbody>
                   {files.map((file) => (
                     <tr key={file.id}>
-                      <td>{file.id}</td>
                       <td>{file.name}</td>
                       <td>{file.description}</td>
                       <td>{file.type}</td>
@@ -131,11 +129,10 @@ const FileList = () => {
               <Modal show={showModal} onHide={handleCloseModal}>
                 <Modal.Header closeButton>
                   <Modal.Title>File Details</Modal.Title>
-                </Modal.Header>
+                </Modal.Header> 
                 <Modal.Body>
                   {selectedFile && (
                     <div>
-                      <p><strong>ID:</strong> {selectedFile.id}</p>
                       <p><strong>Name:</strong> {selectedFile.name}</p>
                       <p><strong>Description:</strong> {selectedFile.description}</p>
                       <p><strong>Type:</strong> {selectedFile.type}</p>
