@@ -25,6 +25,7 @@ import DailyReportList from './components/daily-report/DailyReportList';
 import DatabaseServerList from './components/database-server/DatabaseServerList';
 import DatabaseTableList from './components/database-server/DatabaseTableList';
 import DatabaseFieldList from './components/database-server/DatabaseFieldList';
+import FileList from './components/projectFile/FileList';
 
 
 function App() {
@@ -55,6 +56,7 @@ function App() {
         <Route path='/project/:projectId/dashboard' element={<Dashboard />} />
         <Route path='/project/:projectId/schedule' element={<Schedule />} />
         <Route path='/project/:projectId/daily-report' element={<DailyReportList />} />
+        <Route path='/project/:projectId/file' element={<FileList />} />
         <Route path='/project/:projectId/database' element={<DatabaseServerList />} />
         <Route path='/project/:projectId/database-server/:serverId/tables' element={<DatabaseTableList />} />
         <Route path='/project/:projectId/database-server/table/:tableId/fields' element={<DatabaseFieldList />} />
