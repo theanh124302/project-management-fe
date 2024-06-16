@@ -26,7 +26,7 @@ import DatabaseServerList from './components/database-server/DatabaseServerList'
 import DatabaseTableList from './components/database-server/DatabaseTableList';
 import DatabaseFieldList from './components/database-server/DatabaseFieldList';
 import FileList from './components/projectFile/FileList';
-
+import ProtectedRoute from './components/hoc/ProtectedRoute'; // Import component mới
 
 function App() {
   return (
@@ -36,35 +36,29 @@ function App() {
         <Route path='/login' element={<Login />} />
         <Route path='/signup' element={<SignUp />} />
         <Route path='/projectList' element={<ProjectList />} />
-        <Route path='/project/:projectId/*' element={<Dashboard />} />
         <Route path='/profile' element={<UserProfile />} />
-        <Route path='/project/:projectId/env' element={<EnvList />} />
-        <Route path='/project/:projectId/detail' element={<ProjectDetail />} />
-        <Route path='/project/:projectId/task' element={<TaskList />} />
-        <Route path='/project/:projectId/task/:taskId' element={<TaskDetail />} />
-        <Route path='/project/:projectId/task/:taskId/comment' element={<TaskComments />} />
-        <Route path='/project/:projectId/api' element={<FolderList />} />
-        <Route path='/project/:projectId/folder/:folderId/apis' element={<ApiList />} />
-        <Route path='/project/:projectId/folder/:folderId/api/:apiId' element={<ApiDefine />} />
-        <Route path='/project/:projectId/folder/:folderId/api/:apiId/design' element={<ApiDesign />} />
-        <Route path='/project/:projectId/folder/:folderId/api/:apiId/designDocs' element={<DesignDocs />} />
-        <Route path='/project/:projectId/folder/:folderId/api/:apiId/develop' element={<ApiDevelop />} />
-        <Route path='/project/:projectId/folder/:folderId/api/:apiId/test' element={<ApiTest />} />
-        <Route path='/project/:projectId/task/:taskId/request-done/*' element={<TaskRequest />} />
-        <Route path='/project/:projectId/issue' element={<IssueList />} />  
-        <Route path='/project/:projectId/issue/:issueId' element={<IssueDetail />} />
-        <Route path='/project/:projectId/dashboard' element={<Dashboard />} />
-        <Route path='/project/:projectId/schedule' element={<Schedule />} />
-        <Route path='/project/:projectId/daily-report' element={<DailyReportList />} />
-        <Route path='/project/:projectId/file' element={<FileList />} />
-        <Route path='/project/:projectId/database' element={<DatabaseServerList />} />
-        <Route path='/project/:projectId/database-server/:serverId/tables' element={<DatabaseTableList />} />
-        <Route path='/project/:projectId/database-server/table/:tableId/fields' element={<DatabaseFieldList />} />
-        {/* <Route path='/project/:projectId/task/:taskId/request-done/design' element={<DesignTaskRequest />} />
-        <Route path='/project/:projectId/task/:taskId/request-done/develop' element={<DevelopTaskRequest />} />
-        <Route path='/project/:projectId/task/:taskId/request-done/test' element={<TestTaskRequest />} />
-        <Route path='/project/:projectId/task/:taskId/request-done/deploy' element={<DeployTaskRequest />} />
-        <Route path='/project/:projectId/task/:taskId/request-done/maintain' element={<MaintainTaskRequest />} /> */}
+        <Route path='/project/:projectId/env' element={<ProtectedRoute component={EnvList} />} />
+        <Route path='/project/:projectId/detail' element={<ProtectedRoute component={ProjectDetail} />} />
+        <Route path='/project/:projectId/task' element={<ProtectedRoute component={TaskList} />} />
+        <Route path='/project/:projectId/task/:taskId' element={<ProtectedRoute component={TaskDetail} />} />
+        <Route path='/project/:projectId/task/:taskId/comment' element={<ProtectedRoute component={TaskComments} />} />
+        <Route path='/project/:projectId/api' element={<ProtectedRoute component={FolderList} />} />
+        <Route path='/project/:projectId/folder/:folderId/apis' element={<ProtectedRoute component={ApiList} />} />
+        <Route path='/project/:projectId/folder/:folderId/api/:apiId' element={<ProtectedRoute component={ApiDefine} />} />
+        <Route path='/project/:projectId/folder/:folderId/api/:apiId/design' element={<ProtectedRoute component={ApiDesign} />} />
+        <Route path='/project/:projectId/folder/:folderId/api/:apiId/designDocs' element={<ProtectedRoute component={DesignDocs} />} />
+        <Route path='/project/:projectId/folder/:folderId/api/:apiId/develop' element={<ProtectedRoute component={ApiDevelop} />} />
+        <Route path='/project/:projectId/folder/:folderId/api/:apiId/test' element={<ProtectedRoute component={ApiTest} />} />
+        <Route path='/project/:projectId/task/:taskId/request-done/*' element={<ProtectedRoute component={TaskRequest} />} />
+        <Route path='/project/:projectId/issue' element={<ProtectedRoute component={IssueList} />} />
+        <Route path='/project/:projectId/issue/:issueId' element={<ProtectedRoute component={IssueDetail} />} />
+        <Route path='/project/:projectId/dashboard' element={<ProtectedRoute component={Dashboard} />} />
+        <Route path='/project/:projectId/schedule' element={<ProtectedRoute component={Schedule} />} />
+        <Route path='/project/:projectId/daily-report' element={<ProtectedRoute component={DailyReportList} />} />
+        <Route path='/project/:projectId/file' element={<ProtectedRoute component={FileList} />} />
+        <Route path='/project/:projectId/database' element={<ProtectedRoute component={DatabaseServerList} />} />
+        <Route path='/project/:projectId/database-server/:serverId/tables' element={<ProtectedRoute component={DatabaseTableList} />} />
+        <Route path='/project/:projectId/database-server/table/:tableId/fields' element={<ProtectedRoute component={DatabaseFieldList} />} />
       </Routes>
     </Router>
   );
