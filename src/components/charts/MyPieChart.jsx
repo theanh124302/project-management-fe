@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 import axios from 'axios';
+import axiosInstance from '../AxiosInstance';
 import { useParams } from 'react-router-dom';
 import { Card } from 'react-bootstrap';
 
@@ -13,7 +14,7 @@ const MyPieChart = ({ projectId }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/api/v1/task/countByProjectIdGroupByStatus`, {
+        const response = await axiosInstance.get(`http://localhost:8080/api/v1/task/countByProjectIdGroupByStatus`, {
           params: { projectId }
         });
         setData(response.data.data);

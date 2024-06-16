@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import axiosInstance from '../AxiosInstance';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Card, Button, Form, Modal } from 'react-bootstrap';
 import CustomAppBar from '../navbar/CustomAppBar';
@@ -44,7 +45,7 @@ const IssueDetail = () => {
   useEffect(() => {
     const fetchIssueDetail = async () => {
       try {
-        const response = await axios.get(`${backendUrl}/api/v1/issue/findById`, {
+        const response = await axiosInstance.get(`${backendUrl}/api/v1/issue/findById`, {
           params: { id: issueId }
         });
         const issueData = response.data.data;
@@ -64,7 +65,7 @@ const IssueDetail = () => {
     fetchIssueDetail();
     const fetchProjectDetails = async () => {
       try {
-        const response = await axios.get(`${backendUrl}/api/v1/project/findById?id=${projectId}`);
+        const response = await axiosInstance.get(`${backendUrl}/api/v1/project/findById?id=${projectId}`);
         setProjectLeaderId(response.data.data.leaderId);
       } catch (error) {
         console.error('Error fetching project details:', error);
@@ -85,7 +86,7 @@ const IssueDetail = () => {
   const handleUpdateStatus = async () => {
     try {
       const updatedIssue = { ...issue, status: newStatus };
-      const response = await axios.post(`${backendUrl}/api/v1/issue/update`, updatedIssue);
+      const response = await axiosInstance.post(`${backendUrl}/api/v1/issue/update`, updatedIssue);
       setIssue(response.data.data);
     } catch (error) {
       console.error('Error updating status:', error);
@@ -98,12 +99,12 @@ const IssueDetail = () => {
 
   const handleUpdateIssue = async () => {
     try {
-      await axios.post(`${backendUrl}/api/v1/issue/update`, {
+      await axiosInstance.post(`${backendUrl}/api/v1/issue/update`, {
         ...issue,
         ...newIssue,
       });
       setShowForm(false);
-      const response = await axios.get(`${backendUrl}/api/v1/issue/findById`, {
+      const response = await axiosInstance.get(`${backendUrl}/api/v1/issue/findById`, {
         params: { id: issueId }
       });
       setIssue(response.data.data);
@@ -114,7 +115,7 @@ const IssueDetail = () => {
 
   const handleDeleteIssue = async () => {
     try {
-      await axios.delete(`${backendUrl}/api/v1/issue/delete`, { params: { id: issueId } });
+      await axiosInstance.delete(`${backendUrl}/api/v1/issue/delete`, { params: { id: issueId } });
       navigate(`/project/${projectId}/issue`);
     } catch (error) {
       console.error('Error deleting issue:', error);
@@ -140,7 +141,7 @@ const IssueDetail = () => {
     const taskName = `Issue: ${issue.description}`;
 
     try {
-      await axios.post(`${backendUrl}/api/v1/task/create`, {
+      await axiosInstance.post(`${backendUrl}/api/v1/task/create`, {
         ...newTask,
         name: taskName,
         projectId: projectId,

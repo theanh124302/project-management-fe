@@ -1,6 +1,7 @@
 // Các import không đổi
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import axiosInstance from '../AxiosInstance';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Card, Button, Form, ListGroup, Modal } from 'react-bootstrap';
 import CustomAppBar from '../navbar/CustomAppBar';
@@ -43,7 +44,7 @@ const ApiDefine = () => {
   useEffect(() => {
     const fetchApiDetails = async () => {
       try {
-        const response = await axios.get(`${backendUrl}/api/v1/api/findById?id=${apiId}`);
+        const response = await axiosInstance.get(`${backendUrl}/api/v1/api/findById?id=${apiId}`);
         setApi(response.data.data);
         setFormData({
           name: response.data.data.name,
@@ -63,7 +64,7 @@ const ApiDefine = () => {
 
     const fetchDocs = async () => {
       try {
-        const response = await axios.get(`${backendUrl}/api/v1/docs/findByApiId?apiId=${apiId}`);
+        const response = await axiosInstance.get(`${backendUrl}/api/v1/docs/findByApiId?apiId=${apiId}`);
         setDocs(response.data.data);
       } catch (error) {
         console.error('Error fetching docs:', error);
@@ -86,7 +87,7 @@ const ApiDefine = () => {
 
   const handleUpdateApi = async () => {
     try {
-      await axios.post(`${backendUrl}/api/v1/api/update`, { id: apiId, folderId: folderId, ...formData });
+      await axiosInstance.post(`${backendUrl}/api/v1/api/update`, { id: apiId, folderId: folderId, ...formData });
       navigate(`/project/${projectId}/folder/${folderId}/apis`);
     } catch (error) {
       console.error('Error updating API:', error);
@@ -95,7 +96,7 @@ const ApiDefine = () => {
 
   const handleDeleteApi = async () => {
     try {
-      await axios.delete(`${backendUrl}/api/v1/api/delete`, { data: { id: apiId } });
+      await axiosInstance.delete(`${backendUrl}/api/v1/api/delete`, { data: { id: apiId } });
       navigate(`/project/${projectId}/folder/${folderId}/apis`);
     } catch (error) {
       console.error('Error deleting API:', error);
@@ -104,10 +105,10 @@ const ApiDefine = () => {
 
   const handleAddDoc = async () => {
     try {
-      await axios.post(`${backendUrl}/api/v1/docs/create`, { ...newDoc, apiId });
+      await axiosInstance.post(`${backendUrl}/api/v1/docs/create`, { ...newDoc, apiId });
       setShowDocForm(false);
       setNewDoc({ description: '', url: '' });
-      const response = await axios.get(`${backendUrl}/api/v1/docs/findByApiId?apiId=${apiId}`);
+      const response = await axiosInstance.get(`${backendUrl}/api/v1/docs/findByApiId?apiId=${apiId}`);
       setDocs(response.data.data);
     } catch (error) {
       console.error('Error adding doc:', error);
@@ -116,11 +117,11 @@ const ApiDefine = () => {
 
   const handleUpdateDoc = async () => {
     try {
-      await axios.post(`${backendUrl}/api/v1/docs/update`, { id: currentDoc.id, apiId, ...newDoc });
+      await axiosInstance.post(`${backendUrl}/api/v1/docs/update`, { id: currentDoc.id, apiId, ...newDoc });
       setShowDocForm(false);
       setNewDoc({ description: '', url: '' });
       setCurrentDoc(null);
-      const response = await axios.get(`${backendUrl}/api/v1/docs/findByApiId?apiId=${apiId}`);
+      const response = await axiosInstance.get(`${backendUrl}/api/v1/docs/findByApiId?apiId=${apiId}`);
       setDocs(response.data.data);
     } catch (error) {
       console.error('Error updating doc:', error);
@@ -129,8 +130,8 @@ const ApiDefine = () => {
 
   const handleDeleteDoc = async (docId) => {
     try {
-      await axios.delete(`${backendUrl}/api/v1/docs/delete`, { params: { id: docId, deletedBy: userId } });
-      const response = await axios.get(`${backendUrl}/api/v1/docs/findByApiId?apiId=${apiId}`);
+      await axiosInstance.delete(`${backendUrl}/api/v1/docs/delete`, { params: { id: docId, deletedBy: userId } });
+      const response = await axiosInstance.get(`${backendUrl}/api/v1/docs/findByApiId?apiId=${apiId}`);
       setDocs(response.data.data);
     } catch (error) {
       console.error('Error deleting doc:', error);
@@ -175,7 +176,7 @@ const ApiDefine = () => {
     const taskName = `Define: ${api.name} on ${currentDate}`; // Tên task dựa trên tiêu đề và ngày hiện tại
 
     try {
-      await axios.post(`${backendUrl}/api/v1/task/create`, {
+      await axiosInstance.post(`${backendUrl}/api/v1/task/create`, {
         ...newTask,
         name: taskName,
         projectId: projectId,

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import axiosInstance from '../AxiosInstance';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { Container, Row, Col, Card, Button, Modal, Form, Table } from 'react-bootstrap';
 import CustomAppBar from '../navbar/CustomAppBar';
@@ -33,7 +34,7 @@ const DatabaseFieldList = () => {
 
   const fetchFields = async () => {
     try {
-      const response = await axios.get(`${backendUrl}/api/v1/database-field/findByDatabaseTableId?databaseTableId=${tableId}&page=0&size=100`);
+      const response = await axiosInstance.get(`${backendUrl}/api/v1/database-field/findByDatabaseTableId?databaseTableId=${tableId}&page=0&size=100`);
       setFields(response.data.data);
     } catch (error) {
       console.error('Error fetching fields:', error);
@@ -42,7 +43,7 @@ const DatabaseFieldList = () => {
 
   const fetchTable = async () => {
     try {
-      const response = await axios.get(`${backendUrl}/api/v1/database-table/findById?id=${tableId}`);
+      const response = await axiosInstance.get(`${backendUrl}/api/v1/database-table/findById?id=${tableId}`);
       setTableData(response.data.data);
     } catch (error) {
       console.error('Error fetching table:', error);
@@ -51,7 +52,7 @@ const DatabaseFieldList = () => {
 
   const handleAddField = async () => {
     try {
-      await axios.post(`${backendUrl}/api/v1/database-field/create`, {
+      await axiosInstance.post(`${backendUrl}/api/v1/database-field/create`, {
         ...newField
       });
       setShowForm(false);
@@ -64,7 +65,7 @@ const DatabaseFieldList = () => {
 
   const handleDeleteField = async (fieldId) => {
     try {
-      await axios.delete(`${backendUrl}/api/v1/database-field/delete`, { params: { id: fieldId } });
+      await axiosInstance.delete(`${backendUrl}/api/v1/database-field/delete`, { params: { id: fieldId } });
       fetchFields();
     } catch (error) {
       console.error('Error deleting field:', error);
@@ -73,7 +74,7 @@ const DatabaseFieldList = () => {
 
   const handleDeleteTable = async () => {
     try {
-      await axios.delete(`${backendUrl}/api/v1/database-table/delete`, { params: { id: tableId } });
+      await axiosInstance.delete(`${backendUrl}/api/v1/database-table/delete`, { params: { id: tableId } });
       navigate(`/project/${projectId}`);
     } catch (error) {
       console.error('Error deleting table:', error);

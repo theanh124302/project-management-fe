@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import axiosInstance from '../AxiosInstance'; // Import axiosInstance
 import { useNavigate, Link } from 'react-router-dom';
 import '../../public/css/Login.css';
 
@@ -14,8 +14,8 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        `${backendUrl}/api/v1/auth/signin`,
+      const response = await axiosInstance.post(
+        `/api/v1/auth/signin`,
         {
           username: username,
           password: password,
@@ -27,7 +27,7 @@ const Login = () => {
       localStorage.setItem('username', username);
 
       // Fetch user data to get userId
-      const userResponse = await axios.get(`${backendUrl}/api/v1/user/findByUsername/${username}`);
+      const userResponse = await axiosInstance.get(`/api/v1/user/findByUsername/${username}`);
       const userId = userResponse.data.data.id;
       localStorage.setItem('userId', userId);
 

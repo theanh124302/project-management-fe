@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import axiosInstance from '../AxiosInstance';
 import { Container, Row, Col, Card, Button, Form, ListGroup, Modal } from 'react-bootstrap';
 import CustomAppBar from '../navbar/CustomAppBar';
 import VerticalTabs from '../tabs/VerticalTabs';
@@ -42,7 +43,7 @@ const DesignDocs = () => {
   useEffect(() => {
     const fetchApiDetails = async () => {
       try {
-        const response = await axios.get(`${backendUrl}/api/v1/api/findById?id=${apiId}`);
+        const response = await axiosInstance.get(`${backendUrl}/api/v1/api/findById?id=${apiId}`);
         const data = response.data.data;
         setFormData({
           useCaseDiagram: data.useCaseDiagram,
@@ -57,7 +58,7 @@ const DesignDocs = () => {
 
     const fetchApiImpacts = async () => {
       try {
-        const response = await axios.get(`${backendUrl}/api/v1/impact/findByApiId`, {
+        const response = await axiosInstance.get(`${backendUrl}/api/v1/impact/findByApiId`, {
           params: { apiId }
         });
         setImpacts(response.data.data);
@@ -68,7 +69,7 @@ const DesignDocs = () => {
 
     const fetchDocs = async () => {
       try {
-        const response = await axios.get(`${backendUrl}/api/v1/docs/findByApiId?apiId=${apiId}`);
+        const response = await axiosInstance.get(`${backendUrl}/api/v1/docs/findByApiId?apiId=${apiId}`);
         setDocs(response.data.data);
       } catch (error) {
         console.error('Error fetching docs:', error);
@@ -77,7 +78,7 @@ const DesignDocs = () => {
 
     const fetchRelatedTables = async () => {
       try {
-        const response = await axios.get(`${backendUrl}/api/v1/relatedDatabaseTable/findByApiId`, {
+        const response = await axiosInstance.get(`${backendUrl}/api/v1/relatedDatabaseTable/findByApiId`, {
           params: { apiId }
         });
         setRelatedTables(response.data.data);
@@ -114,7 +115,7 @@ const DesignDocs = () => {
 
   const handleSubmit = async () => {
     try {
-      await axios.post(`${backendUrl}/api/v1/api/updateUseCaseDiagramAndSequenceDiagramAndActivityDiagramAndClassDiagram`, null, {
+      await axiosInstance.post(`${backendUrl}/api/v1/api/updateUseCaseDiagramAndSequenceDiagramAndActivityDiagramAndClassDiagram`, null, {
         params: { id: apiId, ...formData }
       });
       navigate(`/project/${projectId}/folder/${folderId}/api/${apiId}/design`);
@@ -125,7 +126,7 @@ const DesignDocs = () => {
 
   const handleAddImpact = async () => {
     try {
-      await axios.post(`${backendUrl}/api/v1/impact/create`, { ...newImpact, apiId });
+      await axiosInstance.post(`${backendUrl}/api/v1/impact/create`, { ...newImpact, apiId });
       setShowImpactForm(false);
       setNewImpact({
         impactApiId: '',
@@ -135,7 +136,7 @@ const DesignDocs = () => {
         impactPriority: '',
         solution: ''
       });
-      const response = await axios.get(`${backendUrl}/api/v1/impact/findByApiId`, {
+      const response = await axiosInstance.get(`${backendUrl}/api/v1/impact/findByApiId`, {
         params: { apiId }
       });
       setImpacts(response.data.data);
@@ -146,7 +147,7 @@ const DesignDocs = () => {
 
   const handleUpdateImpact = async () => {
     try {
-      await axios.post(`${backendUrl}/api/v1/impact/update`, { id: currentImpact.id, ...newImpact, apiId });
+      await axiosInstance.post(`${backendUrl}/api/v1/impact/update`, { id: currentImpact.id, ...newImpact, apiId });
       setShowImpactForm(false);
       setCurrentImpact(null);
       setNewImpact({
@@ -157,7 +158,7 @@ const DesignDocs = () => {
         impactPriority: '',
         solution: ''
       });
-      const response = await axios.get(`${backendUrl}/api/v1/impact/findByApiId`, {
+      const response = await axiosInstance.get(`${backendUrl}/api/v1/impact/findByApiId`, {
         params: { apiId }
       });
       setImpacts(response.data.data);
@@ -168,10 +169,10 @@ const DesignDocs = () => {
 
   const handleDeleteImpact = async (impactId) => {
     try {
-      await axios.delete(`${backendUrl}/api/v1/impact/delete`, {
+      await axiosInstance.delete(`${backendUrl}/api/v1/impact/delete`, {
         params: { id: impactId }
       });
-      const response = await axios.get(`${backendUrl}/api/v1/impact/findByApiId`, {
+      const response = await axiosInstance.get(`${backendUrl}/api/v1/impact/findByApiId`, {
         params: { apiId }
       });
       setImpacts(response.data.data);
@@ -218,10 +219,10 @@ const DesignDocs = () => {
 
   const handleAddDoc = async () => {
     try {
-      await axios.post(`${backendUrl}/api/v1/docs/create`, { ...newDoc, apiId });
+      await axiosInstance.post(`${backendUrl}/api/v1/docs/create`, { ...newDoc, apiId });
       setShowDocForm(false);
       setNewDoc({ description: '', url: '' });
-      const response = await axios.get(`${backendUrl}/api/v1/docs/findByApiId?apiId=${apiId}`);
+      const response = await axiosInstance.get(`${backendUrl}/api/v1/docs/findByApiId?apiId=${apiId}`);
       setDocs(response.data.data);
     } catch (error) {
       console.error('Error adding doc:', error);
@@ -230,11 +231,11 @@ const DesignDocs = () => {
 
   const handleUpdateDoc = async () => {
     try {
-      await axios.post(`${backendUrl}/api/v1/docs/update`, { id: currentDoc.id, apiId, ...newDoc });
+      await axiosInstance.post(`${backendUrl}/api/v1/docs/update`, { id: currentDoc.id, apiId, ...newDoc });
       setShowDocForm(false);
       setNewDoc({ description: '', url: '' });
       setCurrentDoc(null);
-      const response = await axios.get(`${backendUrl}/api/v1/docs/findByApiId?apiId=${apiId}`);
+      const response = await axiosInstance.get(`${backendUrl}/api/v1/docs/findByApiId?apiId=${apiId}`);
       setDocs(response.data.data);
     } catch (error) {
       console.error('Error updating doc:', error);
@@ -243,8 +244,8 @@ const DesignDocs = () => {
 
   const handleDeleteDoc = async (docId) => {
     try {
-      await axios.delete(`${backendUrl}/api/v1/docs/delete`, { params: { id: docId } });
-      const response = await axios.get(`${backendUrl}/api/v1/docs/findByApiId?apiId=${apiId}`);
+      await axiosInstance.delete(`${backendUrl}/api/v1/docs/delete`, { params: { id: docId } });
+      const response = await axiosInstance.get(`${backendUrl}/api/v1/docs/findByApiId?apiId=${apiId}`);
       setDocs(response.data.data);
     } catch (error) {
       console.error('Error deleting doc:', error);
@@ -265,10 +266,10 @@ const DesignDocs = () => {
 
   const handleAddTable = async () => {
     try {
-      await axios.post(`${backendUrl}/api/v1/relatedDatabaseTable/create`, { ...newTable, apiId });
+      await axiosInstance.post(`${backendUrl}/api/v1/relatedDatabaseTable/create`, { ...newTable, apiId });
       setShowTableForm(false);
       setNewTable({ description: '', databaseTableUuid: '' });
-      const response = await axios.get(`${backendUrl}/api/v1/relatedDatabaseTable/findByApiId`, {
+      const response = await axiosInstance.get(`${backendUrl}/api/v1/relatedDatabaseTable/findByApiId`, {
         params: { apiId }
       });
       setRelatedTables(response.data.data);
@@ -279,11 +280,11 @@ const DesignDocs = () => {
 
   const handleUpdateTable = async () => {
     try {
-      await axios.post(`${backendUrl}/api/v1/relatedDatabaseTable/update`, { id: currentTable.id, ...newTable, apiId });
+      await axiosInstance.post(`${backendUrl}/api/v1/relatedDatabaseTable/update`, { id: currentTable.id, ...newTable, apiId });
       setShowTableForm(false);
       setCurrentTable(null);
       setNewTable({ description: '', databaseTableUuid: '' });
-      const response = await axios.get(`${backendUrl}/api/v1/relatedDatabaseTable/findByApiId`, {
+      const response = await axiosInstance.get(`${backendUrl}/api/v1/relatedDatabaseTable/findByApiId`, {
         params: { apiId }
       });
       setRelatedTables(response.data.data);
@@ -294,8 +295,8 @@ const DesignDocs = () => {
 
   const handleDeleteTable = async (tableId) => {
     try {
-      await axios.delete(`${backendUrl}/api/v1/relatedDatabaseTable/delete`, { params: { id: tableId } });
-      const response = await axios.get(`${backendUrl}/api/v1/relatedDatabaseTable/findByApiId`, {
+      await axiosInstance.delete(`${backendUrl}/api/v1/relatedDatabaseTable/delete`, { params: { id: tableId } });
+      const response = await axiosInstance.get(`${backendUrl}/api/v1/relatedDatabaseTable/findByApiId`, {
         params: { apiId }
       });
       setRelatedTables(response.data.data);

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import axiosInstance from '../AxiosInstance';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Container, Row, Col, Card, Button, Modal, Form } from 'react-bootstrap';
 import CustomAppBar from '../navbar/CustomAppBar';
@@ -40,7 +41,7 @@ const DatabaseServerList = () => {
 
   const fetchProjectDetails = async () => {
     try {
-      const response = await axios.get(`${backendUrl}/api/v1/project/findById?id=${projectId}`);
+      const response = await axiosInstance.get(`${backendUrl}/api/v1/project/findById?id=${projectId}`);
       setProjectLeaderId(response.data.data.leaderId);
     } catch (error) {
       console.error('Error fetching project details:', error);
@@ -49,7 +50,7 @@ const DatabaseServerList = () => {
 
   const fetchServers = async () => {
     try {
-      const response = await axios.get(`${backendUrl}/api/v1/database-server/findAllByProjectId?projectId=${projectId}&page=0&size=100`);
+      const response = await axiosInstance.get(`${backendUrl}/api/v1/database-server/findAllByProjectId?projectId=${projectId}&page=0&size=100`);
       setServers(response.data.data);
     } catch (error) {
       console.error('Error fetching servers:', error);
@@ -58,7 +59,7 @@ const DatabaseServerList = () => {
 
   const handleAddServer = async () => {
     try {
-      await axios.post(`${backendUrl}/api/v1/database-server/create`, {
+      await axiosInstance.post(`${backendUrl}/api/v1/database-server/create`, {
         ...newServer,
         projectId: projectId,
       });

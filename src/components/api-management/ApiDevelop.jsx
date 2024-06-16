@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import axiosInstance from '../AxiosInstance';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Card, Button, Form, Modal } from 'react-bootstrap';
 import CustomAppBar from '../navbar/CustomAppBar';
@@ -32,7 +33,7 @@ const ApiDevelop = () => {
   useEffect(() => {
     const fetchApiDetails = async () => {
       try {
-        const response = await axios.get(`${backendUrl}/api/v1/api/findById?id=${apiId}`);
+        const response = await axiosInstance.get(`${backendUrl}/api/v1/api/findById?id=${apiId}`);
         const data = response.data.data;
         setApiDetails({
           name: data.name,
@@ -57,7 +58,7 @@ const ApiDevelop = () => {
 
   const handleSendRequest = async () => {
     try {
-      const response = await axios.get(`${backendUrl}/api/v1/send/sendApi?apiId=${apiId}`);
+      const response = await axiosInstance.get(`${backendUrl}/api/v1/send/sendApi?apiId=${apiId}`);
       setResponse(response.data);
     } catch (error) {
       console.error('Error sending API request:', error);
@@ -67,7 +68,7 @@ const ApiDevelop = () => {
 
   const handleSave = async () => {
     try {
-      const response = await axios.post(`${backendUrl}/api/v1/api/updateParametersAndBodyAndTokenAndHeader`, null, {
+      const response = await axiosInstance.post(`${backendUrl}/api/v1/api/updateParametersAndBodyAndTokenAndHeader`, null, {
         params: {
           id: apiId,
           parameters: param,
@@ -98,7 +99,7 @@ const ApiDevelop = () => {
     const taskName = `Develop: ${apiDetails.name} on ${currentDate}`;
 
     try {
-      await axios.post(`${backendUrl}/api/v1/task/create`, {
+      await axiosInstance.post(`${backendUrl}/api/v1/task/create`, {
         ...newTask,
         name: taskName,
         projectId: projectId,

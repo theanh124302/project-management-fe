@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import axiosInstance from '../AxiosInstance';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Card, Button, ListGroup, Modal, Form } from 'react-bootstrap';
 import CustomAppBar from '../navbar/CustomAppBar';
@@ -49,7 +50,7 @@ const ApiDesign = () => {
   useEffect(() => {
     const fetchParams = async () => {
       try {
-        const response = await axios.get(`${backendUrl}/api/v1/param/findByApiId?apiId=${apiId}`);
+        const response = await axiosInstance.get(`${backendUrl}/api/v1/param/findByApiId?apiId=${apiId}`);
         setParams(response.data.data);
       } catch (error) {
         console.error('Error fetching params:', error);
@@ -58,7 +59,7 @@ const ApiDesign = () => {
 
     const fetchBodies = async () => {
       try {
-        const response = await axios.get(`${backendUrl}/api/v1/body/findByApiId?apiId=${apiId}`);
+        const response = await axiosInstance.get(`${backendUrl}/api/v1/body/findByApiId?apiId=${apiId}`);
         setBodies(response.data.data);
       } catch (error) {
         console.error('Error fetching bodies:', error);
@@ -67,7 +68,7 @@ const ApiDesign = () => {
 
     const fetchAuthRoles = async () => {
       try {
-        const response = await axios.get(`${backendUrl}/api/v1/auth-role/findByApiId?apiId=${apiId}`);
+        const response = await axiosInstance.get(`${backendUrl}/api/v1/auth-role/findByApiId?apiId=${apiId}`);
         setAuthRoles(response.data.data);
       } catch (error) {
         console.error('Error fetching auth roles:', error);
@@ -76,7 +77,7 @@ const ApiDesign = () => {
 
     const fetchHeaders = async () => {
       try {
-        const response = await axios.get(`${backendUrl}/api/v1/header/findByApiId?apiId=${apiId}`);
+        const response = await axiosInstance.get(`${backendUrl}/api/v1/header/findByApiId?apiId=${apiId}`);
         setHeaders(response.data.data);
       } catch (error) {
         console.error('Error fetching headers:', error);
@@ -85,7 +86,7 @@ const ApiDesign = () => {
 
     const fetchDesignResponses = async () => {
       try {
-        const response = await axios.get(`${backendUrl}/api/v1/design-response/findByApiId?apiId=${apiId}`);
+        const response = await axiosInstance.get(`${backendUrl}/api/v1/design-response/findByApiId?apiId=${apiId}`);
         setDesignResponses(response.data.data);
       } catch (error) {
         console.error('Error fetching design responses:', error);
@@ -94,7 +95,7 @@ const ApiDesign = () => {
 
     const fetchApiDetails = async () => {
       try {
-        const response = await axios.get(`${backendUrl}/api/v1/api/findById?id=${apiId}`);
+        const response = await axiosInstance.get(`${backendUrl}/api/v1/api/findById?id=${apiId}`);
         setApiDetails({ method: response.data.data.method, url: response.data.data.url });
         setApi(response.data.data);
       } catch (error) {
@@ -147,10 +148,10 @@ const ApiDesign = () => {
 
   const handleAddParam = async () => {
     try {
-      await axios.post(`${backendUrl}/api/v1/param/create`, { ...newParam, apiId });
+      await axiosInstance.post(`${backendUrl}/api/v1/param/create`, { ...newParam, apiId });
       setShowParamForm(false);
       setNewParam({ paramKey: '', type: '', description: '', sample: '' });
-      const response = await axios.get(`${backendUrl}/api/v1/param/findByApiId?apiId=${apiId}`);
+      const response = await axiosInstance.get(`${backendUrl}/api/v1/param/findByApiId?apiId=${apiId}`);
       setParams(response.data.data);
     } catch (error) {
       console.error('Error adding param:', error);
@@ -159,10 +160,10 @@ const ApiDesign = () => {
 
   const handleAddBody = async () => {
     try {
-      await axios.post(`${backendUrl}/api/v1/body/create`, { ...newBody, apiId });
+      await axiosInstance.post(`${backendUrl}/api/v1/body/create`, { ...newBody, apiId });
       setShowBodyForm(false);
       setNewBody({ bodyKey: '', type: '', description: '', sample: '' });
-      const response = await axios.get(`${backendUrl}/api/v1/body/findByApiId?apiId=${apiId}`);
+      const response = await axiosInstance.get(`${backendUrl}/api/v1/body/findByApiId?apiId=${apiId}`);
       setBodies(response.data.data);
     } catch (error) {
       console.error('Error adding body:', error);
@@ -171,10 +172,10 @@ const ApiDesign = () => {
 
   const handleAddAuthRole = async () => {
     try {
-      await axios.post(`${backendUrl}/api/v1/auth-role/create`, { ...newAuthRole, apiId });
+      await axiosInstance.post(`${backendUrl}/api/v1/auth-role/create`, { ...newAuthRole, apiId });
       setShowAuthRoleForm(false);
       setNewAuthRole({ role: '' });
-      const response = await axios.get(`${backendUrl}/api/v1/auth-role/findByApiId?apiId=${apiId}`);
+      const response = await axiosInstance.get(`${backendUrl}/api/v1/auth-role/findByApiId?apiId=${apiId}`);
       setAuthRoles(response.data.data);
     } catch (error) {
       console.error('Error adding auth role:', error);
@@ -183,10 +184,10 @@ const ApiDesign = () => {
 
   const handleAddHeader = async () => {
     try {
-      await axios.post(`${backendUrl}/api/v1/header/create`, { ...newHeader, apiId });
+      await axiosInstance.post(`${backendUrl}/api/v1/header/create`, { ...newHeader, apiId });
       setShowHeaderForm(false);
       setNewHeader({ headerKey: '', type: '', description: '', sample: '' });
-      const response = await axios.get(`${backendUrl}/api/v1/header/findByApiId?apiId=${apiId}`);
+      const response = await axiosInstance.get(`${backendUrl}/api/v1/header/findByApiId?apiId=${apiId}`);
       setHeaders(response.data.data);
     } catch (error) {
       console.error('Error adding header:', error);
@@ -195,10 +196,10 @@ const ApiDesign = () => {
 
   const handleAddDesignResponse = async () => {
     try {
-      await axios.post(`${backendUrl}/api/v1/design-response/create`, { ...newDesignResponse, apiId });
+      await axiosInstance.post(`${backendUrl}/api/v1/design-response/create`, { ...newDesignResponse, apiId });
       setShowDesignResponseForm(false);
       setNewDesignResponse({ description: '', value: '' });
-      const response = await axios.get(`${backendUrl}/api/v1/design-response/findByApiId?apiId=${apiId}`);
+      const response = await axiosInstance.get(`${backendUrl}/api/v1/design-response/findByApiId?apiId=${apiId}`);
       setDesignResponses(response.data.data);
     } catch (error) {
       console.error('Error adding design response:', error);
@@ -215,7 +216,7 @@ const ApiDesign = () => {
     const taskName = `Design: ${api.name} on ${currentDate}`; // Tên task dựa trên tiêu đề và ngày hiện tại
 
     try {
-      await axios.post(`${backendUrl}/api/v1/task/create`, {
+      await axiosInstance.post(`${backendUrl}/api/v1/task/create`, {
         ...newTask,
         name: taskName,
         projectId: projectId,
@@ -233,11 +234,11 @@ const ApiDesign = () => {
 
   const handleUpdateParam = async () => {
     try {
-      await axios.post(`${backendUrl}/api/v1/param/update`, { id: currentParam.id, apiId, ...newParam });
+      await axiosInstance.post(`${backendUrl}/api/v1/param/update`, { id: currentParam.id, apiId, ...newParam });
       setShowParamForm(false);
       setNewParam({ paramKey: '', type: '', description: '', sample: '' });
       setCurrentParam(null);
-      const response = await axios.get(`${backendUrl}/api/v1/param/findByApiId?apiId=${apiId}`);
+      const response = await axiosInstance.get(`${backendUrl}/api/v1/param/findByApiId?apiId=${apiId}`);
       setParams(response.data.data);
     } catch (error) {
       console.error('Error updating param:', error);
@@ -246,11 +247,11 @@ const ApiDesign = () => {
 
   const handleUpdateBody = async () => {
     try {
-      await axios.post(`${backendUrl}/api/v1/body/update`, { id: currentBody.id, apiId, ...newBody });
+      await axiosInstance.post(`${backendUrl}/api/v1/body/update`, { id: currentBody.id, apiId, ...newBody });
       setShowBodyForm(false);
       setNewBody({ bodyKey: '', type: '', description: '', sample: '' });
       setCurrentBody(null);
-      const response = await axios.get(`${backendUrl}/api/v1/body/findByApiId?apiId=${apiId}`);
+      const response = await axiosInstance.get(`${backendUrl}/api/v1/body/findByApiId?apiId=${apiId}`);
       setBodies(response.data.data);
     } catch (error) {
       console.error('Error updating body:', error);
@@ -259,11 +260,11 @@ const ApiDesign = () => {
 
   const handleUpdateAuthRole = async () => {
     try {
-      await axios.post(`${backendUrl}/api/v1/auth-role/update`, { id: currentAuthRole.id, apiId, ...newAuthRole });
+      await axiosInstance.post(`${backendUrl}/api/v1/auth-role/update`, { id: currentAuthRole.id, apiId, ...newAuthRole });
       setShowAuthRoleForm(false);
       setNewAuthRole({ role: '' });
       setCurrentAuthRole(null);
-      const response = await axios.get(`${backendUrl}/api/v1/auth-role/findByApiId?apiId=${apiId}`);
+      const response = await axiosInstance.get(`${backendUrl}/api/v1/auth-role/findByApiId?apiId=${apiId}`);
       setAuthRoles(response.data.data);
     } catch (error) {
       console.error('Error updating auth role:', error);
@@ -272,11 +273,11 @@ const ApiDesign = () => {
 
   const handleUpdateHeader = async () => {
     try {
-      await axios.post(`${backendUrl}/api/v1/header/update`, { id: currentHeader.id, apiId, ...newHeader });
+      await axiosInstance.post(`${backendUrl}/api/v1/header/update`, { id: currentHeader.id, apiId, ...newHeader });
       setShowHeaderForm(false);
       setNewHeader({ headerKey: '', type: '', description: '', sample: '' });
       setCurrentHeader(null);
-      const response = await axios.get(`${backendUrl}/api/v1/header/findByApiId?apiId=${apiId}`);
+      const response = await axiosInstance.get(`${backendUrl}/api/v1/header/findByApiId?apiId=${apiId}`);
       setHeaders(response.data.data);
     } catch (error) {
       console.error('Error updating header:', error);
@@ -285,11 +286,11 @@ const ApiDesign = () => {
 
   const handleUpdateDesignResponse = async () => {
     try {
-      await axios.post(`${backendUrl}/api/v1/design-response/update`, { id: currentDesignResponse.id, apiId, ...newDesignResponse });
+      await axiosInstance.post(`${backendUrl}/api/v1/design-response/update`, { id: currentDesignResponse.id, apiId, ...newDesignResponse });
       setShowDesignResponseForm(false);
       setNewDesignResponse({ description: '', value: '' });
       setCurrentDesignResponse(null);
-      const response = await axios.get(`${backendUrl}/api/v1/design-response/findByApiId?apiId=${apiId}`);
+      const response = await axiosInstance.get(`${backendUrl}/api/v1/design-response/findByApiId?apiId=${apiId}`);
       setDesignResponses(response.data.data);
     } catch (error) {
       console.error('Error updating design response:', error);
@@ -298,7 +299,7 @@ const ApiDesign = () => {
 
   const handleUpdateApiDetails = async () => {
     try {
-      await axios.post(`${backendUrl}/api/v1/api/updateUrlAndMethod`, null, {
+      await axiosInstance.post(`${backendUrl}/api/v1/api/updateUrlAndMethod`, null, {
         params: { id: apiId, url: apiDetails.url, method: apiDetails.method },
       });
       setShowApiForm(false);
@@ -309,8 +310,8 @@ const ApiDesign = () => {
 
   const handleDeleteParam = async (paramId) => {
     try {
-      await axios.delete(`${backendUrl}/api/v1/param/delete`, { params: { id: paramId } });
-      const response = await axios.get(`${backendUrl}/api/v1/param/findByApiId?apiId=${apiId}`);
+      await axiosInstance.delete(`${backendUrl}/api/v1/param/delete`, { params: { id: paramId } });
+      const response = await axiosInstance.get(`${backendUrl}/api/v1/param/findByApiId?apiId=${apiId}`);
       setParams(response.data.data);
     } catch (error) {
       console.error('Error deleting param:', error);
@@ -319,8 +320,8 @@ const ApiDesign = () => {
 
   const handleDeleteBody = async (bodyId) => {
     try {
-      await axios.delete(`${backendUrl}/api/v1/body/delete`, { params: { id: bodyId } });
-      const response = await axios.get(`${backendUrl}/api/v1/body/findByApiId?apiId=${apiId}`);
+      await axiosInstance.delete(`${backendUrl}/api/v1/body/delete`, { params: { id: bodyId } });
+      const response = await axiosInstance.get(`${backendUrl}/api/v1/body/findByApiId?apiId=${apiId}`);
       setBodies(response.data.data);
     } catch (error) {
       console.error('Error deleting body:', error);
@@ -329,8 +330,8 @@ const ApiDesign = () => {
 
   const handleDeleteAuthRole = async (authRoleId) => {
     try {
-      await axios.delete(`${backendUrl}/api/v1/auth-role/delete`, { params: { id: authRoleId } });
-      const response = await axios.get(`${backendUrl}/api/v1/auth-role/findByApiId?apiId=${apiId}`);
+      await axiosInstance.delete(`${backendUrl}/api/v1/auth-role/delete`, { params: { id: authRoleId } });
+      const response = await axiosInstance.get(`${backendUrl}/api/v1/auth-role/findByApiId?apiId=${apiId}`);
       setAuthRoles(response.data.data);
     } catch (error) {
       console.error('Error deleting auth role:', error);
@@ -339,8 +340,8 @@ const ApiDesign = () => {
 
   const handleDeleteHeader = async (headerId) => {
     try {
-      await axios.delete(`${backendUrl}/api/v1/header/delete`, { params: { id: headerId } });
-      const response = await axios.get(`${backendUrl}/api/v1/header/findByApiId?apiId=${apiId}`);
+      await axiosInstance.delete(`${backendUrl}/api/v1/header/delete`, { params: { id: headerId } });
+      const response = await axiosInstance.get(`${backendUrl}/api/v1/header/findByApiId?apiId=${apiId}`);
       setHeaders(response.data.data);
     } catch (error) {
       console.error('Error deleting header:', error);
@@ -349,8 +350,8 @@ const ApiDesign = () => {
 
   const handleDeleteDesignResponse = async (designResponseId) => {
     try {
-      await axios.delete(`${backendUrl}/api/v1/design-response/delete`, { params: { id: designResponseId } });
-      const response = await axios.get(`${backendUrl}/api/v1/design-response/findByApiId?apiId=${apiId}`);
+      await axiosInstance.delete(`${backendUrl}/api/v1/design-response/delete`, { params: { id: designResponseId } });
+      const response = await axiosInstance.get(`${backendUrl}/api/v1/design-response/findByApiId?apiId=${apiId}`);
       setDesignResponses(response.data.data);
     } catch (error) {
       console.error('Error deleting design response:', error);

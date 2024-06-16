@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import axiosInstance from '../AxiosInstance';
 import { useParams } from 'react-router-dom';
 import { Container, Row, Col, Card, Button, Form, ListGroup, ListGroupItem, Modal } from 'react-bootstrap';
 import CustomAppBar from '../navbar/CustomAppBar';
@@ -27,7 +28,7 @@ const TaskRequest = () => {
 
   const fetchTaskName = async () => {
     try {
-      const response = await axios.get(`${backendUrl}/api/v1/task/findById`, {
+      const response = await axiosInstance.get(`${backendUrl}/api/v1/task/findById`, {
         params: { id: taskId }
       });
       const taskData = response.data.data;
@@ -43,7 +44,7 @@ const TaskRequest = () => {
 
   const fetchTaskRequests = async () => {
     try {
-      const response = await axios.get(`${backendUrl}/api/v1/task-request/findByTaskId`, {
+      const response = await axiosInstance.get(`${backendUrl}/api/v1/task-request/findByTaskId`, {
         params: { taskId }
       });
       setTaskRequests(response.data.data);
@@ -54,7 +55,7 @@ const TaskRequest = () => {
 
   const handleCreate = async () => {
     try {
-      await axios.post(`${backendUrl}/api/v1/task-request/create`, newTaskRequest);
+      await axiosInstance.post(`${backendUrl}/api/v1/task-request/create`, newTaskRequest);
       fetchTaskRequests();
       setNewTaskRequest({
         description: `Request done for task ${taskName}`,

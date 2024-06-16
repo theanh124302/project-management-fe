@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import axiosInstance from '../AxiosInstance';
 import { useNavigate } from 'react-router-dom';
 import { Modal, Button, Form, Card, Container, Row, Col } from 'react-bootstrap';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, CartesianGrid } from 'recharts';
 import CustomAppBar from '../navbar/CustomAppBar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../public/css/ProjectList.css';
-
-const backendUrl = 'http://localhost:8080'; // Cập nhật URL backend cố định ở đây
 
 const ProjectList = () => {
   const [projects, setProjects] = useState([]);
@@ -27,7 +25,7 @@ const ProjectList = () => {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await axios.get(`${backendUrl}/api/v1/project/findByUsername?username=${username}`);
+        const response = await axiosInstance.get(`/api/v1/project/findByUsername?username=${username}`);
         setProjects(response.data.data);
       } catch (error) {
         console.error('Error fetching projects:', error);
@@ -36,7 +34,7 @@ const ProjectList = () => {
 
     const fetchUserInfo = async () => {
       try {
-        const response = await axios.get(`${backendUrl}/api/v1/user/findByUsername/${username}`);
+        const response = await axiosInstance.get(`/api/v1/user/findByUsername/${username}`);
         setUserName(response.data.data.name);
         setLeaderId(response.data.data.id);
       } catch (error) {
@@ -46,7 +44,7 @@ const ProjectList = () => {
 
     const fetchDueDateTasks = async () => {
       try {
-        const response = await axios.get(`${backendUrl}/api/v1/task/countDueDateByDayAndUserId`, {
+        const response = await axiosInstance.get(`/api/v1/task/countDueDateByDayAndUserId`, {
           params: { userId }
         });
         setDueDateTasks(response.data.data);
@@ -67,13 +65,13 @@ const ProjectList = () => {
     }
 
     try {
-      await axios.post(`${backendUrl}/api/v1/project/create`, {
+      await axiosInstance.post(`/api/v1/project/create`, {
         ...newProject,
         leaderId
       });
       setShowForm(false);
       setNewProject({ name: '', description: '', coverImage: '' });
-      const response = await axios.get(`${backendUrl}/api/v1/project/findByUsername?username=${username}`);
+      const response = await axiosInstance.get(`/api/v1/project/findByUsername?username=${username}`);
       setProjects(response.data.data);
     } catch (error) {
       console.error('Error adding project:', error);

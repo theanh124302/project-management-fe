@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import axiosInstance from '../AxiosInstance';
 import { useParams } from 'react-router-dom';
 import { Table, Button, Modal, Form, Container, Row, Col, Card } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -23,7 +24,7 @@ const FileList = () => {
 
   const fetchFiles = async () => {
     try {
-      const response = await axios.get(`${backendUrl}/api/v1/project-file/findByProjectId`, {
+      const response = await axiosInstance.get(`${backendUrl}/api/v1/project-file/findByProjectId`, {
         params: { projectId, page: 0, size: 10 },
       });
       setFiles(response.data.data);
@@ -34,7 +35,7 @@ const FileList = () => {
 
   const handleDelete = async (fileId) => {
     try {
-      await axios.delete(`${backendUrl}/api/v1/project-file/delete`, {
+      await axiosInstance.delete(`${backendUrl}/api/v1/project-file/delete`, {
         params: { id: fileId },
       });
       fetchFiles();
@@ -78,7 +79,7 @@ const FileList = () => {
     formData.append('description', description);
 
     try {
-      await axios.post(`${backendUrl}/api/v1/project-file/create`, formData);
+      await axiosInstance.post(`${backendUrl}/api/v1/project-file/create`, formData);
       fetchFiles();
       handleCloseUploadModal();
     } catch (error) {

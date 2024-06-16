@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import axiosInstance from '../AxiosInstance';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { Container, Row, Col, Card, Button, Modal, Form } from 'react-bootstrap';
 import CustomAppBar from '../navbar/CustomAppBar';
@@ -42,7 +43,7 @@ const DatabaseTableList = () => {
 
   const fetchProjectDetails = async () => {
     try {
-      const response = await axios.get(`${backendUrl}/api/v1/project/findById?id=${projectId}`);
+      const response = await axiosInstance.get(`${backendUrl}/api/v1/project/findById?id=${projectId}`);
       setProjectLeaderId(response.data.data.leaderId);
     } catch (error) {
       console.error('Error fetching project details:', error);
@@ -51,7 +52,7 @@ const DatabaseTableList = () => {
 
   const fetchTables = async () => {
     try {
-      const response = await axios.get(`${backendUrl}/api/v1/database-table/findAllByDatabaseServerId?databaseServerId=${serverId}&page=0&size=100`);
+      const response = await axiosInstance.get(`${backendUrl}/api/v1/database-table/findAllByDatabaseServerId?databaseServerId=${serverId}&page=0&size=100`);
       setTables(response.data.data);
     } catch (error) {
       console.error('Error fetching tables:', error);
@@ -60,7 +61,7 @@ const DatabaseTableList = () => {
 
   const fetchServerDetails = async () => {
     try {
-      const response = await axios.get(`${backendUrl}/api/v1/database-server/findById?id=${serverId}`);
+      const response = await axiosInstance.get(`${backendUrl}/api/v1/database-server/findById?id=${serverId}`);
       setServerDetails(response.data.data);
       setEditServer(response.data.data);
     } catch (error) {
@@ -70,7 +71,7 @@ const DatabaseTableList = () => {
 
   const handleAddTable = async () => {
     try {
-      await axios.post(`${backendUrl}/api/v1/database-table/create`, {
+      await axiosInstance.post(`${backendUrl}/api/v1/database-table/create`, {
         ...newTable
       });
       setShowForm(false);
@@ -83,7 +84,7 @@ const DatabaseTableList = () => {
 
   const handleEditServer = async () => {
     try {
-      await axios.post(`${backendUrl}/api/v1/database-server/update`, {
+      await axiosInstance.post(`${backendUrl}/api/v1/database-server/update`, {
         ...editServer,
         id: serverId
       });
@@ -96,7 +97,7 @@ const DatabaseTableList = () => {
 
   const handleDeleteServer = async () => {
     try {
-      await axios.delete(`${backendUrl}/api/v1/database-server/delete`, {
+      await axiosInstance.delete(`${backendUrl}/api/v1/database-server/delete`, {
         params: { id: serverId }
       });
       navigate(`/project/${projectId}/database`);

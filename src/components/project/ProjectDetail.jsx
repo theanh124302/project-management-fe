@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import axiosInstance from '../AxiosInstance';
 import { useParams, useNavigate } from 'react-router-dom';
 import CustomAppBar from '../navbar/CustomAppBar';
 import VerticalTabs from '../tabs/VerticalTabs';
@@ -32,15 +33,15 @@ const ProjectDetail = () => {
   useEffect(() => {
     const fetchProjectDetails = async () => {
       try {
-        const projectResponse = await axios.get(`${backendUrl}/api/v1/project/findById?id=${projectId}`);
+        const projectResponse = await axiosInstance.get(`${backendUrl}/api/v1/project/findById?id=${projectId}`);
         setProject(projectResponse.data.data);
         setStartDate(projectResponse.data.data.startDate.split('T')[0]); // Chỉ lấy phần ngày tháng năm
         setExpectedEndDate(projectResponse.data.data.expectedEndDate.split('T')[0]); // Chỉ lấy phần ngày tháng năm
 
-        const leaderResponse = await axios.get(`${backendUrl}/api/v1/user/findById/${projectResponse.data.data.leaderId}`);
+        const leaderResponse = await axiosInstance.get(`${backendUrl}/api/v1/user/findById/${projectResponse.data.data.leaderId}`);
         setLeaderName(leaderResponse.data.data.name);
         
-        const membersResponse = await axios.get(`${backendUrl}/api/v1/user/findByProjectId/${projectId}`);
+        const membersResponse = await axiosInstance.get(`${backendUrl}/api/v1/user/findByProjectId/${projectId}`);
         setMembers(membersResponse.data.data);
       } catch (error) {
         console.error('Error fetching project details or members:', error);
@@ -52,7 +53,7 @@ const ProjectDetail = () => {
 
   const handleAddOrEditMember = async () => {
     try {
-      await axios.post(`${backendUrl}/api/v1/project/assignUserByUsername`, null, {
+      await axiosInstance.post(`${backendUrl}/api/v1/project/assignUserByUsername`, null, {
         params: {
           projectId,
           username: newMember.username,
@@ -61,7 +62,7 @@ const ProjectDetail = () => {
       });
       setNewMember({ username: '', role: '' });
       setEditingMember(null);
-      const membersResponse = await axios.get(`${backendUrl}/api/v1/user/findByProjectId/${projectId}`);
+      const membersResponse = await axiosInstance.get(`${backendUrl}/api/v1/user/findByProjectId/${projectId}`);
       setMembers(membersResponse.data.data);
     } catch (error) {
       console.error('Error adding or editing member:', error);
@@ -70,14 +71,14 @@ const ProjectDetail = () => {
 
   const handleDeleteMember = async (username) => {
     try {
-      await axios.post(`${backendUrl}/api/v1/project/removeUserByUsername`, null, {
+      await axiosInstance.post(`${backendUrl}/api/v1/project/removeUserByUsername`, null, {
         params: {
           projectId,
           username,
           deleterId: userId,
         },
       });
-      const membersResponse = await axios.get(`${backendUrl}/api/v1/user/findByProjectId/${projectId}`);
+      const membersResponse = await axiosInstance.get(`${backendUrl}/api/v1/user/findByProjectId/${projectId}`);
       setMembers(membersResponse.data.data);
     } catch (error) {
       console.error('Error deleting member:', error);
@@ -97,7 +98,7 @@ const ProjectDetail = () => {
   const handleUpdateProjectDates = async () => {
     try {
       const updatedProject = { ...project, startDate, expectedEndDate };
-      const response = await axios.post(`${backendUrl}/api/v1/project/update`, updatedProject, {
+      const response = await axiosInstance.post(`${backendUrl}/api/v1/project/update`, updatedProject, {
         params: { userId }
       });
       setProject(response.data.data);
@@ -109,7 +110,7 @@ const ProjectDetail = () => {
 
   const handleLeaveProject = async () => {
     try {
-      await axios.post(`${backendUrl}/api/v1/project/leaveProject`, null, {
+      await axiosInstance.post(`${backendUrl}/api/v1/project/leaveProject`, null, {
         params: {
           projectId,
           userId,
@@ -132,7 +133,7 @@ const ProjectDetail = () => {
 
   const handleDeleteProject = async () => {
     try {
-      await axios.delete(`${backendUrl}/api/v1/project/delete`, { params: { id: project.id, userId } });
+      await axiosInstance.delete(`${backendUrl}/api/v1/project/delete`, { params: { id: project.id, userId } });
       navigate('/projectList');
     } catch (error) {
       console.error('Error deleting project:', error);
@@ -142,7 +143,7 @@ const ProjectDetail = () => {
   const handleUpdateProject = async () => {
     try {
       const updatedProject = { ...project, ...newProject };
-      const response = await axios.post(`${backendUrl}/api/v1/project/update`, updatedProject, {
+      const response = await axiosInstance.post(`${backendUrl}/api/v1/project/update`, updatedProject, {
         params: { userId }
       });
       setProject(response.data.data);

@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, CartesianGrid } from 'recharts';
 import axios from 'axios';
+import axiosInstance from '../AxiosInstance';
 import { useParams } from 'react-router-dom';
 import { Card, ButtonGroup, Button } from 'react-bootstrap';
 
@@ -14,7 +15,7 @@ const DueDateTaskBarChart = () => {
     const fetchData = async () => {
       try {
         const endpoint = filter === 'day' ? 'countDueDateByDay' : 'countDueDateByMonth';
-        const response = await axios.get(`http://localhost:8080/api/v1/task/${endpoint}`, {
+        const response = await axiosInstance.get(`http://localhost:8080/api/v1/task/${endpoint}`, {
           params: { projectId }
         });
         setData(response.data.data);

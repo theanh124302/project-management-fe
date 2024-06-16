@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import axiosInstance from '../AxiosInstance';
 import { useParams } from 'react-router-dom';
 import Paper from '@mui/material/Paper';
 import { ViewState } from '@devexpress/dx-react-scheduler';
@@ -28,7 +29,7 @@ const Schedule = () => {
 
   const fetchProjectDetails = async () => {
     try {
-      const response = await axios.get(`${backendUrl}/api/v1/project/findById?id=${projectId}`);
+      const response = await axiosInstance.get(`${backendUrl}/api/v1/project/findById?id=${projectId}`);
       setProjectLeaderId(response.data.data.leaderId);
     } catch (error) {
       console.error('Error fetching project details:', error);
@@ -37,7 +38,7 @@ const Schedule = () => {
 
   const fetchEvents = async () => {
     try {
-      const response = await axios.get(`${backendUrl}/api/v1/events/findByProjectId`, {
+      const response = await axiosInstance.get(`${backendUrl}/api/v1/events/findByProjectId`, {
         params: { projectId }
       });
       const events = response.data.data;
@@ -61,7 +62,7 @@ const Schedule = () => {
 
   const handleAddEvent = async () => {
     try {
-      await axios.post(`${backendUrl}/api/v1/events/create`, {
+      await axiosInstance.post(`${backendUrl}/api/v1/events/create`, {
         ...newEvent,
         projectId: projectId,
       });

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import axiosInstance from '../AxiosInstance';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Card, Button, Form, Modal } from 'react-bootstrap';
 import CustomAppBar from '../navbar/CustomAppBar';
@@ -35,7 +36,7 @@ const ApiTest = () => {
   useEffect(() => {
     const fetchApiDetails = async () => {
       try {
-        const response = await axios.get(`${backendUrl}/api/v1/api/findById?id=${apiId}`);
+        const response = await axiosInstance.get(`${backendUrl}/api/v1/api/findById?id=${apiId}`);
         const data = response.data.data;
         setApiDetails({
           name: data.name,
@@ -76,7 +77,7 @@ const ApiTest = () => {
     const taskName = `Test: ${apiDetails.name} on ${currentDate}`;
 
     try {
-      await axios.post(`${backendUrl}/api/v1/task/create`, {
+      await axiosInstance.post(`${backendUrl}/api/v1/task/create`, {
         ...newTask,
         name: taskName,
         projectId: projectId,
@@ -94,7 +95,7 @@ const ApiTest = () => {
 
   const handleAddIssue = async () => {
     try {
-      await axios.post(`${backendUrl}/api/v1/issue/create`, {
+      await axiosInstance.post(`${backendUrl}/api/v1/issue/create`, {
         ...newIssue,
         projectId,
         apiId,
@@ -119,7 +120,7 @@ const ApiTest = () => {
 
   const handleUpdateApi = async () => {
     try {
-      await axios.post(`${backendUrl}/api/v1/api/updateInstallationGuide`, null, {
+      await axiosInstance.post(`${backendUrl}/api/v1/api/updateInstallationGuide`, null, {
         params: {
           id: apiId,
           installationGuide: apiDetails.installationGuide

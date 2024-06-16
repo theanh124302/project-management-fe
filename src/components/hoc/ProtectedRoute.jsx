@@ -14,7 +14,7 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
   useEffect(() => {
     const checkValidUser = async () => {
       try {
-        const response = await axios.get(`${backendUrl}/api/v1/project/checkValidUser`, {
+        const response = await axios.get(`${backendUrl}/api/v1/auth/checkValidUser`, {
           params: { projectId, userId }
         });
         if (response.data.data) {

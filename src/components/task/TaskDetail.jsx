@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import axiosInstance from '../AxiosInstance';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Card, Button, Form, ListGroup, ListGroupItem, Modal } from 'react-bootstrap';
 import CustomAppBar from '../navbar/CustomAppBar';
@@ -44,7 +45,7 @@ const TaskDetail = () => {
   useEffect(() => {
     const fetchTaskDetail = async () => {
       try {
-        const response = await axios.get(`${backendUrl}/api/v1/task/findById?id=${taskId}`);
+        const response = await axiosInstance.get(`${backendUrl}/api/v1/task/findById?id=${taskId}`);
         const taskData = response.data.data;
         setTask(taskData);
         setNewStatus(taskData.status);
@@ -59,7 +60,7 @@ const TaskDetail = () => {
 
         // Fetch API details
         if (taskData.apiId) {
-          const apiResponse = await axios.get(`${backendUrl}/api/v1/api/findById?id=${taskData.apiId}`);
+          const apiResponse = await axiosInstance.get(`${backendUrl}/api/v1/api/findById?id=${taskData.apiId}`);
           setApiName(apiResponse.data.data.name);
           setApiId(taskData.apiId);
           setFolderId(apiResponse.data.data.folderId); // Set folderId from API details
@@ -71,7 +72,7 @@ const TaskDetail = () => {
 
     const fetchAssignedUsers = async () => {
       try {
-        const response = await axios.get(`${backendUrl}/api/v1/user/findByTaskId/${taskId}`);
+        const response = await axiosInstance.get(`${backendUrl}/api/v1/user/findByTaskId/${taskId}`);
         setAssignedUsers(response.data.data);
       } catch (error) {
         console.error('Error fetching assigned users:', error);
@@ -84,12 +85,12 @@ const TaskDetail = () => {
 
   const handleAssign = async () => {
     try {
-      await axios.post(`${backendUrl}/api/v1/task/assignByUsername`, null, {
+      await axiosInstance.post(`${backendUrl}/api/v1/task/assignByUsername`, null, {
         params: { taskId, username, assignerId: userId },
       });
-      const response = await axios.get(`${backendUrl}/api/v1/task/findById?id=${taskId}`);
+      const response = await axiosInstance.get(`${backendUrl}/api/v1/task/findById?id=${taskId}`);
       setTask(response.data.data);
-      const usersResponse = await axios.get(`${backendUrl}/api/v1/user/findByTaskId/${taskId}`);
+      const usersResponse = await axiosInstance.get(`${backendUrl}/api/v1/user/findByTaskId/${taskId}`);
       setAssignedUsers(usersResponse.data.data);
       setAssignError('');
     } catch (error) {
@@ -100,12 +101,12 @@ const TaskDetail = () => {
 
   const handleUnassign = async (username) => {
     try {
-      await axios.post(`${backendUrl}/api/v1/task/unassignByUsername`, null, {
+      await axiosInstance.post(`${backendUrl}/api/v1/task/unassignByUsername`, null, {
         params: { taskId, username, unAssignerId: userId },
       });
-      const response = await axios.get(`${backendUrl}/api/v1/task/findById?id=${taskId}`);
+      const response = await axiosInstance.get(`${backendUrl}/api/v1/task/findById?id=${taskId}`);
       setTask(response.data.data);
-      const usersResponse = await axios.get(`${backendUrl}/api/v1/user/findByTaskId/${taskId}`);
+      const usersResponse = await axiosInstance.get(`${backendUrl}/api/v1/user/findByTaskId/${taskId}`);
       setAssignedUsers(usersResponse.data.data);
       setAssignError('');
     } catch (error) {
@@ -121,7 +122,7 @@ const TaskDetail = () => {
   const handleUpdateStatus = async () => {
     try {
       const updatedTask = { ...task, status: newStatus };
-      const response = await axios.post(`${backendUrl}/api/v1/task/update`, updatedTask);
+      const response = await axiosInstance.post(`${backendUrl}/api/v1/task/update`, updatedTask);
       setTask(response.data.data);
     } catch (error) {
       console.error('Error updating status:', error);
@@ -134,12 +135,12 @@ const TaskDetail = () => {
 
   const handleUpdateTask = async () => {
     try {
-      await axios.post(`${backendUrl}/api/v1/task/update`, {
+      await axiosInstance.post(`${backendUrl}/api/v1/task/update`, {
         ...task,
         ...newTask,
       });
       setShowForm(false);
-      const response = await axios.get(`${backendUrl}/api/v1/task/findById?id=${taskId}`);
+      const response = await axiosInstance.get(`${backendUrl}/api/v1/task/findById?id=${taskId}`);
       setTask(response.data.data);
     } catch (error) {
       console.error('Error updating task:', error);
@@ -148,7 +149,7 @@ const TaskDetail = () => {
 
   const handleDeleteTask = async () => {
     try {
-      await axios.delete(`${backendUrl}/api/v1/task/delete`, { data: { id: taskId } });
+      await axiosInstance.delete(`${backendUrl}/api/v1/task/delete`, { data: { id: taskId } });
       navigate(`/project/${projectId}/task`);
     } catch (error) {
       console.error('Error deleting task:', error);

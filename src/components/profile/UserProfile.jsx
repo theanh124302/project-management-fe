@@ -1,6 +1,7 @@
 // UserProfile.jsx
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import axiosInstance from '../AxiosInstance';
 import { useNavigate } from 'react-router-dom';
 import CustomAppBar from '../navbar/CustomAppBar';
 import Avatar from '@mui/material/Avatar';
@@ -23,7 +24,7 @@ const UserProfile = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/api/v1/user/findById/${userId}`);
+        const response = await axiosInstance.get(`http://localhost:8080/api/v1/user/findById/${userId}`);
         setUser(response.data.data);
       } catch (error) {
         console.error('Error fetching user:', error);
@@ -40,7 +41,7 @@ const UserProfile = () => {
 
   const handleUpdateUser = async () => {
     try {
-      await axios.post('http://localhost:8080/api/v1/user/update', user);
+      await axiosInstance.post('http://localhost:8080/api/v1/user/update', user);
       setIsEditing(false);
       alert('User updated successfully');
     } catch (error) {
