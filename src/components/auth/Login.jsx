@@ -3,7 +3,7 @@ import axiosInstance from '../AxiosInstance'; // Import axiosInstance
 import { useNavigate, Link } from 'react-router-dom';
 import '../../public/css/Login.css';
 
-const backendUrl = 'http://localhost:8080'; // Cập nhật URL backend cố định ở đây
+const backendUrl = 'http://localhost:8080'; // Update the backend URL here
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -33,16 +33,16 @@ const Login = () => {
 
       navigate(`/projectList`);
     } catch (error) {
-      setError('Đăng nhập thất bại. Vui lòng kiểm tra lại tên đăng nhập và mật khẩu.');
+      setError('Login failed. Please check your username and password.');
     }
   };
 
   return (
     <div className="container">
-      <h2>Đăng nhập</h2>
+      <h2>Login</h2>
       <form onSubmit={handleLogin}>
         <div>
-          <label htmlFor="username">Tên đăng nhập:</label>
+          <label htmlFor="username">Username:</label>
           <input
             type="text"
             id="username"
@@ -51,7 +51,7 @@ const Login = () => {
           />
         </div>
         <div>
-          <label htmlFor="password">Mật khẩu:</label>
+          <label htmlFor="password">Password:</label>
           <input
             type="password"
             id="password"
@@ -60,9 +60,9 @@ const Login = () => {
           />
         </div>
         {error && <p className="error">{error}</p>}
-        <button type="submit">Đăng nhập</button>
+        <button type="submit">Login</button>
       </form>
-      <p>Bạn chưa có tài khoản? <Link to="/signup">Đăng ký ngay</Link></p>
+      <p>Don't have an account? <Link to="/signup">Sign up now</Link></p>
     </div>
   );
 };

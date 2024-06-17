@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import '../../public/css/SignUp.css';
 
-const backendUrl = 'http://localhost:8080'; // Cập nhật URL backend cố định ở đây
+const backendUrl = 'http://localhost:8080'; // Update the backend URL here
 
 const SignUp = () => {
   const [name, setName] = useState('');
@@ -16,6 +16,13 @@ const SignUp = () => {
 
   const handleSignUp = async (e) => {
     e.preventDefault();
+
+    // Check if all fields are filled
+    if (!name || !phoneNumber || !email || !username || !password) {
+      setError('Please fill in all fields.');
+      return;
+    }
+
     try {
       await axios.post(
         `${backendUrl}/api/v1/auth/signup`,
@@ -27,18 +34,18 @@ const SignUp = () => {
           password: password,
         }
       );
-      navigate('/login'); // Điều hướng đến trang đăng nhập sau khi đăng ký thành công
+      navigate('/login'); // Navigate to the login page after successful registration
     } catch (error) {
-      setError('Đăng ký thất bại. Vui lòng kiểm tra lại thông tin.');
+      setError('Registration failed. Please check your information.');
     }
   };
 
   return (
     <div className="container">
-      <h2>Đăng ký</h2>
+      <h2>Sign Up</h2>
       <form onSubmit={handleSignUp}>
         <div>
-          <label htmlFor="name">Tên:</label>
+          <label htmlFor="name">Name:</label>
           <input
             type="text"
             id="name"
@@ -47,7 +54,7 @@ const SignUp = () => {
           />
         </div>
         <div>
-          <label htmlFor="phoneNumber">Số điện thoại:</label>
+          <label htmlFor="phoneNumber">Phone Number:</label>
           <input
             type="text"
             id="phoneNumber"
@@ -65,7 +72,7 @@ const SignUp = () => {
           />
         </div>
         <div>
-          <label htmlFor="username">Tên đăng nhập:</label>
+          <label htmlFor="username">Username:</label>
           <input
             type="text"
             id="username"
@@ -74,7 +81,7 @@ const SignUp = () => {
           />
         </div>
         <div>
-          <label htmlFor="password">Mật khẩu:</label>
+          <label htmlFor="password">Password:</label>
           <input
             type="password"
             id="password"
@@ -83,7 +90,7 @@ const SignUp = () => {
           />
         </div>
         {error && <p className="error">{error}</p>}
-        <button type="submit">Đăng ký</button>
+        <button type="submit">Sign Up</button>
       </form>
     </div>
   );
