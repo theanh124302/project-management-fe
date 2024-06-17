@@ -6,6 +6,7 @@ import { Table, Button, Modal, Form, Container, Row, Col, Card } from 'react-boo
 import 'bootstrap/dist/css/bootstrap.min.css';
 import CustomAppBar from '../navbar/CustomAppBar';
 import VerticalTabs from '../tabs/VerticalTabs';
+import '../../public/css/FileList.css';
 
 const backendUrl = 'http://localhost:8080'; // Cập nhật URL backend cố định ở đây
 
@@ -95,7 +96,7 @@ const FileList = () => {
         <Col xs={12} md={3}>
           <VerticalTabs projectId={projectId} />
         </Col>
-        <Col xs={12} md={9} className='config'>
+        <Col xs={12} md={9} className='file-content'>
           <Card className="mt-4 project-card">
             <Card.Body>
               <Button variant="success" onClick={handleShowUploadModal}>Add File</Button>

@@ -86,7 +86,7 @@ const Schedule = () => {
         <Col xs={12} md={3}>
           <VerticalTabs projectId={projectId} />
         </Col>
-        <Col xs={12} md={9} className='config'>
+        <Col xs={12} md={9} className='scheduler-content'>
           <Card className="mt-4">
             <Card.Body>
               <Card.Title>Schedule</Card.Title>

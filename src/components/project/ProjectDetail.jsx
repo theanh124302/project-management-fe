@@ -168,7 +168,7 @@ const ProjectDetail = () => {
         <Col xs={12} md={3}>
           <VerticalTabs projectId={projectId} />
         </Col>
-        <Col xs={12} md={9}  className='config'>
+        <Col xs={12} md={9}  className='project-content'>
           <Card className="mt-4 project-card">
             <Card.Body>
               {project ? (
