@@ -65,6 +65,8 @@ export default function CustomAppBar() {
   };
 
   const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
     navigate('/login');
     handleMenuClose();
   };
