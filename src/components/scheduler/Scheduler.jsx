@@ -169,9 +169,9 @@ const Schedule = () => {
           <Button variant="secondary" onClick={handleCloseForm}>
             Cancel
           </Button>
-          <Button variant="success" onClick={handleAddEvent}>
+          {/* <Button variant="success" onClick={handleAddEvent}>
             Add Event
-          </Button>
+          </Button> */}
         </Modal.Footer>
       </Modal>
     </Container>
