@@ -97,13 +97,13 @@ const Schedule = () => {
                   <Appointments />
                 </Scheduler>
               </Paper>
-              {projectLeaderId === parseInt(userId, 10) && (
+              {/* {projectLeaderId === parseInt(userId, 10) && (
                 <div>
                   <Button variant="success" onClick={() => setShowForm(true)} className="mt-3">
                     Add Event
                   </Button>
                 </div>
-              )}
+              )} */}
             </Card.Body>
           </Card>
         </Col>
@@ -169,9 +169,9 @@ const Schedule = () => {
           <Button variant="secondary" onClick={handleCloseForm}>
             Cancel
           </Button>
-          {/* <Button variant="success" onClick={handleAddEvent}>
+          <Button variant="success" onClick={handleAddEvent}>
             Add Event
-          </Button> */}
+          </Button>
         </Modal.Footer>
       </Modal>
     </Container>
