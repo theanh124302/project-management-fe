@@ -373,7 +373,7 @@ const DesignDocs = () => {
                   />
                 </Form.Group>
               </Form>
-              <Button variant="primary" onClick={handleSubmit}>
+              <Button variant="success" onClick={handleSubmit}>
                 Update Diagrams
               </Button>
               <Card.Title className="mt-4">Related APIs</Card.Title>
@@ -385,7 +385,7 @@ const DesignDocs = () => {
                         <Card.Title>{impact.apiImpactName}</Card.Title>
                         <Card.Text>Status: {impact.status}</Card.Text>
                         <Card.Text>Priority: {impact.impactPriority}</Card.Text>
-                        <Button variant="outline-primary" size="sm" className="me-2" onClick={() => handleEditImpactClick(impact)}>
+                        <Button variant="outline-success" size="sm" className="me-2" onClick={() => handleEditImpactClick(impact)}>
                           Edit
                         </Button>
                         <Button variant="outline-danger" size="sm" onClick={() => handleDeleteImpact(impact.id)}>
@@ -410,7 +410,7 @@ const DesignDocs = () => {
                       <Card.Body>
                         <Card.Title>{table.databaseTableName}</Card.Title>
                         <Card.Text>Description: {table.description}</Card.Text>
-                        <Button variant="outline-primary" size="sm" className="me-2" onClick={() => handleEditTableClick(table)}>
+                        <Button variant="outline-success" size="sm" className="me-2" onClick={() => handleEditTableClick(table)}>
                           Edit
                         </Button>
                         <Button variant="outline-danger" size="sm" onClick={() => handleDeleteTable(table.id)}>
@@ -424,7 +424,7 @@ const DesignDocs = () => {
                   </Col>
                 ))}
               </Row>
-              <Button variant="secondary" onClick={() => setShowTableForm(true)}>
+              <Button variant="success" onClick={() => setShowTableForm(true)}>
                 Add Table
               </Button>
               <Modal show={showDocForm} onHide={handleCloseDocForm}>
