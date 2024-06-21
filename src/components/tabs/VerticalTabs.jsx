@@ -36,9 +36,9 @@ const VerticalTabs = () => {
 
   return (
     <div className="vertical-tabs d-flex flex-column bg-success p-3">
-      <button className="btn btn-light mb-3" onClick={handleBackClick}>
+      {/* <button className="btn btn-light mb-3" onClick={handleBackClick}>
         <FaArrowLeft /> Back
-      </button>
+      </button> */}
       <nav className="nav flex-column">
         <a
           className={`nav-link text-white ${selectedTab === 0 ? 'active' : ''}`}

@@ -129,7 +129,7 @@ export default function CustomAppBar() {
           </Search>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <IconButton size="large" aria-label="show 4 new mails" className="icon-button">
+            {/* <IconButton size="large" aria-label="show 4 new mails" className="icon-button">
               <Badge badgeContent={4} color="error">
                 <FaEnvelope />
               </Badge>
@@ -142,7 +142,7 @@ export default function CustomAppBar() {
               <Badge badgeContent={17} color="error">
                 <FaBell />
               </Badge>
-            </IconButton>
+            </IconButton> */}
             <IconButton
               size="large"
               edge="end"

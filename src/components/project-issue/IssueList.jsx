@@ -131,10 +131,10 @@ const IssueList = () => {
     <Container fluid className="issue-list-container">
       <CustomAppBar />
       <Row>
-        <Col xs={12} md={3}>
+        <Col xs={12} md={2}>
           <VerticalTabs projectId={projectId} />
         </Col>
-        <Col xs={12} md={9} className='issue-content'>
+        <Col xs={12} md={10} className='issue-content'>
           <h2>Issue List</h2>
           <Row>
             {issues.map((issue) => (
