@@ -39,5 +39,6 @@ body, html {
   background-color: #fff; /* Màu nền trắng */ /* Khoảng cách phía trên */
   transform: translateX(-45px);
   margin-top: 50px;
+  min-height: 500px;
   margin-bottom: 50px;
 }

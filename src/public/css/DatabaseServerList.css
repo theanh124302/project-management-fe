@@ -22,6 +22,7 @@
     margin-top: 50px; /* Khoảng cách phía trên */
     margin-bottom: 50px;
     transform: translateX(-45px);
+    min-height: 500px;
   }
   
   .config {
