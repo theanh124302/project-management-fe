@@ -19,7 +19,7 @@ const Dashboard = () => {
         <Col xs={12} md={2}>
           <VerticalTabs projectId={projectId} />
         </Col>
-        <Col xs={12} md={10} className='card-style'>
+        <Col xs={12} md={10} className='content-style'>
           <Card className="mt-4">
             <Card.Body>
               <Card.Title>Dashboard</Card.Title>
