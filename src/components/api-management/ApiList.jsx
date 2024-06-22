@@ -6,7 +6,8 @@ import { Container, Row, Col, Card, Button, Modal, Form } from 'react-bootstrap'
 import CustomAppBar from '../navbar/CustomAppBar';
 import VerticalTabs from '../tabs/VerticalTabs';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../../public/css/ApiList.css';
+
+import '../../public/css/Styles.css';
 
 const backendUrl = 'http://localhost:8080'; // Cập nhật URL backend cố định ở đây
 
@@ -79,18 +80,18 @@ const ApiList = () => {
   };
 
   return (
-    <Container fluid className="api-list-container">
+    <Container fluid>
       <CustomAppBar />
       <Row>
-        <Col xs={12} md={3}>
+        <Col xs={12} md={2}>
           <VerticalTabs projectId={projectId} />
         </Col>
-        <Col xs={12} md={9} className='api-content'>
+        <Col xs={12} md={10} className='content-style'>
           <h2>API List</h2>
           <Row>
             {apis.map((api) => (
               <Col key={api.id} xs={12} md={6} lg={4} className="mb-3">
-                <Card onClick={() => handleApiClick(api.id)} className="api-card" style={{ cursor: 'pointer' }}>
+                <Card onClick={() => handleApiClick(api.id)} className="card-style" style={{ cursor: 'pointer' }}>
                   <Card.Body>
                     <Card.Title>{api.name}</Card.Title>
                     <Card.Text>{api.description}</Card.Text>
@@ -105,7 +106,7 @@ const ApiList = () => {
               </Col>
             ))}
             <Col xs={12} md={6} lg={4} className="mb-3">
-              <Card onClick={() => setShowForm(true)} className="api-card add-api-card" style={{ cursor: 'pointer' }}>
+              <Card onClick={() => setShowForm(true)} className="card-style" style={{ cursor: 'pointer' }}>
                 <Card.Body className="d-flex justify-content-center align-items-center">
                   <h1>+</h1>
                 </Card.Body>

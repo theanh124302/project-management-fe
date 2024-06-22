@@ -6,7 +6,7 @@ import { Container, Row, Col, Card, Button, Modal, Form } from 'react-bootstrap'
 import CustomAppBar from '../navbar/CustomAppBar';
 import VerticalTabs from '../tabs/VerticalTabs';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../../public/css/FolderList.css';
+import '../../public/css/Styles.css';
 
 const backendUrl = 'http://localhost:8080'; // Cập nhật URL backend cố định ở đây
 
@@ -100,22 +100,22 @@ const FolderList = () => {
   };
 
   return (
-    <Container fluid className="folder-list-container">
+    <Container fluid>
       <CustomAppBar />
       <Row>
-        <Col xs={12} md={3}>
+        <Col xs={12} md={2}>
           <VerticalTabs projectId={projectId} />
         </Col>
-        <Col xs={12} md={9} className='folder-content'>
+        <Col xs={12} md={10} className='content-style'>
           <h2>Folder List</h2>
           <Row>
             {folders.map((folder) => (
               <Col key={folder.id} xs={12} md={6} lg={4} className="mb-3">
-                <Card onClick={() => handleFolderClick(folder.id)} className="folder-card" style={{ cursor: 'pointer' }}>
+                <Card onClick={() => handleFolderClick(folder.id)} className="card-style" style={{ cursor: 'pointer' }}>
                   <Card.Body>
                     <Card.Title>{folder.name}</Card.Title>
                     {projectLeaderId === parseInt(userId, 10) && (
-                      <div className="folder-buttons">
+                      <div className="buttons-style">
                         <Button variant="light" onClick={(e) => { e.stopPropagation(); handleEditFolder(folder); }} className="me-2">
                           Edit
                         </Button>
@@ -129,7 +129,7 @@ const FolderList = () => {
               </Col>
             ))}
             <Col xs={12} md={6} lg={4} className="mb-3">
-              <Card onClick={() => setShowForm(true)} className="folder-card add-folder-card" style={{ cursor: 'pointer' }}>
+              <Card onClick={() => setShowForm(true)} className="card-style" style={{ cursor: 'pointer' }}>
                 <Card.Body className="d-flex justify-content-center align-items-center">
                   <h1>+</h1>
                 </Card.Body>

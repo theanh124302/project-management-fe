@@ -6,7 +6,7 @@ import { Container, Row, Col, Card, Button, Modal, Form } from 'react-bootstrap'
 import CustomAppBar from '../navbar/CustomAppBar';
 import VerticalTabs from '../tabs/VerticalTabs';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../../public/css/DatabaseServerList.css';
+import '../../public/css/Styles.css';
 
 const backendUrl = 'http://localhost:8080'; // Update to your backend URL
 
@@ -81,13 +81,13 @@ const DatabaseServerList = () => {
   };
 
   return (
-    <Container fluid className="server-list-container">
+    <Container fluid>
       <CustomAppBar />
       <Row>
-        <Col xs={12} md={3}>
+        <Col xs={12} md={2}>
           <VerticalTabs projectId={projectId} />
         </Col>
-        <Col xs={12} md={9} className="server-content">
+        <Col xs={12} md={10} className="content-style">
           <h2>Database Server List</h2>
           <Row>
             {servers.map((server) => (

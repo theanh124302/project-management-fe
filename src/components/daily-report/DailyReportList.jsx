@@ -6,7 +6,7 @@ import { Container, Row, Col, Card, Button, Modal, Form, InputGroup, FormControl
 import CustomAppBar from '../navbar/CustomAppBar';
 import VerticalTabs from '../tabs/VerticalTabs';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../../public/css/DailyReportList.css';
+import '../../public/css/Styles.css';
 
 const backendUrl = 'http://localhost:8080'; // Cập nhật URL backend cố định ở đây
 
@@ -135,13 +135,13 @@ const DailyReportList = () => {
   };
 
   return (
-    <Container fluid className="daily-report-list-container">
+    <Container fluid>
       <CustomAppBar />
       <Row>
-        <Col xs={12} md={3}>
+        <Col xs={12} md={2}>
           <VerticalTabs projectId={projectId} />
         </Col>
-        <Col xs={12} md={9} className="daily-report-content">
+        <Col xs={12} md={10} className="content-style">
           <h2>Daily Report List</h2>
           <InputGroup className="mb-3">
             <FormControl
@@ -153,7 +153,7 @@ const DailyReportList = () => {
           <Row>
             {dailyReports.map((report) => (
               <Col key={report.id} xs={12} md={6} lg={4} className="mb-3">
-                <Card onClick={() => handleReportClick(report)} className="daily-report-card" style={{ cursor: 'pointer' }}>
+                <Card onClick={() => handleReportClick(report)} className="card-style" style={{ cursor: 'pointer' }}>
                   <Card.Body>
                     <Card.Title>{report.name}</Card.Title>
                     <Card.Text>{report.description}</Card.Text>
@@ -161,7 +161,7 @@ const DailyReportList = () => {
                       <strong>Date:</strong> {new Date(report.date).toLocaleString()}
                     </Card.Text>
                     {report.createdBy === parseInt(userId, 10) && (
-                      <div className="daily-report-buttons">
+                      <div className="buttons-style">
                         <Button variant="light" onClick={(e) => { e.stopPropagation(); handleEditReport(report); }} className="me-2">
                           Edit
                         </Button>
@@ -175,7 +175,7 @@ const DailyReportList = () => {
               </Col>
             ))}
             <Col xs={12} md={6} lg={4} className="mb-3">
-              <Card onClick={() => setShowForm(true)} className="daily-report-card add-daily-report-card" style={{ cursor: 'pointer' }}>
+              <Card onClick={() => setShowForm(true)} className="card-style" style={{ cursor: 'pointer' }}>
                 <Card.Body className="d-flex justify-content-center align-items-center">
                   <h1>+</h1>
                 </Card.Body>

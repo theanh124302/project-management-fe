@@ -6,7 +6,7 @@ import { Container, Row, Col, Card, Button, Modal, Form, Table } from 'react-boo
 import CustomAppBar from '../navbar/CustomAppBar';
 import VerticalTabs from '../tabs/VerticalTabs';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../../public/css/DatabaseFieldList.css';
+import '../../public/css/Styles.css';
 
 const backendUrl = 'http://localhost:8080'; // Update your backend URL
 
@@ -81,23 +81,19 @@ const DatabaseFieldList = () => {
     }
   };
 
-  const handleFieldClick = (fieldId) => {
-    console.log(`Viewing details of field: ${fieldId}`);
-  };
-
   const handleCloseForm = () => {
     setShowForm(false);
     setNewField({ fieldName: '', type: '', description: '', databaseTableId: tableId, sample: '' });
   };
 
   return (
-    <Container fluid className="field-list-container">
+    <Container fluid>
       <CustomAppBar />
       <Row>
-        <Col xs={12} md={3}>
+        <Col xs={12} md={2}>
           <VerticalTabs projectId={projectId} />
         </Col>
-        <Col xs={12} md={9} className="field-content" style={{ backgroundColor: typeColor }}>
+        <Col xs={12} md={10} className="content-style" style={{ backgroundColor: typeColor }}>
           <div style={{ backgroundColor: '#fff', borderRadius: '8px', padding: '15px', boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}>
             <h2 class="title-background">{tableData.name}</h2>
             <h6>{tableData.uuid}</h6>

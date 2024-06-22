@@ -6,7 +6,7 @@ import { Container, Row, Col, Card, Button, Form, Modal } from 'react-bootstrap'
 import CustomAppBar from '../navbar/CustomAppBar';
 import VerticalTabs from '../tabs/VerticalTabs';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../../public/css/IssueDetail.css';
+import '../../public/css/Styles.css';
 
 const backendUrl = 'http://localhost:8080';
 
@@ -171,14 +171,14 @@ const IssueDetail = () => {
   };
 
   return (
-    <Container fluid className="issue-detail-container">
+    <Container fluid>
       <CustomAppBar />
       <Row>
-        <Col xs={12} md={3}>
+        <Col xs={12} md={2}>
           <VerticalTabs projectId={projectId} />
         </Col>
-        <Col xs={12} md={9}  className='config'>
-          <Card className="mt-4 issue-card">
+        <Col xs={12} md={10}  className='content-style'>
+          <Card className="mt-4 card-style">
             <Card.Body>
               <Card.Title>{issue.description}</Card.Title>
               <Card.Text><strong>Content:</strong> {issue.content}</Card.Text>

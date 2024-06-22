@@ -6,7 +6,7 @@ import { Container, Row, Col, Card, Button, Form, ListGroup, Modal } from 'react
 import CustomAppBar from '../navbar/CustomAppBar';
 import VerticalTabs from '../tabs/VerticalTabs';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../../public/css/TaskComments.css';
+import '../../public/css/Styles.css';
 
 const backendUrl = 'http://localhost:8080';
 
@@ -105,13 +105,13 @@ const TaskComments = () => {
   };
 
   return (
-    <Container fluid className="task-comments-container">
+    <Container fluid>
       <CustomAppBar />
       <Row>
-        <Col xs={12} md={3}>
+        <Col xs={12} md={2}>
           <VerticalTabs projectId={projectId} />
         </Col>
-        <Col xs={12} md={9}  className='config'>
+        <Col xs={12} md={10}   className='content-style'>
           <Card className="mt-4">
             <Card.Body>
               <Card.Title>Comments</Card.Title>

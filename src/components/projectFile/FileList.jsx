@@ -6,7 +6,7 @@ import { Table, Button, Modal, Form, Container, Row, Col, Card } from 'react-boo
 import 'bootstrap/dist/css/bootstrap.min.css';
 import CustomAppBar from '../navbar/CustomAppBar';
 import VerticalTabs from '../tabs/VerticalTabs';
-import '../../public/css/FileList.css';
+import '../../public/css/Styles.css';
 
 const backendUrl = 'http://localhost:8080'; // Cập nhật URL backend cố định ở đây
 
@@ -90,13 +90,13 @@ const FileList = () => {
   };
 
   return (
-    <Container fluid className="project-detail-container">
+    <Container fluid>
       <CustomAppBar />
       <Row>
-        <Col xs={12} md={3}>
+        <Col xs={12} md={2}>
           <VerticalTabs projectId={projectId} />
         </Col>
-        <Col xs={12} md={9} className='file-content'>
+        <Col xs={12} md={10} className='content-style'>
           <Card className="mt-4 project-card">
             <Card.Body>
               <Button variant="success" onClick={handleShowUploadModal}>Add File</Button>

@@ -6,7 +6,7 @@ import { Container, Row, Col, Card, Button, Modal, Form } from 'react-bootstrap'
 import CustomAppBar from '../navbar/CustomAppBar';
 import VerticalTabs from '../tabs/VerticalTabs';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../../public/css/DatabaseTableList.css';
+import '../../public/css/Styles.css';
 
 const backendUrl = 'http://localhost:8080'; // Update to your backend URL
 
@@ -120,13 +120,13 @@ const DatabaseTableList = () => {
   };
 
   return (
-    <Container fluid className="table-list-container" >
+    <Container fluid>
       <CustomAppBar />
       <Row>
-        <Col xs={12} md={3}>
+        <Col xs={12} md={2}>
           <VerticalTabs projectId={projectId} />
         </Col>
-        <Col xs={12} md={9} className="table-content" style={{ backgroundColor: typeColor }}>
+        <Col xs={12} md={10} className="content-style" style={{ backgroundColor: typeColor }}>
           {serverDetails && (
             <Card className="mb-3">
               <Card.Body>
@@ -149,7 +149,7 @@ const DatabaseTableList = () => {
               <Col key={table.id} xs={12} md={6} lg={4} className="mb-3">
                 <Card
                   onClick={() => handleTableClick(table.id)}
-                  className="table-card"
+                  className="card-style"
                   style={{ cursor: 'pointer' }}
                 >
                   <Card.Body>
@@ -162,7 +162,7 @@ const DatabaseTableList = () => {
             <Col xs={12} md={6} lg={4} className="mb-3">
               {projectLeaderId === parseInt(userId, 10) && (
                 <div>
-                  <Card onClick={() => setShowForm(true)} className="table-card add-table-card" style={{ cursor: 'pointer' }}>
+                  <Card onClick={() => setShowForm(true)} className="card-style" style={{ cursor: 'pointer' }}>
                     <Card.Body className="d-flex justify-content-center align-items-center">
                       <h1>+</h1>
                     </Card.Body>

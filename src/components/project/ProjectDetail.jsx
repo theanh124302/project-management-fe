@@ -7,7 +7,7 @@ import VerticalTabs from '../tabs/VerticalTabs';
 import { Container, Row, Col, Card, Button, Table, Form, FormControl, Modal } from 'react-bootstrap';
 import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../../public/css/ProjectDetail.css';
+import '../../public/css/Styles.css';
 
 const backendUrl = 'http://localhost:8080'; // Cập nhật URL backend cố định ở đây
 
@@ -162,14 +162,14 @@ const ProjectDetail = () => {
   const isLeader = project && project.leaderId === parseInt(userId, 10);
 
   return (
-    <Container fluid className="project-detail-container">
+    <Container fluid>
       <CustomAppBar />
       <Row>
-        <Col xs={12} md={3}>
+        <Col xs={12} md={2}>
           <VerticalTabs projectId={projectId} />
         </Col>
-        <Col xs={12} md={9}  className='project-content'>
-          <Card className="mt-4 project-card">
+        <Col xs={12} md={10}  className='content-style'>
+          <Card className="mt-4 card-style">
             <Card.Body>
               {project ? (
                 <>

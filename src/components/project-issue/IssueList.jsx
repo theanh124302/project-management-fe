@@ -6,7 +6,7 @@ import { Container, Row, Col, Card, Button, Modal, Form } from 'react-bootstrap'
 import CustomAppBar from '../navbar/CustomAppBar';
 import VerticalTabs from '../tabs/VerticalTabs';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../../public/css/IssueList.css';
+import '../../public/css/Styles.css';
 
 const backendUrl = 'http://localhost:8080';
 
@@ -128,18 +128,18 @@ const IssueList = () => {
   };
 
   return (
-    <Container fluid className="issue-list-container">
+    <Container fluid>
       <CustomAppBar />
       <Row>
-        <Col xs={12} md={3}>
+        <Col xs={12} md={2}>
           <VerticalTabs projectId={projectId} />
         </Col>
-        <Col xs={12} md={9} className='issue-content'>
+        <Col xs={12} md={10} className='content-style'>
           <h2>Issue List</h2>
           <Row>
             {issues.map((issue) => (
               <Col key={issue.id} xs={12} md={6} lg={4} className="mb-3">
-                <Card onClick={() => handleIssueClick(issue.id)} className={`issue-card border-${statusColors[issue.status]}`} style={{ cursor: 'pointer' }}>
+                <Card onClick={() => handleIssueClick(issue.id)} className={`card-style border-${statusColors[issue.status]}`} style={{ cursor: 'pointer' }}>
                   <Card.Body>
                     <Card.Title>{issue.description}</Card.Title>
                     <Card.Text>{issue.content}</Card.Text>

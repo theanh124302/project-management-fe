@@ -6,7 +6,7 @@ import { Container, Row, Col, Card, Button, Modal, Form, InputGroup, FormControl
 import CustomAppBar from '../navbar/CustomAppBar';
 import VerticalTabs from '../tabs/VerticalTabs';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../../public/css/TaskList.css';
+import '../../public/css/Styles.css';
 
 const backendUrl = 'http://localhost:8080'; // Cập nhật URL backend cố định ở đây
 
@@ -118,13 +118,13 @@ const TaskList = () => {
   };
 
   return (
-    <Container fluid className="task-list-container">
+    <Container fluid>
       <CustomAppBar />
       <Row>
-        <Col xs={12} md={3}>
+        <Col xs={12} md={2}>
           <VerticalTabs projectId={projectId} />
         </Col>
-        <Col xs={12} md={9} className="task-content">
+        <Col xs={12} md={10} className='content-style'>
           <h2>Task List</h2>
           <div className="d-flex justify-content-end mb-3">
             <Form.Group controlId="formStatusFilter" className="d-flex align-items-center me-3">
@@ -149,7 +149,7 @@ const TaskList = () => {
           <Row>
             {tasks.map((task) => (
               <Col key={task.id} xs={12} md={6} lg={4} className="mb-3">
-                <Card onClick={() => handleTaskClick(task.id)} className={`task-card border-${statusColors[task.status]}`} style={{ cursor: 'pointer' }}>
+                <Card onClick={() => handleTaskClick(task.id)} className={`card-style border-${statusColors[task.status]}`} style={{ cursor: 'pointer' }}>
                   <Card.Body>
                     <Card.Title>{task.name}</Card.Title>
                     <Card.Text>{task.description}</Card.Text>
@@ -169,7 +169,7 @@ const TaskList = () => {
             <Col xs={12} md={6} lg={4} className="mb-3">
               {projectLeaderId === parseInt(userId, 10) && (
                 <div>
-                  <Card onClick={() => setShowForm(true)} className="task-card add-task-card" style={{ cursor: 'pointer' }}>
+                  <Card onClick={() => setShowForm(true)} className="card-style" style={{ cursor: 'pointer' }}>
                     <Card.Body className="d-flex justify-content-center align-items-center">
                       <h1>+</h1>
                     </Card.Body>

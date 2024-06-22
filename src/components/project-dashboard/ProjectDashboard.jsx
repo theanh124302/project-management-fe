@@ -7,19 +7,19 @@ import MyPieChart from '../charts/MyPieChart';
 import DueDateTaskBarChart from '../charts/DueDateTaskBarChart'; // Import DueDateTaskBarChart
 import { useParams } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../../public/css/Dashboard.css';
+import '../../public/css/Styles.css';
 
 const Dashboard = () => {
   const { projectId } = useParams();
 
   return (
-    <Container fluid className="dashboard-container">
+    <Container fluid>
       <CustomAppBar />
       <Row>
-        <Col xs={12} md={3}>
+        <Col xs={12} md={2}>
           <VerticalTabs projectId={projectId} />
         </Col>
-        <Col xs={12} md={9} className='dashboard-content'>
+        <Col xs={12} md={10} className='card-style'>
           <Card className="mt-4">
             <Card.Body>
               <Card.Title>Dashboard</Card.Title>
