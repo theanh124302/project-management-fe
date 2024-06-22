@@ -20,11 +20,11 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
         if (response.data.data) {
           setIsValid(true);
         } else {
-          navigate('/unauthorized');
+          navigate('/login');
         }
       } catch (error) {
         console.error('Error checking valid user:', error);
-        navigate('/unauthorized');
+        navigate('/login');
       } finally {
         setLoading(false);
       }
