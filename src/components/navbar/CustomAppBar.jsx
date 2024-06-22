@@ -7,7 +7,7 @@ import IconButton from '@mui/material/IconButton';
 import InputBase from '@mui/material/InputBase';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-import { FaSearch, FaUserCircle, FaEnvelope, FaBell, FaCogs } from 'react-icons/fa';
+import { FaSearch, FaUserCircle, FaEnvelope,FaCogs } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import '../../public/css/CustomAppBar.css';
 

@@ -116,7 +116,7 @@ const FileList = () => {
                       <td>{file.description}</td>
                       <td>{file.type}</td>
                       <td>
-                        <Button variant="success" onClick={() => handleShowModal(file)} className="me-2">
+                        <Button onClick={() => handleShowModal(file)} className="me-2 button-style">
                           View
                         </Button>
                         <Button variant="danger" className="me-2" onClick={() => handleDelete(file.id)}>

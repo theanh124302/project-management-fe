@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { FaArrowLeft, FaTasks, FaInfoCircle, FaDatabase, FaBug, FaTachometerAlt, FaCalendarAlt, FaFileAlt } from 'react-icons/fa';
-import '../../public/css/VerticalTabs.css';  // Import CSS
+import '../../public/css/Styles.css';
 
 const VerticalTabs = () => {
   const [selectedTab, setSelectedTab] = useState(0);
@@ -35,7 +35,7 @@ const VerticalTabs = () => {
   };
 
   return (
-    <div className="vertical-tabs d-flex flex-column bg-success p-3">
+    <div className="vertical-tabs d-flex flex-column p-3">
       {/* <button className="btn btn-light mb-3" onClick={handleBackClick}>
         <FaArrowLeft /> Back
       </button> */}

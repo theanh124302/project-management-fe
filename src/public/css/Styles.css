@@ -1,5 +1,6 @@
 body, html {
-    background-color: #e6f7e6;
+  /* background-color: #e6f7e6; */
+    background-color: #f3f4f7;
     height: 100%;
     margin: 0;
   }
@@ -39,3 +40,62 @@ body, html {
     margin-bottom: 20px;
   }
   
+
+  .vertical-tabs {
+    position: fixed;
+    left: 0;
+    height: 100vh;
+    width: 220px;
+    background-color: #212631;
+    /* background-color: #198754; */
+  }
+  
+  .nav-link {
+    font-weight: normal;
+    transition: font-weight 0.3s ease;
+  }
+  
+  .nav-link.active {
+    font-weight: bold;
+  }
+  .icon-size {
+    width: 20px;
+    height: 20px;
+  }
+
+  
+  .normal {
+    background-color: #198754;
+  }
+
+  .danger {
+    background-color: #ff0000;
+  }
+
+  .warning {
+    background-color: #ffc107;
+  }
+
+  .success {
+    background-color: #198754;
+  }
+
+  .info {
+    background-color: #0dcaf0;
+  }
+
+  .primary {
+    background-color: #0d6efd;
+  }
+
+  .secondary {
+    background-color: #6c757d;
+  }
+
+  .light {
+    background-color: #f8f9fa;
+  }
+
+  .dark {
+    background-color: #212529;
+  }
