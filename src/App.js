@@ -26,7 +26,8 @@ import DatabaseServerList from './components/database-server/DatabaseServerList'
 import DatabaseTableList from './components/database-server/DatabaseTableList';
 import DatabaseFieldList from './components/database-server/DatabaseFieldList';
 import FileList from './components/projectFile/FileList';
-import ProtectedRoute from './components/hoc/ProtectedRoute'; // Import component mới
+import ProtectedRoute from './components/hoc/ProtectedRoute';
+import Test from './components/template/Test';
 
 function App() {
   return (
@@ -59,6 +60,7 @@ function App() {
         <Route path='/project/:projectId/database' element={<ProtectedRoute component={DatabaseServerList} />} />
         <Route path='/project/:projectId/database-server/:serverId/tables' element={<ProtectedRoute component={DatabaseTableList} />} />
         <Route path='/project/:projectId/database-server/table/:tableId/fields' element={<ProtectedRoute component={DatabaseFieldList} />} />
+        <Route path='/test' element={<Test />} />
       </Routes>
     </Router>
   );
