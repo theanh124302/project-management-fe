@@ -36,7 +36,7 @@ const IssueList = () => {
   useEffect(() => {
     const fetchIssues = async () => {
       try {
-        const response = await axiosInstance.get(`${backendUrl}/api/v1/issue/findByProjectId`, {
+        const response = await axiosInstance.get(`/api/v1/issue/findByProjectId`, {
           params: { projectId }
         });
         setIssues(response.data.data);
@@ -46,7 +46,7 @@ const IssueList = () => {
     };
     const fetchProjectDetails = async () => {
       try {
-        const response = await axiosInstance.get(`${backendUrl}/api/v1/project/findById?id=${projectId}`);
+        const response = await axiosInstance.get(`/api/v1/project/findById?id=${projectId}`);
         setProjectLeaderId(response.data.data.leaderId);
       } catch (error) {
         console.error('Error fetching project details:', error);
@@ -63,14 +63,14 @@ const IssueList = () => {
 
   const handleAddIssue = async () => {
     try {
-      await axiosInstance.post(`${backendUrl}/api/v1/issue/create`, {
+      await axiosInstance.post(`/api/v1/issue/create`, {
         ...newIssue,
         projectId,
         createdBy: userId,
       });
       setShowForm(false);
       setNewIssue({ description: '', content: '', url: '', status: 'OPEN', priority: 'Low' });
-      const response = await axiosInstance.get(`${backendUrl}/api/v1/issue/findByProjectId`, {
+      const response = await axiosInstance.get(`/api/v1/issue/findByProjectId`, {
         params: { projectId }
       });
       setIssues(response.data.data);
@@ -81,14 +81,14 @@ const IssueList = () => {
 
   const handleEditIssue = async () => {
     try {
-      await axiosInstance.post(`${backendUrl}/api/v1/issue/update`, {
+      await axiosInstance.post(`/api/v1/issue/update`, {
         ...currentIssue,
         projectId,
         createdBy: userId,
       });
       setShowForm(false);
       setCurrentIssue(null);
-      const response = await axiosInstance.get(`${backendUrl}/api/v1/issue/findByProjectId`, {
+      const response = await axiosInstance.get(`/api/v1/issue/findByProjectId`, {
         params: { projectId }
       });
       setIssues(response.data.data);
@@ -99,8 +99,8 @@ const IssueList = () => {
 
   const handleDeleteIssue = async (id) => {
     try {
-      await axiosInstance.delete(`${backendUrl}/api/v1/issue/delete`, { params: { id } });
-      const response = await axiosInstance.get(`${backendUrl}/api/v1/issue/findByProjectId`, {
+      await axiosInstance.delete(`/api/v1/issue/delete`, { params: { id } });
+      const response = await axiosInstance.get(`/api/v1/issue/findByProjectId`, {
         params: { projectId }
       });
       setIssues(response.data.data);

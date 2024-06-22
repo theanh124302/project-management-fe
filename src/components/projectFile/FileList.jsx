@@ -25,7 +25,7 @@ const FileList = () => {
 
   const fetchFiles = async () => {
     try {
-      const response = await axiosInstance.get(`${backendUrl}/api/v1/project-file/findByProjectId`, {
+      const response = await axiosInstance.get(`/api/v1/project-file/findByProjectId`, {
         params: { projectId, page: 0, size: 10 },
       });
       setFiles(response.data.data);
@@ -36,7 +36,7 @@ const FileList = () => {
 
   const handleDelete = async (fileId) => {
     try {
-      await axiosInstance.delete(`${backendUrl}/api/v1/project-file/delete`, {
+      await axiosInstance.delete(`/api/v1/project-file/delete`, {
         params: { id: fileId },
       });
       fetchFiles();
@@ -80,7 +80,7 @@ const FileList = () => {
     formData.append('description', description);
 
     try {
-      await axiosInstance.post(`${backendUrl}/api/v1/project-file/create`, formData);
+      await axiosInstance.post(`/api/v1/project-file/create`, formData);
       fetchFiles();
       handleCloseUploadModal();
     } catch (error) {

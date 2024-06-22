@@ -23,7 +23,7 @@ const FolderList = () => {
   useEffect(() => {
     const fetchProjectDetails = async () => {
       try {
-        const response = await axiosInstance.get(`${backendUrl}/api/v1/project/findById?id=${projectId}`);
+        const response = await axiosInstance.get(`/api/v1/project/findById?id=${projectId}`);
         setProjectLeaderId(response.data.data.leaderId);
       } catch (error) {
         console.error('Error fetching project details:', error);
@@ -32,7 +32,7 @@ const FolderList = () => {
 
     const fetchFolders = async () => {
       try {
-        const response = await axiosInstance.get(`${backendUrl}/api/v1/folder/findByProjectId?projectId=${projectId}`);
+        const response = await axiosInstance.get(`/api/v1/folder/findByProjectId?projectId=${projectId}`);
         setFolders(response.data.data);
       } catch (error) {
         console.error('Error fetching folders:', error);
@@ -50,10 +50,10 @@ const FolderList = () => {
     }
 
     try {
-      await axiosInstance.post(`${backendUrl}/api/v1/folder/create`, { name: newFolder.name, projectId });
+      await axiosInstance.post(`/api/v1/folder/create`, { name: newFolder.name, projectId });
       setShowForm(false);
       setNewFolder({ name: '' });
-      const response = await axiosInstance.get(`${backendUrl}/api/v1/folder/findByProjectId?projectId=${projectId}`);
+      const response = await axiosInstance.get(`/api/v1/folder/findByProjectId?projectId=${projectId}`);
       setFolders(response.data.data);
     } catch (error) {
       console.error('Error adding folder:', error);
@@ -62,8 +62,8 @@ const FolderList = () => {
 
   const handleDeleteFolder = async (id) => {
     try {
-      await axiosInstance.delete(`${backendUrl}/api/v1/folder/delete`, { params: { id } });
-      const response = await axiosInstance.get(`${backendUrl}/api/v1/folder/findByProjectId?projectId=${projectId}`);
+      await axiosInstance.delete(`/api/v1/folder/delete`, { params: { id } });
+      const response = await axiosInstance.get(`/api/v1/folder/findByProjectId?projectId=${projectId}`);
       setFolders(response.data.data);
     } catch (error) {
       console.error('Error deleting folder:', error);
@@ -78,11 +78,11 @@ const FolderList = () => {
 
   const handleUpdateFolder = async () => {
     try {
-      await axiosInstance.post(`${backendUrl}/api/v1/folder/update`, { id: currentFolder.id, name: newFolder.name, projectId });
+      await axiosInstance.post(`/api/v1/folder/update`, { id: currentFolder.id, name: newFolder.name, projectId });
       setShowForm(false);
       setNewFolder({ name: '' });
       setCurrentFolder(null);
-      const response = await axiosInstance.get(`${backendUrl}/api/v1/folder/findByProjectId?projectId=${projectId}`);
+      const response = await axiosInstance.get(`/api/v1/folder/findByProjectId?projectId=${projectId}`);
       setFolders(response.data.data);
     } catch (error) {
       console.error('Error updating folder:', error);

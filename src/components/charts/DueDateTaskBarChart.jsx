@@ -15,7 +15,7 @@ const DueDateTaskBarChart = () => {
     const fetchData = async () => {
       try {
         const endpoint = filter === 'day' ? 'countDueDateByDay' : 'countDueDateByMonth';
-        const response = await axiosInstance.get(`http://localhost:8080/api/v1/task/${endpoint}`, {
+        const response = await axiosInstance.get(`/api/v1/task/${endpoint}`, {
           params: { projectId }
         });
         setData(response.data.data);

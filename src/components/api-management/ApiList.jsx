@@ -27,7 +27,7 @@ const ApiList = () => {
   useEffect(() => {
     const fetchProjectDetails = async () => {
       try {
-        const response = await axiosInstance.get(`${backendUrl}/api/v1/project/findById?id=${projectId}`);
+        const response = await axiosInstance.get(`/api/v1/project/findById?id=${projectId}`);
         setProjectLeaderId(response.data.data.leaderId);
       } catch (error) {
         console.error('Error fetching project details:', error);
@@ -36,7 +36,7 @@ const ApiList = () => {
 
     const fetchApis = async () => {
       try {
-        const response = await axiosInstance.get(`${backendUrl}/api/v1/api/findByFolderId?folderId=${folderId}`);
+        const response = await axiosInstance.get(`/api/v1/api/findByFolderId?folderId=${folderId}`);
         setApis(response.data.data);
       } catch (error) {
         console.error('Error fetching APIs:', error);
@@ -54,7 +54,7 @@ const ApiList = () => {
     }
 
     try {
-      await axiosInstance.post(`${backendUrl}/api/v1/api/create`, {
+      await axiosInstance.post(`/api/v1/api/create`, {
         ...newApi,
         projectId: projectId,
         folderId: folderId,
@@ -62,7 +62,7 @@ const ApiList = () => {
       });
       setShowForm(false);
       setNewApi({ name: '', description: '' });
-      const response = await axiosInstance.get(`${backendUrl}/api/v1/api/findByFolderId?folderId=${folderId}`);
+      const response = await axiosInstance.get(`/api/v1/api/findByFolderId?folderId=${folderId}`);
       setApis(response.data.data);
     } catch (error) {
       console.error('Error adding API:', error);

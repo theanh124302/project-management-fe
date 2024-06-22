@@ -29,7 +29,7 @@ const TaskRequest = () => {
 
   const fetchTaskName = async () => {
     try {
-      const response = await axiosInstance.get(`${backendUrl}/api/v1/task/findById`, {
+      const response = await axiosInstance.get(`/api/v1/task/findById`, {
         params: { id: taskId }
       });
       const taskData = response.data.data;
@@ -45,7 +45,7 @@ const TaskRequest = () => {
 
   const fetchTaskRequests = async () => {
     try {
-      const response = await axiosInstance.get(`${backendUrl}/api/v1/task-request/findByTaskId`, {
+      const response = await axiosInstance.get(`/api/v1/task-request/findByTaskId`, {
         params: { taskId }
       });
       setTaskRequests(response.data.data);
@@ -56,7 +56,7 @@ const TaskRequest = () => {
 
   const handleCreate = async () => {
     try {
-      await axiosInstance.post(`${backendUrl}/api/v1/task-request/create`, newTaskRequest);
+      await axiosInstance.post(`/api/v1/task-request/create`, newTaskRequest);
       fetchTaskRequests();
       setNewTaskRequest({
         description: `Request done for task ${taskName}`,

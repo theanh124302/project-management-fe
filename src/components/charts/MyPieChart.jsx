@@ -14,7 +14,7 @@ const MyPieChart = ({ projectId }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axiosInstance.get(`http://localhost:8080/api/v1/task/countByProjectIdGroupByStatus`, {
+        const response = await axiosInstance.get(`/api/v1/task/countByProjectIdGroupByStatus`, {
           params: { projectId }
         });
         setData(response.data.data);

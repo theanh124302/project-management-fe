@@ -23,7 +23,7 @@ const UserProfile = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axiosInstance.get(`http://localhost:8080/api/v1/user/findById/${userId}`);
+        const response = await axiosInstance.get(`/api/v1/user/findById/${userId}`);
         setUser(response.data.data);
       } catch (error) {
         console.error('Error fetching user:', error);

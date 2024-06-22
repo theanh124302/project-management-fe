@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import axiosInstance from '../AxiosInstance';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const backendUrl = 'http://localhost:8080'; // Cập nhật URL backend cố định ở đây
@@ -14,7 +14,7 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
   useEffect(() => {
     const checkValidUser = async () => {
       try {
-        const response = await axios.get(`${backendUrl}/api/v1/auth/checkValidUser`, {
+        const response = await axiosInstance.get(`/api/v1/auth/checkValidUser`, {
           params: { projectId, userId }
         });
         if (response.data.data) {

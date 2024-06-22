@@ -45,7 +45,7 @@ const TaskList = () => {
 
   const fetchProjectDetails = async () => {
     try {
-      const response = await axiosInstance.get(`${backendUrl}/api/v1/project/findById?id=${projectId}`);
+      const response = await axiosInstance.get(`/api/v1/project/findById?id=${projectId}`);
       setProjectLeaderId(response.data.data.leaderId);
     } catch (error) {
       console.error('Error fetching project details:', error);
@@ -54,7 +54,7 @@ const TaskList = () => {
 
   const fetchTasks = async (name = '') => {
     try {
-      const response = await axiosInstance.get(`${backendUrl}/api/v1/task/findByProjectIdAndName`, {
+      const response = await axiosInstance.get(`/api/v1/task/findByProjectIdAndName`, {
         params: { projectId, name }
       });
       setTasks(response.data.data);
@@ -65,7 +65,7 @@ const TaskList = () => {
 
   const fetchTasksByStatus = async (status) => {
     try {
-      const response = await axiosInstance.get(`${backendUrl}/api/v1/task/findByProjectIdAndStatus?projectId=${projectId}&status=${status}`);
+      const response = await axiosInstance.get(`/api/v1/task/findByProjectIdAndStatus?projectId=${projectId}&status=${status}`);
       setTasks(response.data.data);
     } catch (error) {
       console.error('Error fetching tasks by status:', error);
@@ -79,7 +79,7 @@ const TaskList = () => {
     }
 
     try {
-      await axiosInstance.post(`${backendUrl}/api/v1/task/create`, {
+      await axiosInstance.post(`/api/v1/task/create`, {
         ...newTask,
         projectId: projectId,
         createdBy: userId,

@@ -29,7 +29,7 @@ const Schedule = () => {
 
   const fetchProjectDetails = async () => {
     try {
-      const response = await axiosInstance.get(`${backendUrl}/api/v1/project/findById?id=${projectId}`);
+      const response = await axiosInstance.get(`/api/v1/project/findById?id=${projectId}`);
       setProjectLeaderId(response.data.data.leaderId);
     } catch (error) {
       console.error('Error fetching project details:', error);
@@ -38,7 +38,7 @@ const Schedule = () => {
 
   const fetchEvents = async () => {
     try {
-      const response = await axiosInstance.get(`${backendUrl}/api/v1/events/findByProjectId`, {
+      const response = await axiosInstance.get(`/api/v1/events/findByProjectId`, {
         params: { projectId }
       });
       const events = response.data.data;
@@ -62,7 +62,7 @@ const Schedule = () => {
 
   const handleAddEvent = async () => {
     try {
-      await axiosInstance.post(`${backendUrl}/api/v1/events/create`, {
+      await axiosInstance.post(`/api/v1/events/create`, {
         ...newEvent,
         projectId: projectId,
       });

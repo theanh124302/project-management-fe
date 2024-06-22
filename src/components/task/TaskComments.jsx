@@ -22,7 +22,7 @@ const TaskComments = () => {
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const response = await axiosInstance.get(`${backendUrl}/api/v1/comment/findByTaskId`, {
+        const response = await axiosInstance.get(`/api/v1/comment/findByTaskId`, {
           params: { taskId }
         });
         setComments(response.data.data);
@@ -31,7 +31,7 @@ const TaskComments = () => {
         const userIds = [...new Set(response.data.data.map(comment => comment.userId))];
 
         // Fetch user details
-        const userPromises = userIds.map(id => axiosInstance.get(`${backendUrl}/api/v1/user/findById/${id}`));
+        const userPromises = userIds.map(id => axiosInstance.get(`/api/v1/user/findById/${id}`));
         const users = await Promise.all(userPromises);
         const userMap = users.reduce((acc, user) => {
           acc[user.data.data.id] = user.data.data;
@@ -54,9 +54,9 @@ const TaskComments = () => {
         taskId: taskId,
         userId: userId,
       };
-      await axiosInstance.post(`${backendUrl}/api/v1/comment/create`, commentDTO);
+      await axiosInstance.post(`/api/v1/comment/create`, commentDTO);
       setNewComment('');
-      const response = await axiosInstance.get(`${backendUrl}/api/v1/comment/findByTaskId`, {
+      const response = await axiosInstance.get(`/api/v1/comment/findByTaskId`, {
         params: { taskId }
       });
       setComments(response.data.data);
@@ -72,11 +72,11 @@ const TaskComments = () => {
 
   const handleUpdateComment = async () => {
     try {
-      await axiosInstance.post(`${backendUrl}/api/v1/comment/update`, {
+      await axiosInstance.post(`/api/v1/comment/update`, {
         ...editComment,
       });
       setShowEditModal(false);
-      const response = await axiosInstance.get(`${backendUrl}/api/v1/comment/findByTaskId`, {
+      const response = await axiosInstance.get(`/api/v1/comment/findByTaskId`, {
         params: { taskId }
       });
       setComments(response.data.data);
@@ -87,10 +87,10 @@ const TaskComments = () => {
 
   const handleDeleteComment = async (commentId) => {
     try {
-      await axiosInstance.delete(`${backendUrl}/api/v1/comment/delete`, {
+      await axiosInstance.delete(`/api/v1/comment/delete`, {
         params: { id: commentId }
       });
-      const response = await axiosInstance.get(`${backendUrl}/api/v1/comment/findByTaskId`, {
+      const response = await axiosInstance.get(`/api/v1/comment/findByTaskId`, {
         params: { taskId }
       });
       setComments(response.data.data);

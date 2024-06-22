@@ -3,8 +3,6 @@ import axiosInstance from '../AxiosInstance';
 import { useNavigate, Link } from 'react-router-dom';
 import '../../public/css/Login.css';
 
-const backendUrl = 'http://localhost:8080';
-
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');

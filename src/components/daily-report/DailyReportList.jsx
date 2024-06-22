@@ -34,7 +34,7 @@ const DailyReportList = () => {
 
   const fetchProjectDetails = async () => {
     try {
-      const response = await axiosInstance.get(`${backendUrl}/api/v1/project/findById?id=${projectId}`);
+      const response = await axiosInstance.get(`/api/v1/project/findById?id=${projectId}`);
       setProjectLeaderId(response.data.data.leaderId);
     } catch (error) {
       console.error('Error fetching project details:', error);
@@ -43,7 +43,7 @@ const DailyReportList = () => {
 
   const fetchDailyReports = async (name = '') => {
     try {
-      const response = await axiosInstance.get(`${backendUrl}/api/v1/daily-report/findAllByProjectIdAndName`, {
+      const response = await axiosInstance.get(`/api/v1/daily-report/findAllByProjectIdAndName`, {
         params: { projectId, name }
       });
       setDailyReports(response.data.data);
@@ -54,7 +54,7 @@ const DailyReportList = () => {
 
   const fetchUserName = async () => {
     try {
-      const response = await axiosInstance.get(`${backendUrl}/api/v1/user/findById/${userId}`);
+      const response = await axiosInstance.get(`/api/v1/user/findById/${userId}`);
       setUserName(response.data.data.name);
     } catch (error) {
       console.error('Error fetching user name:', error);
@@ -71,7 +71,7 @@ const DailyReportList = () => {
     const reportName = `${currentDate} - ${userName}`;
 
     try {
-      await axiosInstance.post(`${backendUrl}/api/v1/daily-report/create`, {
+      await axiosInstance.post(`/api/v1/daily-report/create`, {
         ...newReport,
         name: reportName,
         date: currentDate,
@@ -88,7 +88,7 @@ const DailyReportList = () => {
 
   const handleDeleteReport = async (id) => {
     try {
-      await axiosInstance.delete(`${backendUrl}/api/v1/daily-report/delete`, { params: { id } });
+      await axiosInstance.delete(`/api/v1/daily-report/delete`, { params: { id } });
       fetchDailyReports();
     } catch (error) {
       console.error('Error deleting daily report:', error);
@@ -103,7 +103,7 @@ const DailyReportList = () => {
 
   const handleUpdateReport = async () => {
     try {
-      await axiosInstance.post(`${backendUrl}/api/v1/daily-report/update`, { id: currentReport.id, ...newReport, projectId });
+      await axiosInstance.post(`/api/v1/daily-report/update`, { id: currentReport.id, ...newReport, projectId });
       setShowForm(false);
       setNewReport({ description: '', date: '' });
       setCurrentReport(null);

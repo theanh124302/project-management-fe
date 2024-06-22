@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import axiosInstance from '../AxiosInstance';
 import { useNavigate } from 'react-router-dom';
 import '../../public/css/SignUp.css';
-
-const backendUrl = 'http://localhost:8080'; // Update the backend URL here
 
 const SignUp = () => {
   const [name, setName] = useState('');
@@ -24,8 +23,8 @@ const SignUp = () => {
     }
 
     try {
-      await axios.post(
-        `${backendUrl}/api/v1/auth/signup`,
+      await axiosInstance.post(
+        `/api/v1/auth/signup`,
         {
           name: name,
           phoneNumber: phoneNumber,
