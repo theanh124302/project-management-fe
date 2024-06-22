@@ -1,0 +1,20 @@
+.project-list-container {
+  padding: 0px;
+}
+
+.project-card {
+  border: 1px solid #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.project-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.project-card img {
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
