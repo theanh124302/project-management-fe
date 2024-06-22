@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import axiosInstance from '../AxiosInstance'; // Import axiosInstance
+import axiosInstance from '../AxiosInstance';
 import { useNavigate, Link } from 'react-router-dom';
 import '../../public/css/Login.css';
 
-const backendUrl = 'http://localhost:8080'; // Update the backend URL here
+const backendUrl = 'http://localhost:8080';
 
 const Login = () => {
   const [username, setUsername] = useState('');

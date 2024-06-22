@@ -9,7 +9,7 @@ import VerticalTabs from '../tabs/VerticalTabs';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../public/css/Styles.css';
 
-const backendUrl = 'http://localhost:8080'; // Cập nhật URL backend cố định ở đây
+const backendUrl = 'http://localhost:8080';
 
 const ApiDefine = () => {
   const { projectId, folderId, apiId } = useParams();
