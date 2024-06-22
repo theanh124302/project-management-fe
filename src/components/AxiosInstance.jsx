@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const backendUrl = 'http://localhost:8080';
+const backendUrl = 'https://project-management-production-beeb.up.railway.app';
 
 const AxiosInstance = axios.create({
   baseURL: backendUrl,
