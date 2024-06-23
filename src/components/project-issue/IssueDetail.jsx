@@ -34,7 +34,6 @@ const IssueDetail = () => {
   const [newTask, setNewTask] = useState({
     name: '',
     description: '',
-    priority: '',
     startDate: '',
     dueDate: '',
     lifeCycle: 'DEVELOP',
@@ -57,6 +56,10 @@ const IssueDetail = () => {
           url: issueData.url,
           status: issueData.status,
           priority: issueData.priority,
+        });
+        setNewTask({
+          ...newTask,
+          priority: issueData.priority, // Gán priority của issue cho task
         });
       } catch (error) {
         console.error('Error fetching issue detail:', error);
@@ -150,7 +153,7 @@ const IssueDetail = () => {
         startDate: currentDate,
       });
       setShowTaskForm(false);
-      setNewTask({ name: '', description: '', priority: '', startDate: '', dueDate: '', lifeCycle: 'DEVELOP' });
+      setNewTask({ name: '', description: '', startDate: '', dueDate: '', lifeCycle: 'DEVELOP', priority: issue.priority });
     } catch (error) {
       console.error('Error adding task:', error);
     }
@@ -158,7 +161,7 @@ const IssueDetail = () => {
 
   const handleCloseTaskForm = () => {
     setShowTaskForm(false);
-    setNewTask({ name: '', description: '', priority: '', startDate: '', dueDate: '', lifeCycle: 'DEVELOP' });
+    setNewTask({ name: '', description: '', startDate: '', dueDate: '', lifeCycle: 'DEVELOP', priority: issue.priority });
   };
 
   if (!issue) {
@@ -330,20 +333,6 @@ const IssueDetail = () => {
                 value={newTask.description}
                 onChange={handleTaskInputChange}
               />
-            </Form.Group>
-            <Form.Group controlId="formTaskPriority" className="mb-3">
-              <Form.Label>Priority</Form.Label>
-              <Form.Control
-                as="select"
-                name="priority"
-                value={newTask.priority}
-                onChange={handleTaskInputChange}
-              >
-                <option value="Low">Low</option>
-                <option value="Medium">Medium</option>
-                <option value="High">High</option>
-                <option value="Critical">Critical</option>
-              </Form.Control>
             </Form.Group>
             <Form.Group controlId="formTaskStartDate" className="mb-3">
               <Form.Label>Start Date</Form.Label>

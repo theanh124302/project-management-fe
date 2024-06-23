@@ -97,8 +97,7 @@ const ProjectList = () => {
       </div>
       <div className="d-flex justify-content-center mb-4">
         <div style={{ backgroundColor: 'white', padding: '10px', borderRadius: '10px' }}>
-          <BarChart width={600} height={400} data={dueDateTasks}>
-            <CartesianGrid strokeDasharray="3 3" />
+          <BarChart width={1800} height={500} data={dueDateTasks}>
             <XAxis dataKey="number" />
             <YAxis />
             <Tooltip />

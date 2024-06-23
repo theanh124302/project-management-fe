@@ -37,20 +37,19 @@ const DueDateTaskBarChart = () => {
         <Card.Title>Due Date Task Distribution</Card.Title>
         <ButtonGroup className="mb-3">
           <Button
-            variant={filter === 'day' ? 'primary' : 'secondary'}
+            variant={filter === 'day' ? 'success' : 'secondary'}
             onClick={() => handleFilterChange('day')}
           >
             By Day
           </Button>
           <Button
-            variant={filter === 'month' ? 'primary' : 'secondary'}
+            variant={filter === 'month' ? 'success' : 'secondary'}
             onClick={() => handleFilterChange('month')}
           >
             By Month
           </Button>
         </ButtonGroup>
-        <BarChart width={600} height={400} data={data}>
-          <CartesianGrid strokeDasharray="3 3" />
+        <BarChart width={1400} height={500} data={data}>
           <XAxis dataKey="number" />
           <YAxis />
           <Tooltip />
