@@ -154,7 +154,7 @@ const FolderList = () => {
               </Form>
             </Modal.Body>
             <Modal.Footer>
-              <Button variant="primary" onClick={currentFolder ? handleUpdateFolder : handleAddFolder}>
+              <Button variant="success" onClick={currentFolder ? handleUpdateFolder : handleAddFolder}>
                 {currentFolder ? 'Update Folder' : 'Add Folder'}
               </Button>
               <Button variant="secondary" onClick={handleCloseForm}>
