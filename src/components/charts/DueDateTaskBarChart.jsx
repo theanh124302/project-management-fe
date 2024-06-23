@@ -49,7 +49,7 @@ const DueDateTaskBarChart = () => {
             By Month
           </Button>
         </ButtonGroup>
-        <BarChart width={1400} height={500} data={data}>
+        <BarChart width={1100} height={500} data={data}>
           <XAxis dataKey="number" />
           <YAxis />
           <Tooltip />

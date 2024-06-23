@@ -92,7 +92,7 @@ const ProjectList = () => {
       <CustomAppBar />
       <div className="d-flex justify-content-center mb-4">
         <div style={{ backgroundColor: 'white', padding: '10px', borderRadius: '10px', marginTop: '15px' }}>
-          <BarChart width={1800} height={500} data={dueDateTasks}>
+          <BarChart width={1200} height={500} data={dueDateTasks}>
             <XAxis dataKey="number" />
             <YAxis />
             <Tooltip />
