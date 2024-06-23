@@ -90,13 +90,8 @@ const ProjectList = () => {
   return (
     <Container fluid className="project-list-container">
       <CustomAppBar />
-      <div className="text-end mb-3">
-        <Button variant="success" onClick={() => setShowForm(true)}>
-          Add Project
-        </Button>
-      </div>
       <div className="d-flex justify-content-center mb-4">
-        <div style={{ backgroundColor: 'white', padding: '10px', borderRadius: '10px' }}>
+        <div style={{ backgroundColor: 'white', padding: '10px', borderRadius: '10px', marginTop: '15px' }}>
           <BarChart width={1800} height={500} data={dueDateTasks}>
             <XAxis dataKey="number" />
             <YAxis />
@@ -105,6 +100,11 @@ const ProjectList = () => {
             <Bar dataKey="value" fill="#8884d8" />
           </BarChart>
         </div>
+      </div>
+      <div className="text-end mb-3">
+        <Button variant="success" onClick={() => setShowForm(true)}>
+          Add Project
+        </Button>
       </div>
       <Row>
         {projects.map((project) => (

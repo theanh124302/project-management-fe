@@ -1,12 +1,18 @@
 // src/components/charts/MyPieChart.jsx
 import React, { useEffect, useState } from 'react';
 import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
-import axios from 'axios';
 import axiosInstance from '../AxiosInstance';
-import { useParams } from 'react-router-dom';
 import { Card } from 'react-bootstrap';
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#FF6384', '#36A2EB', '#FFCE56'];
+const COLOR_MAP = {
+  CANCELLED: '#dc3545', // 'danger'
+  NOT_STARTED: '#6c757d', // 'secondary'
+  IN_PROGRESS: '#17a2b8', // 'info'
+  COMPLETED: '#28a745', // 'success'
+  BLOCKED: '#343a40', // 'dark'
+  ON_HOLD: '#ffc107', // 'warning'
+  PENDING: '#007bff', // 'primary'
+};
 
 const MyPieChart = ({ projectId }) => {
   const [data, setData] = useState([]);
@@ -42,7 +48,7 @@ const MyPieChart = ({ projectId }) => {
             nameKey="name"
           >
             {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+              <Cell key={`cell-${index}`} fill={COLOR_MAP[entry.name]} />
             ))}
           </Pie>
           <Tooltip formatter={(value, name, props) => `${name}: ${value}`} />
