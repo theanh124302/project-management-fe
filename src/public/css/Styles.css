@@ -63,13 +63,9 @@ body, html {
     height: 20px;
   }
 
-  
-  .normal {
-    background-color: #198754;
-  }
 
   .danger {
-    background-color: #ff0000;
+    background-color: #dc3545;
   }
 
   .warning {

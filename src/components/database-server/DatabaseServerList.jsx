@@ -27,7 +27,7 @@ const DatabaseServerList = () => {
   const [newServer, setNewServer] = useState({
     name: '',
     description: '',
-    type: 'MySQL', // Default type
+    type: 'MySQL',
     url: '',
     username: '',
     password: '',
@@ -94,10 +94,10 @@ const DatabaseServerList = () => {
               <Col key={server.id} xs={12} md={6} lg={4} className="mb-3">
                 <Card
                   onClick={() => handleServerClick(server)}
-                  className="server-card"
+                  className="card-style"
                   style={{ 
                     cursor: 'pointer', 
-                    borderColor: typeColors[server.type] || typeColors['MySQL'] // Default to MySQL color if type is not specified
+                    borderColor: typeColors[server.type] || typeColors['MySQL']
                   }}
                 >
                   <Card.Body>
@@ -119,7 +119,7 @@ const DatabaseServerList = () => {
             <Col xs={12} md={6} lg={4} className="mb-3">
               {projectLeaderId === parseInt(userId, 10) && (
                 <div>
-                  <Card onClick={() => setShowForm(true)} className="server-card add-server-card" style={{ cursor: 'pointer' }}>
+                  <Card onClick={() => setShowForm(true)} className="card-style" style={{ cursor: 'pointer' }}>
                     <Card.Body className="d-flex justify-content-center align-items-center">
                       <h1>+</h1>
                     </Card.Body>
@@ -197,11 +197,11 @@ const DatabaseServerList = () => {
               </Form>
             </Modal.Body>
             <Modal.Footer>
+              <Button variant="success" onClick={handleAddServer}>
+                Add Server
+              </Button>
               <Button variant="secondary" onClick={handleCloseForm}>
                 Cancel
-              </Button>
-              <Button variant="primary" onClick={handleAddServer}>
-                Add Server
               </Button>
             </Modal.Footer>
           </Modal>

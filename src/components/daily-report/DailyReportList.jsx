@@ -201,11 +201,11 @@ const DailyReportList = () => {
               </Form>
             </Modal.Body>
             <Modal.Footer>
+              <Button variant="success" onClick={currentReport ? handleUpdateReport : handleAddReport}>
+                {currentReport ? 'Update Daily Report' : 'Add Daily Report'}
+              </Button>
               <Button variant="secondary" onClick={handleCloseForm}>
                 Cancel
-              </Button>
-              <Button variant="primary" onClick={currentReport ? handleUpdateReport : handleAddReport}>
-                {currentReport ? 'Update Daily Report' : 'Add Daily Report'}
               </Button>
             </Modal.Footer>
           </Modal>

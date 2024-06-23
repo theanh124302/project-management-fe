@@ -141,11 +141,11 @@ const ApiList = () => {
               </Form>
             </Modal.Body>
             <Modal.Footer>
-              <Button variant="secondary" onClick={handleCloseForm}>
-                Cancel
-              </Button>
               <Button variant="primary" onClick={handleAddApi}>
                 Add API
+              </Button>
+              <Button variant="secondary" onClick={handleCloseForm}>
+                Cancel
               </Button>
             </Modal.Footer>
           </Modal>

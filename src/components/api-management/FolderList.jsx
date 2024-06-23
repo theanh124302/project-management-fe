@@ -154,11 +154,11 @@ const FolderList = () => {
               </Form>
             </Modal.Body>
             <Modal.Footer>
-              <Button variant="secondary" onClick={handleCloseForm}>
-                Cancel
-              </Button>
               <Button variant="primary" onClick={currentFolder ? handleUpdateFolder : handleAddFolder}>
                 {currentFolder ? 'Update Folder' : 'Add Folder'}
+              </Button>
+              <Button variant="secondary" onClick={handleCloseForm}>
+                Cancel
               </Button>
             </Modal.Footer>
           </Modal>

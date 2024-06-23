@@ -163,7 +163,7 @@ const FileList = () => {
                       <Form.Label>Description</Form.Label>
                       <Form.Control type="text" value={description} onChange={handleDescriptionChange} />
                     </Form.Group>
-                    <Button variant="primary" onClick={handleUpload}>
+                    <Button variant="success" onClick={handleUpload}>
                       Upload
                     </Button>
                   </Form>

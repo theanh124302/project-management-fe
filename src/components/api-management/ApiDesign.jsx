@@ -455,7 +455,7 @@ const ApiDesign = () => {
                     <strong>URL:</strong> {apiDetails.url}
                   </div>
                 </ListGroup.Item>
-                <Button variant="outline-primary" size="sm" onClick={handleEditApiClick}>
+                <Button variant="outline-success" size="sm" onClick={handleEditApiClick}>
                   Edit API Details
                 </Button>
               </ListGroup>
@@ -467,7 +467,7 @@ const ApiDesign = () => {
                       <strong>{param.paramKey}</strong>: {param.description} ({param.type}) - Sample: {param.sample}
                     </div>
                     <div>
-                      <Button variant="outline-primary" size="sm" className="me-2" onClick={() => handleEditParamClick(param)}>
+                      <Button variant="outline-success" size="sm" className="me-2" onClick={() => handleEditParamClick(param)}>
                         Edit
                       </Button>
                       <Button variant="outline-danger" size="sm" onClick={() => handleDeleteParam(param.id)}>
@@ -488,7 +488,7 @@ const ApiDesign = () => {
                       <strong>{body.bodyKey}</strong>: {body.description} ({body.type}) - Sample: {body.sample}
                     </div>
                     <div>
-                      <Button variant="outline-primary" size="sm" className="me-2" onClick={() => handleEditBodyClick(body)}>
+                      <Button variant="outline-success" size="sm" className="me-2" onClick={() => handleEditBodyClick(body)}>
                         Edit
                       </Button>
                       <Button variant="outline-danger" size="sm" onClick={() => handleDeleteBody(body.id)}>
@@ -509,7 +509,7 @@ const ApiDesign = () => {
                       <strong>{authRole.role}</strong>
                     </div>
                     <div>
-                      <Button variant="outline-primary" size="sm" className="me-2" onClick={() => handleEditAuthRoleClick(authRole)}>
+                      <Button variant="outline-success" size="sm" className="me-2" onClick={() => handleEditAuthRoleClick(authRole)}>
                         Edit
                       </Button>
                       <Button variant="outline-danger" size="sm" onClick={() => handleDeleteAuthRole(authRole.id)}>
@@ -530,7 +530,7 @@ const ApiDesign = () => {
                       <strong>{header.headerKey}</strong>: {header.description} ({header.type}) - Sample: {header.sample}
                     </div>
                     <div>
-                      <Button variant="outline-primary" size="sm" className="me-2" onClick={() => handleEditHeaderClick(header)}>
+                      <Button variant="outline-success" size="sm" className="me-2" onClick={() => handleEditHeaderClick(header)}>
                         Edit
                       </Button>
                       <Button variant="outline-danger" size="sm" onClick={() => handleDeleteHeader(header.id)}>
@@ -551,7 +551,7 @@ const ApiDesign = () => {
                       <strong>{designResponse.description}</strong>: {designResponse.value}
                     </div>
                     <div>
-                      <Button variant="outline-primary" size="sm" className="me-2" onClick={() => handleEditDesignResponseClick(designResponse)}>
+                      <Button variant="outline-success" size="sm" className="me-2" onClick={() => handleEditDesignResponseClick(designResponse)}>
                         Edit
                       </Button>
                       <Button variant="outline-danger" size="sm" onClick={() => handleDeleteDesignResponse(designResponse.id)}>
@@ -608,11 +608,11 @@ const ApiDesign = () => {
                   </Form>
                 </Modal.Body>
                 <Modal.Footer>
+                  <Button variant="success" onClick={handleUpdateApiDetails}>
+                    Update API Details
+                  </Button>
                   <Button variant="secondary" onClick={handleCloseApiForm}>
                     Cancel
-                  </Button>
-                  <Button variant="primary" onClick={handleUpdateApiDetails}>
-                    Update API Details
                   </Button>
                 </Modal.Footer>
               </Modal>
@@ -662,11 +662,11 @@ const ApiDesign = () => {
                   </Form>
                 </Modal.Body>
                 <Modal.Footer>
+                  <Button variant="success" onClick={currentParam ? handleUpdateParam : handleAddParam}>
+                    {currentParam ? 'Update Param' : 'Add Param'}
+                  </Button>
                   <Button variant="secondary" onClick={handleCloseParamForm}>
                     Cancel
-                  </Button>
-                  <Button variant="primary" onClick={currentParam ? handleUpdateParam : handleAddParam}>
-                    {currentParam ? 'Update Param' : 'Add Param'}
                   </Button>
                 </Modal.Footer>
               </Modal>
@@ -716,11 +716,11 @@ const ApiDesign = () => {
                   </Form>
                 </Modal.Body>
                 <Modal.Footer>
+                  <Button variant="success" onClick={currentBody ? handleUpdateBody : handleAddBody}>
+                    {currentBody ? 'Update Body' : 'Add Body'}
+                  </Button>
                   <Button variant="secondary" onClick={handleCloseBodyForm}>
                     Cancel
-                  </Button>
-                  <Button variant="primary" onClick={currentBody ? handleUpdateBody : handleAddBody}>
-                    {currentBody ? 'Update Body' : 'Add Body'}
                   </Button>
                 </Modal.Footer>
               </Modal>
@@ -742,11 +742,11 @@ const ApiDesign = () => {
                   </Form>
                 </Modal.Body>
                 <Modal.Footer>
+                  <Button variant="success" onClick={currentAuthRole ? handleUpdateAuthRole : handleAddAuthRole}>
+                    {currentAuthRole ? 'Update Auth Role' : 'Add Auth Role'}
+                  </Button>
                   <Button variant="secondary" onClick={handleCloseAuthRoleForm}>
                     Cancel
-                  </Button>
-                  <Button variant="primary" onClick={currentAuthRole ? handleUpdateAuthRole : handleAddAuthRole}>
-                    {currentAuthRole ? 'Update Auth Role' : 'Add Auth Role'}
                   </Button>
                 </Modal.Footer>
               </Modal>
@@ -796,11 +796,11 @@ const ApiDesign = () => {
                   </Form>
                 </Modal.Body>
                 <Modal.Footer>
+                  <Button variant="success" onClick={currentHeader ? handleUpdateHeader : handleAddHeader}>
+                    {currentHeader ? 'Update Header' : 'Add Header'}
+                  </Button>
                   <Button variant="secondary" onClick={handleCloseHeaderForm}>
                     Cancel
-                  </Button>
-                  <Button variant="primary" onClick={currentHeader ? handleUpdateHeader : handleAddHeader}>
-                    {currentHeader ? 'Update Header' : 'Add Header'}
                   </Button>
                 </Modal.Footer>
               </Modal>
@@ -832,11 +832,11 @@ const ApiDesign = () => {
                   </Form>
                 </Modal.Body>
                 <Modal.Footer>
+                  <Button variant="success" onClick={currentDesignResponse ? handleUpdateDesignResponse : handleAddDesignResponse}>
+                    {currentDesignResponse ? 'Update Design Response' : 'Add Design Response'}
+                  </Button>
                   <Button variant="secondary" onClick={handleCloseDesignResponseForm}>
                     Cancel
-                  </Button>
-                  <Button variant="primary" onClick={currentDesignResponse ? handleUpdateDesignResponse : handleAddDesignResponse}>
-                    {currentDesignResponse ? 'Update Design Response' : 'Add Design Response'}
                   </Button>
                 </Modal.Footer>
               </Modal>
@@ -903,11 +903,11 @@ const ApiDesign = () => {
                   </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                  <Button variant="danger" onClick={handleCloseTaskForm}>
-                    Cancel
-                  </Button>
                   <Button variant="success" onClick={handleAddTask}>
                     Add Task
+                  </Button>
+                  <Button variant="danger" onClick={handleCloseTaskForm}>
+                    Cancel
                   </Button>
                 </Modal.Footer>
               </Modal>

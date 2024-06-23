@@ -345,11 +345,11 @@ const ProjectDetail = () => {
           </Form>
         </Modal.Body>
         <Modal.Footer>
+          <Button variant="success" onClick={handleUpdateProject}>
+            Update Project
+          </Button>
           <Button variant="secondary" onClick={handleCloseForm}>
             Cancel
-          </Button>
-          <Button variant="primary" onClick={handleUpdateProject}>
-            Update Project
           </Button>
         </Modal.Footer>
       </Modal>

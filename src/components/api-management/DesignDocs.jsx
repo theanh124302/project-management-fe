@@ -454,11 +454,11 @@ const DesignDocs = () => {
                   </Form>
                 </Modal.Body>
                 <Modal.Footer>
+                  <Button variant="success" onClick={currentDoc ? handleUpdateDoc : handleAddDoc}>
+                    {currentDoc ? 'Update Doc' : 'Add Doc'}
+                  </Button>
                   <Button variant="secondary" onClick={handleCloseDocForm}>
                     Cancel
-                  </Button>
-                  <Button variant="primary" onClick={currentDoc ? handleUpdateDoc : handleAddDoc}>
-                    {currentDoc ? 'Update Doc' : 'Add Doc'}
                   </Button>
                 </Modal.Footer>
               </Modal>
@@ -535,11 +535,11 @@ const DesignDocs = () => {
                   </Form>
                 </Modal.Body>
                 <Modal.Footer>
+                  <Button variant="success" onClick={currentImpact ? handleUpdateImpact : handleAddImpact}>
+                    {currentImpact ? 'Update Impact' : 'Add Impact'}
+                  </Button>
                   <Button variant="secondary" onClick={handleCloseImpactForm}>
                     Cancel
-                  </Button>
-                  <Button variant="primary" onClick={currentImpact ? handleUpdateImpact : handleAddImpact}>
-                    {currentImpact ? 'Update Impact' : 'Add Impact'}
                   </Button>
                 </Modal.Footer>
               </Modal>
@@ -570,11 +570,11 @@ const DesignDocs = () => {
                   </Form>
                 </Modal.Body>
                 <Modal.Footer>
+                  <Button variant="success" onClick={currentTable ? handleUpdateTable : handleAddTable}>
+                    {currentTable ? 'Update Table' : 'Add Table'}
+                  </Button>
                   <Button variant="secondary" onClick={handleCloseTableForm}>
                     Cancel
-                  </Button>
-                  <Button variant="primary" onClick={currentTable ? handleUpdateTable : handleAddTable}>
-                    {currentTable ? 'Update Table' : 'Add Table'}
                   </Button>
                 </Modal.Footer>
               </Modal>

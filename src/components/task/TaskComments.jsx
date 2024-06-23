@@ -182,7 +182,7 @@ const TaskComments = () => {
           <Button variant="secondary" onClick={() => setShowEditModal(false)}>
             Cancel
           </Button>
-          <Button variant="primary" onClick={handleUpdateComment}>
+          <Button variant="success" onClick={handleUpdateComment}>
             Update Comment
           </Button>
         </Modal.Footer>

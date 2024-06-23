@@ -233,11 +233,11 @@ const IssueList = () => {
               </Form>
             </Modal.Body>
             <Modal.Footer>
-              <Button variant="secondary" onClick={handleCloseForm}>
-                Cancel
-              </Button>
               <Button variant="success" onClick={handleFormSubmit}>
                 Add Issue
+              </Button>
+              <Button variant="secondary" onClick={handleCloseForm}>
+                Cancel
               </Button>
             </Modal.Footer>
           </Modal>

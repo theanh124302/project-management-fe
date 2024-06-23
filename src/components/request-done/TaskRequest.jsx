@@ -102,7 +102,7 @@ const TaskRequest = () => {
                     onChange={(e) => setNewTaskRequest({ ...newTaskRequest, content: e.target.value })}
                   />
                 </Form.Group>
-                <Button variant="primary" onClick={handleCreate}>
+                <Button variant="success" onClick={handleCreate}>
                   Submit
                 </Button>
               </Form>

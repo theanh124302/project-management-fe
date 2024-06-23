@@ -199,11 +199,11 @@ const DatabaseTableList = () => {
               </Form>
             </Modal.Body>
             <Modal.Footer>
-              <Button variant="secondary" onClick={handleCloseForm}>
-                Cancel
-              </Button>
               <Button variant="success" onClick={handleAddTable}>
                 Add Table
+              </Button>
+              <Button variant="secondary" onClick={handleCloseForm}>
+                Cancel
               </Button>
             </Modal.Footer>
           </Modal>
@@ -276,11 +276,11 @@ const DatabaseTableList = () => {
               </Form>
             </Modal.Body>
             <Modal.Footer>
+            <Button variant="success" onClick={handleEditServer}>
+                Save Changes
+              </Button>
               <Button variant="secondary" onClick={handleCloseEditForm}>
                 Cancel
-              </Button>
-              <Button variant="success" onClick={handleEditServer}>
-                Save Changes
               </Button>
             </Modal.Footer>
           </Modal>

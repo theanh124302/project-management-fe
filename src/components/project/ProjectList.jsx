@@ -157,11 +157,11 @@ const ProjectList = () => {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseForm}>
-            Cancel
-          </Button>
           <Button variant="success" onClick={handleAddProject}>
             Add Project
+          </Button>
+          <Button variant="secondary" onClick={handleCloseForm}>
+            Cancel
           </Button>
         </Modal.Footer>
       </Modal>

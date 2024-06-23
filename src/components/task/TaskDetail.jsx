@@ -382,11 +382,11 @@ const TaskDetail = () => {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseForm}>
-            Cancel
-          </Button>
           <Button variant="success" onClick={handleUpdateTask}>
             Update Task
+          </Button>
+          <Button variant="secondary" onClick={handleCloseForm}>
+            Cancel
           </Button>
         </Modal.Footer>
       </Modal>

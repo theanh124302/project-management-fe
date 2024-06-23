@@ -265,11 +265,11 @@ const ApiDevelop = () => {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="danger" onClick={handleCloseTaskForm}>
-            Cancel
-          </Button>
           <Button variant="success" onClick={handleAddTask}>
             Add Task
+          </Button>
+          <Button variant="danger" onClick={handleCloseTaskForm}>
+            Cancel
           </Button>
         </Modal.Footer>
       </Modal>
