@@ -181,7 +181,6 @@ const ApiDefine = () => {
         apiId: apiId,
         createdBy: userId,
         lifeCycle: 'DEFINE',
-        startDate: currentDate // Ngày tạo task
       });
       setShowTaskForm(false);
       setNewTask({ name: '', description: '', priority: '', startDate: '', dueDate: '', lifeCycle: 'DEFINE' });

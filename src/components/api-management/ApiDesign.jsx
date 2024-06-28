@@ -221,7 +221,6 @@ const ApiDesign = () => {
         apiId: apiId,
         createdBy: userId,
         lifeCycle: 'DESIGN',
-        startDate: currentDate // Ngày tạo task
       });
       setShowTaskForm(false);
       setNewTask({ name: '', description: '', priority: '', startDate: '', dueDate: '', lifeCycle: 'DESIGN' });

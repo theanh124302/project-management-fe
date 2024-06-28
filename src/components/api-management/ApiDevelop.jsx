@@ -106,7 +106,6 @@ const ApiDevelop = () => {
         apiId: apiId,
         createdBy: userId,
         lifeCycle: 'DEVELOP',
-        startDate: currentDate
       });
       setShowTaskForm(false);
       setNewTask({ name: '', description: '', priority: '', startDate: '', dueDate: '', lifeCycle: 'DEVELOP' });
