@@ -9,8 +9,6 @@ import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../public/css/Styles.css';
 
-const backendUrl = 'http://localhost:8080'; // Cập nhật URL backend cố định ở đây
-
 const ProjectDetail = () => {
   const { projectId } = useParams();
   const [project, setProject] = useState(null);
@@ -271,6 +269,7 @@ const ProjectDetail = () => {
                           <tr>
                             <th>Name</th>
                             <th>Email</th>
+                            <th>Username</th>
                             <th>Role</th>
                             <th>Actions</th>
                           </tr>
@@ -280,6 +279,7 @@ const ProjectDetail = () => {
                             <tr key={member.id}>
                               <td>{member.name}</td>
                               <td>{member.email}</td>
+                              <td>{member.username}</td>
                               <td>{member.role}</td>
                               <td>
                                 {isLeader && (

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import axiosInstance from '../AxiosInstance';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Card, Button, Form, Modal } from 'react-bootstrap';
@@ -8,10 +7,10 @@ import VerticalTabs from '../tabs/VerticalTabs';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../public/css/Styles.css';
 
-const backendUrl = 'http://localhost:8080';
-
 const ApiTest = () => {
   const { projectId, folderId, apiId } = useParams();
+  const [project, setProject] = useState(null);
+  const [isEditable, setEditable] = useState(false);
   const [apiDetails, setApiDetails] = useState({ name: '', method: '', url: '', installationGuide: '' });
   const [showTaskForm, setShowTaskForm] = useState(false);
   const [newTask, setNewTask] = useState({
@@ -50,7 +49,31 @@ const ApiTest = () => {
     };
 
     fetchApiDetails();
-  }, [apiId]);
+
+    const fetchProjectDetails = async () => {
+      try {
+        const response = await axiosInstance.get(`/api/v1/project/findById?id=${projectId}`);
+        setProject(response.data.data);
+        
+      } catch (error) {
+        console.error('Error fetching project details:', error);
+      }
+    }
+    fetchProjectDetails();
+
+    const fetchEditable = async () => {
+      try {
+        const editableResponse = await axiosInstance.get(`/api/v1/project/checkEditable?projectId=${projectId}&userId=${userId}&apiId=${apiId}&lifeCycle=TEST`);
+        setEditable(editableResponse.data.data);
+      } catch (error) {
+        console.error('Error fetching editable:', error);
+      }
+    }
+    fetchEditable();
+  }, [apiId, projectId, userId]);
+
+  const isLeader = project && project.leaderId === parseInt(userId, 10);
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -154,20 +177,26 @@ const ApiTest = () => {
                   />
                 </Form.Group>
               </Form>
-              <Button variant="success" onClick={handleUpdateApi} className="me-2">
-                Update Installation Guide
-              </Button>
+              {isLeader && (
+                <Button variant="success" onClick={handleUpdateApi} className="me-2">
+                  Update Installation Guide
+                </Button>
+              )}
               <Row className="mt-4">
-                <Col xs="auto">
-                  <Button variant="warning" onClick={() => setShowTaskForm(true)}>
-                    Create Task
-                  </Button>
-                </Col>
-                <Col xs="auto">
-                  <Button variant="danger" onClick={() => setShowIssueForm(true)}>
-                    Create Issue
-                  </Button>
-                </Col>
+                {isEditable && (
+                  <Col xs="auto">
+                    <Button variant="warning" onClick={() => setShowTaskForm(true)}>
+                      Create Task
+                    </Button>
+                  </Col>
+                )}
+                {isEditable && (
+                  <Col xs="auto">
+                    <Button variant="danger" onClick={() => setShowIssueForm(true)}>
+                      Create Issue
+                    </Button>
+                  </Col>
+                )}
                 <Col xs="auto">
                   <Button variant="primary" onClick={() => navigate(`/project/${projectId}/folder/${folderId}/api/${apiId}/develop`)}>
                     Develop

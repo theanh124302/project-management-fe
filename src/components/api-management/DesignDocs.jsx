@@ -8,8 +8,6 @@ import VerticalTabs from '../tabs/VerticalTabs';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../public/css/Styles.css';
 
-const backendUrl = 'http://localhost:8080';
-
 const DesignDocs = () => {
   const { projectId, folderId, apiId } = useParams();
   const [formData, setFormData] = useState({
@@ -18,6 +16,8 @@ const DesignDocs = () => {
     activityDiagram: '',
     classDiagram: ''
   });
+  const [project, setProject] = useState(null);
+  const [isEditable, setEditable] = useState(false);
   const [docs, setDocs] = useState([]);
   const [impacts, setImpacts] = useState([]);
   const [relatedTables, setRelatedTables] = useState([]);
@@ -39,7 +39,7 @@ const DesignDocs = () => {
   });
   const [newTable, setNewTable] = useState({ description: '', databaseTableUuid: '' });
   const navigate = useNavigate();
-
+  const userId = localStorage.getItem('userId');
   useEffect(() => {
     const fetchApiDetails = async () => {
       try {
@@ -91,7 +91,31 @@ const DesignDocs = () => {
     fetchApiImpacts();
     fetchDocs();
     fetchRelatedTables();
-  }, [apiId]);
+
+    const fetchProjectDetails = async () => {
+      try {
+        const response = await axiosInstance.get(`/api/v1/project/findById?id=${projectId}`);
+        setProject(response.data.data);
+        
+      } catch (error) {
+        console.error('Error fetching project details:', error);
+      }
+    }
+    fetchProjectDetails();
+
+    const fetchEditable = async () => {
+      try {
+        const editableResponse = await axiosInstance.get(`/api/v1/project/checkEditable?projectId=${projectId}&userId=${userId}&apiId=${apiId}&lifeCycle=DESIGN`);
+        setEditable(editableResponse.data.data);
+      } catch (error) {
+        console.error('Error fetching editable:', error);
+      }
+    }
+    fetchEditable();
+  }, [apiId, projectId, userId]);
+
+  const isLeader = project && project.leaderId === parseInt(userId, 10);
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -373,9 +397,11 @@ const DesignDocs = () => {
                   />
                 </Form.Group>
               </Form>
+              {isEditable && (
               <Button variant="success" onClick={handleSubmit}>
                 Update Diagrams
               </Button>
+              )}
               <Card.Title className="mt-4">Related APIs</Card.Title>
               <Row>
                 {impacts.map((impact) => (
@@ -385,12 +411,16 @@ const DesignDocs = () => {
                         <Card.Title>{impact.apiImpactName}</Card.Title>
                         <Card.Text>Status: {impact.status}</Card.Text>
                         <Card.Text>Priority: {impact.impactPriority}</Card.Text>
+                        {isEditable && (
                         <Button variant="outline-success" size="sm" className="me-2" onClick={() => handleEditImpactClick(impact)}>
                           Edit
                         </Button>
+                        )}
+                        {isEditable && (
                         <Button variant="outline-danger" size="sm" onClick={() => handleDeleteImpact(impact.id)}>
                           Delete
                         </Button>
+                        )}
                         <Button variant="outline-secondary" size="sm" onClick={() => handleViewImpactDetailClick(impact)}>
                           View Details
                         </Button>
@@ -399,9 +429,11 @@ const DesignDocs = () => {
                   </Col>
                 ))}
               </Row>
+              {isEditable && (
               <Button variant="success" onClick={() => setShowImpactForm(true)}>
                 Add Impact
               </Button>
+              )}
               <Card.Title className="mt-4">Related Database Tables</Card.Title>
               <Row>
                 {relatedTables.map((table) => (
@@ -410,12 +442,16 @@ const DesignDocs = () => {
                       <Card.Body>
                         <Card.Title>{table.databaseTableName}</Card.Title>
                         <Card.Text>Description: {table.description}</Card.Text>
+                        {isEditable && (
                         <Button variant="outline-success" size="sm" className="me-2" onClick={() => handleEditTableClick(table)}>
                           Edit
                         </Button>
+                        )}
+                        {isEditable && (
                         <Button variant="outline-danger" size="sm" onClick={() => handleDeleteTable(table.id)}>
                           Delete
                         </Button>
+                        )}
                         <Button variant="outline-secondary" size="sm" onClick={() => navigate(`/project/${projectId}/database-server/table/${table.databaseTableId}/fields`)}>
                           Database Table Details
                         </Button>
@@ -424,9 +460,11 @@ const DesignDocs = () => {
                   </Col>
                 ))}
               </Row>
+              {isEditable && (
               <Button variant="success" onClick={() => setShowTableForm(true)}>
                 Add Table
               </Button>
+              )}
               <Modal show={showDocForm} onHide={handleCloseDocForm}>
                 <Modal.Header closeButton>
                   <Modal.Title>{currentDoc ? 'Edit Doc' : 'Add New Doc'}</Modal.Title>
@@ -468,15 +506,15 @@ const DesignDocs = () => {
                 </Modal.Header>
                 <Modal.Body>
                   <Form>
-                    <Form.Group controlId="formImpactApiId" className="mb-3">
-                      <Form.Label>Impact API ID</Form.Label>
+                    {/* <Form.Group controlId="formImpactApiId" className="mb-3">
+                      <Form.Label>Impact API UID</Form.Label>
                       <Form.Control
                         type="text"
                         name="impactApiId"
                         value={newImpact.impactApiId}
                         onChange={handleImpactInputChange}
                       />
-                    </Form.Group>
+                    </Form.Group> */}
                     <Form.Group controlId="formApiImpactName" className="mb-3">
                       <Form.Label>Impact API Name</Form.Label>
                       <Form.Control

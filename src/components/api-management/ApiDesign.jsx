@@ -10,6 +10,8 @@ import '../../public/css/Styles.css';
 
 const ApiDesign = () => {
   const { projectId, folderId, apiId } = useParams();
+  const [project, setProject] = useState(null);
+  const [isEditable, setEditable] = useState(false);
   const [params, setParams] = useState([]);
   const [bodies, setBodies] = useState([]);
   const [authRoles, setAuthRoles] = useState([]);
@@ -107,7 +109,31 @@ const ApiDesign = () => {
     fetchHeaders();
     fetchDesignResponses();
     fetchApiDetails();
-  }, [apiId]);
+
+    const fetchProjectDetails = async () => {
+      try {
+        const response = await axiosInstance.get(`/api/v1/project/findById?id=${projectId}`);
+        setProject(response.data.data);
+        
+      } catch (error) {
+        console.error('Error fetching project details:', error);
+      }
+    }
+    fetchProjectDetails();
+
+    const fetchEditable = async () => {
+      try {
+        const editableResponse = await axiosInstance.get(`/api/v1/project/checkEditable?projectId=${projectId}&userId=${userId}&apiId=${apiId}&lifeCycle=DESIGN`);
+        setEditable(editableResponse.data.data);
+      } catch (error) {
+        console.error('Error fetching editable:', error);
+      }
+    }
+    fetchEditable();
+  }, [apiId, projectId, userId]);
+
+  const isLeader = project && project.leaderId === parseInt(userId, 10);
+
 
   const handleParamInputChange = (e) => {
     const { name, value } = e.target;
@@ -454,9 +480,11 @@ const ApiDesign = () => {
                     <strong>URL:</strong> {apiDetails.url}
                   </div>
                 </ListGroup.Item>
+                {isEditable && (
                 <Button variant="outline-success" size="sm" onClick={handleEditApiClick}>
                   Edit API Details
                 </Button>
+                )}
               </ListGroup>
               <Card.Title className="mt-4">API Params</Card.Title>
               <ListGroup className="mb-3">
@@ -465,6 +493,7 @@ const ApiDesign = () => {
                     <div>
                       <strong>{param.paramKey}</strong>: {param.description} ({param.type}) - Sample: {param.sample}
                     </div>
+                    {isEditable && (
                     <div>
                       <Button variant="outline-success" size="sm" className="me-2" onClick={() => handleEditParamClick(param)}>
                         Edit
@@ -473,12 +502,15 @@ const ApiDesign = () => {
                         Delete
                       </Button>
                     </div>
+                    )}
                   </ListGroup.Item>
                 ))}
               </ListGroup>
+              {isEditable && (
               <Button variant="success" onClick={() => setShowParamForm(true)}>
                 Add Param
               </Button>
+              )}
               <Card.Title className="mt-4">API Bodies</Card.Title>
               <ListGroup className="mb-3">
                 {bodies.map((body) => (
@@ -486,6 +518,7 @@ const ApiDesign = () => {
                     <div>
                       <strong>{body.bodyKey}</strong>: {body.description} ({body.type}) - Sample: {body.sample}
                     </div>
+                    {isEditable && (
                     <div>
                       <Button variant="outline-success" size="sm" className="me-2" onClick={() => handleEditBodyClick(body)}>
                         Edit
@@ -494,12 +527,15 @@ const ApiDesign = () => {
                         Delete
                       </Button>
                     </div>
+                    )}
                   </ListGroup.Item>
                 ))}
               </ListGroup>
+              {isEditable && (
               <Button variant="success" onClick={() => setShowBodyForm(true)}>
                 Add Body
               </Button>
+              )}
               <Card.Title className="mt-4">API Access Roles</Card.Title>
               <ListGroup className="mb-3">
                 {authRoles.map((authRole) => (
@@ -507,6 +543,7 @@ const ApiDesign = () => {
                     <div>
                       <strong>{authRole.role}</strong>
                     </div>
+                    {isEditable && (
                     <div>
                       <Button variant="outline-success" size="sm" className="me-2" onClick={() => handleEditAuthRoleClick(authRole)}>
                         Edit
@@ -515,12 +552,15 @@ const ApiDesign = () => {
                         Delete
                       </Button>
                     </div>
+                    )}
                   </ListGroup.Item>
                 ))}
               </ListGroup>
+              {isEditable && (
               <Button variant="success" onClick={() => setShowAuthRoleForm(true)}>
                 Add Role
               </Button>
+              )}
               <Card.Title className="mt-4">API Headers</Card.Title>
               <ListGroup className="mb-3">
                 {headers.map((header) => (
@@ -528,6 +568,7 @@ const ApiDesign = () => {
                     <div>
                       <strong>{header.headerKey}</strong>: {header.description} ({header.type}) - Sample: {header.sample}
                     </div>
+                    {isEditable && (
                     <div>
                       <Button variant="outline-success" size="sm" className="me-2" onClick={() => handleEditHeaderClick(header)}>
                         Edit
@@ -536,12 +577,15 @@ const ApiDesign = () => {
                         Delete
                       </Button>
                     </div>
+                    )}
                   </ListGroup.Item>
                 ))}
               </ListGroup>
+              {isEditable && (
               <Button variant="success" onClick={() => setShowHeaderForm(true)}>
                 Add Header
               </Button>
+              )}
               <Card.Title className="mt-4">Design Responses</Card.Title>
               <ListGroup className="mb-3">
                 {designResponses.map((designResponse) => (
@@ -549,6 +593,7 @@ const ApiDesign = () => {
                     <div>
                       <strong>{designResponse.description}</strong>: {designResponse.value}
                     </div>
+                    {isEditable && (
                     <div>
                       <Button variant="outline-success" size="sm" className="me-2" onClick={() => handleEditDesignResponseClick(designResponse)}>
                         Edit
@@ -557,18 +602,23 @@ const ApiDesign = () => {
                         Delete
                       </Button>
                     </div>
+                    )}
                   </ListGroup.Item>
                 ))}
               </ListGroup>
+              {isEditable && (
               <Button variant="success" className="me-2" onClick={() => setShowDesignResponseForm(true)}>
                 Add Design Response
               </Button>
+              )}
               <Button variant="primary" className="me-2" onClick={() => navigate(`/project/${projectId}/folder/${folderId}/api/${apiId}/designDocs`)}>
                 Design Docs
               </Button>
+              {isLeader && (
               <Button variant="warning" onClick={() => setShowTaskForm(true)} className="me-2">
                 Create Task
               </Button>
+              )}
               <Button variant="primary" className="me-2" onClick={() => navigate(`/project/${projectId}/folder/${folderId}/api/${apiId}`)}>
                 Define
               </Button>

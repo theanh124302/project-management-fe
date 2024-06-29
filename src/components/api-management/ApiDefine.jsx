@@ -11,6 +11,8 @@ import '../../public/css/Styles.css';
 
 const ApiDefine = () => {
   const { projectId, folderId, apiId } = useParams();
+  const [project, setProject] = useState(null);
+  const [isEditable, setEditable] = useState(false);
   const [api, setApi] = useState(null);
   const [docs, setDocs] = useState([]);
   const [formData, setFormData] = useState({
@@ -71,7 +73,31 @@ const ApiDefine = () => {
 
     fetchApiDetails();
     fetchDocs();
-  }, [apiId]);
+
+    const fetchProjectDetails = async () => {
+      try {
+        const response = await axiosInstance.get(`/api/v1/project/findById?id=${projectId}`);
+        setProject(response.data.data);
+        
+      } catch (error) {
+        console.error('Error fetching project details:', error);
+      }
+    }
+    fetchProjectDetails();
+
+    const fetchEditable = async () => {
+      try {
+        const editableResponse = await axiosInstance.get(`/api/v1/project/checkEditable?projectId=${projectId}&userId=${userId}&apiId=${apiId}&lifeCycle=DEFINE`);
+        setEditable(editableResponse.data.data);
+      } catch (error) {
+        console.error('Error fetching editable:', error);
+      }
+    }
+    fetchEditable();
+  }, [apiId, projectId, userId]);
+
+  const isLeader = project && project.leaderId === parseInt(userId, 10);
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -296,15 +322,21 @@ const ApiDefine = () => {
                   />
                 </Form.Group>
               </Form>
+              {isEditable && (
               <Button variant="success" onClick={handleUpdateApi} className="me-2">
                 Update API
               </Button>
+              )}
+              {isLeader && (
               <Button variant="danger" onClick={handleDeleteApi} className="me-2">
                 Delete API
               </Button>
+              )}
+              {isLeader && (
               <Button variant="warning" onClick={() => setShowTaskForm(true)} className="me-2">
                 Create Task
               </Button>
+              )}
               <Button variant="primary" onClick={handleNavigateToDesign} className="me-2">
                 Design
               </Button>   

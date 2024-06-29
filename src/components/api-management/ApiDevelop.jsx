@@ -12,6 +12,8 @@ const backendUrl = 'http://localhost:8080';
 
 const ApiDevelop = () => {
   const { projectId, folderId, apiId } = useParams();
+  const [project, setProject] = useState(null);
+  const [isEditable, setEditable] = useState(false);
   const [apiDetails, setApiDetails] = useState({ method: '', url: '', token: '', header: '', parameters: '', bodyJson: '' });
   const [response, setResponse] = useState('');
   const [token, setToken] = useState('');
@@ -54,7 +56,31 @@ const ApiDevelop = () => {
     };
 
     fetchApiDetails();
-  }, [apiId]);
+
+    const fetchProjectDetails = async () => {
+      try {
+        const response = await axiosInstance.get(`/api/v1/project/findById?id=${projectId}`);
+        setProject(response.data.data);
+        
+      } catch (error) {
+        console.error('Error fetching project details:', error);
+      }
+    }
+    fetchProjectDetails();
+
+    const fetchEditable = async () => {
+      try {
+        const editableResponse = await axiosInstance.get(`/api/v1/project/checkEditable?projectId=${projectId}&userId=${userId}&apiId=${apiId}&lifeCycle=DEVELOP`);
+        setEditable(editableResponse.data.data);
+      } catch (error) {
+        console.error('Error fetching editable:', error);
+      }
+    }
+    fetchEditable();
+  }, [apiId, projectId, userId]);
+
+  const isLeader = project && project.leaderId === parseInt(userId, 10);
+
 
   const handleSendRequest = async () => {
     try {
@@ -162,11 +188,13 @@ const ApiDevelop = () => {
                   <Form.Control as="textarea" rows={3} value={body} onChange={(e) => setBody(e.target.value)} placeholder={apiDetails.bodyJson} />
                 </Form.Group>
                 <Row className="mb-3">
+                  {isEditable && (
                   <Col xs="auto">
                     <Button variant="success" size="sm" onClick={handleSave}>
                       Save
                     </Button>
                   </Col>
+                  )}
                   <Col xs="auto">
                     <Button variant="primary" size="sm" onClick={handleSendRequest}>
                       Send Request
@@ -181,11 +209,13 @@ const ApiDevelop = () => {
                 </Card.Body>
               </Card>
               <Row className="mt-4">
+                {isLeader && (
                 <Col xs="auto">
                   <Button variant="warning" onClick={() => setShowTaskForm(true)}>
                     Create Task
                   </Button>
                 </Col>
+                )}
                 <Col xs="auto">
                   <Button variant="primary" onClick={() => navigate(`/project/${projectId}/folder/${folderId}/api/${apiId}/design`)}>
                     Design
