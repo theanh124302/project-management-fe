@@ -75,7 +75,7 @@ const DatabaseFieldList = () => {
   const handleDeleteTable = async () => {
     try {
       await axiosInstance.delete(`/api/v1/database-table/delete`, { params: { id: tableId } });
-      navigate(`/project/${projectId}`);
+      navigate(`/project/${projectId}/datebase`);
     } catch (error) {
       console.error('Error deleting table:', error);
     }
@@ -110,7 +110,7 @@ const DatabaseFieldList = () => {
                   <th>Field Name</th>
                   <th>Type</th>
                   <th>Description</th>
-                  <th>Sample</th>
+                  <th>Value</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -166,10 +166,10 @@ const DatabaseFieldList = () => {
                     />
                   </Form.Group>
                   <Form.Group controlId="formFieldSample" className="mb-3">
-                    <Form.Label>Sample</Form.Label>
+                    <Form.Label>Value</Form.Label>
                     <Form.Control
                       type="text"
-                      placeholder="Enter field sample data"
+                      placeholder="Enter field value data"
                       value={newField.sample}
                       onChange={(e) => setNewField({ ...newField, sample: e.target.value })}
                     />

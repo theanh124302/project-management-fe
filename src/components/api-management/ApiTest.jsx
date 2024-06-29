@@ -217,7 +217,7 @@ const ApiTest = () => {
               <Form.Label>Task Name</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Enter task name"
+                placeholder={`Test: ${apiDetails.name} on ${new Date().toISOString().split('T')[0]}`}
                 name="name"
                 value={newTask.name}
                 onChange={handleTaskInputChange}
