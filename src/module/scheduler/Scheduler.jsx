@@ -57,25 +57,6 @@ const Schedule = () => {
 
   const currentDate = new Date().toISOString().split('T')[0];
 
-  const handleAddEvent = async () => {
-    try {
-      await axiosInstance.post(`/api/v1/events/create`, {
-        ...newEvent,
-        projectId: projectId,
-      });
-      setShowForm(false);
-      setNewEvent({ name: '', description: '', priority: '', startDate: '', endDate: '' });
-      fetchEvents(); // Fetch events again to include the new event
-    } catch (error) {
-      console.error('Error adding event:', error);
-    }
-  };
-
-  const handleCloseForm = () => {
-    setShowForm(false);
-    setNewEvent({ name: '', description: '', priority: '', startDate: '', endDate: '' });
-  };
-
   return (
     <Container fluid>
       <CustomAppBar />
@@ -94,83 +75,10 @@ const Schedule = () => {
                   <Appointments />
                 </Scheduler>
               </Paper>
-              {/* {projectLeaderId === parseInt(userId, 10) && (
-                <div>
-                  <Button variant="success" onClick={() => setShowForm(true)} className="mt-3">
-                    Add Event
-                  </Button>
-                </div>
-              )} */}
             </Card.Body>
           </Card>
         </Col>
       </Row>
-
-      <Modal show={showForm} onHide={handleCloseForm}>
-        <Modal.Header closeButton>
-          <Modal.Title>Add New Event</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <Form.Group controlId="formEventName" className="mb-3">
-              <Form.Label>Event Name</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter event name"
-                value={newEvent.name}
-                onChange={(e) => setNewEvent({ ...newEvent, name: e.target.value })}
-              />
-            </Form.Group>
-            <Form.Group controlId="formEventDescription" className="mb-3">
-              <Form.Label>Description</Form.Label>
-              <Form.Control
-                as="textarea"
-                rows={3}
-                placeholder="Enter event description"
-                value={newEvent.description}
-                onChange={(e) => setNewEvent({ ...newEvent, description: e.target.value })}
-              />
-            </Form.Group>
-            <Form.Group controlId="formEventPriority" className="mb-3">
-              <Form.Label>Priority</Form.Label>
-              <Form.Control
-                as="select"
-                value={newEvent.priority}
-                onChange={(e) => setNewEvent({ ...newEvent, priority: e.target.value })}
-              >
-                <option value="Low">Low</option>
-                <option value="Medium">Medium</option>
-                <option value="High">High</option>
-                <option value="Critical">Critical</option>
-              </Form.Control>
-            </Form.Group>
-            <Form.Group controlId="formEventStartDate" className="mb-3">
-              <Form.Label>Start Date</Form.Label>
-              <Form.Control
-                type="date"
-                value={newEvent.startDate}
-                onChange={(e) => setNewEvent({ ...newEvent, startDate: e.target.value })}
-              />
-            </Form.Group>
-            <Form.Group controlId="formEventEndDate" className="mb-3">
-              <Form.Label>End Date</Form.Label>
-              <Form.Control
-                type="date"
-                value={newEvent.endDate}
-                onChange={(e) => setNewEvent({ ...newEvent, endDate: e.target.value })}
-              />
-            </Form.Group>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseForm}>
-            Cancel
-          </Button>
-          <Button variant="success" onClick={handleAddEvent}>
-            Add Event
-          </Button>
-        </Modal.Footer>
-      </Modal>
     </Container>
   );
 };
