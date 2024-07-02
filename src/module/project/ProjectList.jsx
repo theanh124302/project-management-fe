@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import axiosInstance from '../AxiosInstance';
 import { useNavigate } from 'react-router-dom';
 import { Modal, Button, Form, Card, Container, Row, Col } from 'react-bootstrap';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, CartesianGrid } from 'recharts';
+import { ViewState } from '@devexpress/dx-react-scheduler';
+import { Scheduler, MonthView, Appointments } from '@devexpress/dx-react-scheduler-material-ui';
+import Paper from '@mui/material/Paper';
 import CustomAppBar from '../navbar/CustomAppBar';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../../public/css/ProjectList.css';
+import '../../public/css/Auth.css';
 
 const ProjectList = () => {
   const [projects, setProjects] = useState([]);
@@ -17,7 +19,7 @@ const ProjectList = () => {
   });
   const [leaderId, setLeaderId] = useState(null);
   const [userName, setUserName] = useState('');
-  const [dueDateTasks, setDueDateTasks] = useState([]);
+  const [tasks, setTasks] = useState([]);
   const username = localStorage.getItem('username');
   const userId = localStorage.getItem('userId');
   const navigate = useNavigate();
@@ -42,20 +44,26 @@ const ProjectList = () => {
       }
     };
 
-    const fetchDueDateTasks = async () => {
+    const fetchTasks = async () => {
       try {
-        const response = await axiosInstance.get(`/api/v1/task/countDueDateByDayAndUserId`, {
+        const response = await axiosInstance.get(`/api/v1/task/findByUserId`, {
           params: { userId }
         });
-        setDueDateTasks(response.data.data);
+        const tasks = response.data.data;
+        const formattedTasks = tasks.map(task => ({
+          startDate: task.startDate,
+          endDate: task.dueDate,
+          title: task.name,
+        }));
+        setTasks(formattedTasks);
       } catch (error) {
-        console.error('Error fetching due date tasks:', error);
+        console.error('Error fetching tasks:', error);
       }
     };
 
     fetchProjects();
     fetchUserInfo();
-    fetchDueDateTasks();
+    fetchTasks();
   }, [username, userId]);
 
   const handleAddProject = async () => {
@@ -87,18 +95,20 @@ const ProjectList = () => {
     setNewProject({ name: '', description: '', coverImage: '' });
   };
 
+  const currentDate = new Date().toISOString().split('T')[0];
+
   return (
-    <Container fluid className="project-list-container">
+    <Container fluid>
       <CustomAppBar />
       <div className="d-flex justify-content-center mb-4">
-        <div style={{ backgroundColor: 'white', padding: '10px', borderRadius: '10px', marginTop: '15px' }}>
-          <BarChart width={1200} height={500} data={dueDateTasks}>
-            <XAxis dataKey="number" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="value" fill="#8884d8" />
-          </BarChart>
+        <div style={{ backgroundColor: 'white', padding: '10px', borderRadius: '10px', marginTop: '15px', width: '100%' }}>
+          <Paper>
+            <Scheduler data={tasks}>
+              <ViewState currentDate={currentDate} />
+              <MonthView />
+              <Appointments />
+            </Scheduler>
+          </Paper>
         </div>
       </div>
       <div className="text-end mb-3">

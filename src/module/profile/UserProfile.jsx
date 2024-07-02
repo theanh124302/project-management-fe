@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axiosInstance from '../AxiosInstance';
 import { useNavigate } from 'react-router-dom';
 import CustomAppBar from '../navbar/CustomAppBar';
-import '../../public/css/UserProfile.css';
+import '../../public/css/Auth.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faSave, faTimes, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { Container, Row, Col, Form, Button, Image } from 'react-bootstrap';
@@ -51,7 +51,7 @@ const UserProfile = () => {
   };
 
   return (
-    <div>
+    <div className="page-container">
       <CustomAppBar />
       <Container className="mt-5">
         <div className="d-flex flex-column align-items-center">

@@ -10,9 +10,6 @@ import VerticalTabs from '../tabs/VerticalTabs';
 import { Container, Row, Col, Card, Button, Modal, Form } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../public/css/Styles.css';
-
-const backendUrl = 'http://localhost:8080';
-
 const Schedule = () => {
   const userId = localStorage.getItem('userId');
   const [projectLeaderId, setProjectLeaderId] = useState(null);

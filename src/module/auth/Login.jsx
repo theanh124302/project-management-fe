@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import axiosInstance from '../AxiosInstance';
 import { useNavigate, Link } from 'react-router-dom';
+import { FaBuysellads } from 'react-icons/fa';
 import NonLoginAppBar from '../navbar/NonLoginAppBar';
-import '../../public/css/Login.css';
+import '../../public/css/Auth.css';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -24,8 +25,6 @@ const Login = () => {
       localStorage.setItem('token', token);
       localStorage.setItem('refreshToken', refreshToken);
       localStorage.setItem('username', username);
-
-      // Fetch user data to get userId
       const userResponse = await axiosInstance.get(`/api/v1/user/findByUsername/${username}`);
       const userId = userResponse.data.data.id;
       localStorage.setItem('userId', userId);
@@ -38,32 +37,34 @@ const Login = () => {
 
   return (
     <>
-      <NonLoginAppBar />
-      <div className="container">
-        <form onSubmit={handleLogin}>
-          <h2>Login</h2>
-          <div>
-            <label htmlFor="username">Username:</label>
-            <input
-              type="text"
-              id="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-          </div>
-          <div>
-            <label htmlFor="password">Password:</label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          {error && <p className="error">{error}</p>}
-          <button type="submit">Login</button>
-        </form>
-        <p>Don't have an account? <Link to="/signup">Sign up now</Link></p>
+      <div className="page-container">
+        <NonLoginAppBar />
+        <div className="container">
+          <form onSubmit={handleLogin}>
+            <h2>Login to <FaBuysellads /></h2>
+            <div>
+              <label htmlFor="username">Username:</label>
+              <input
+                type="text"
+                id="username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </div>
+            <div>
+              <label htmlFor="password">Password:</label>
+              <input
+                type="password"
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+            {error && <p className="error">{error}</p>}
+            <button type="submit">Login</button>
+            <p>Don't have an account? <Link to="/signup" style={{color: '#212631'} }>Sign up now</Link></p>
+          </form>
+        </div>
       </div>
     </>
   );

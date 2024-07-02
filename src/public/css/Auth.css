@@ -1,9 +1,14 @@
-/* public/css/Login.css */
+
+.page-container {
+  background: linear-gradient(to top, #212631, #ffffff);
+  min-height: 100vh;
+}
 
 .container {
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
+
   }
   
   h2 {
@@ -40,7 +45,7 @@
   form button {
     width: 100%;
     padding: 10px;
-    background: #007bff;
+    background: #212631;
     color: white;
     border: none;
     border-radius: 4px;
