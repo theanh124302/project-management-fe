@@ -1,22 +1,15 @@
-// UserProfile.jsx
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import axiosInstance from '../AxiosInstance';
 import { useNavigate } from 'react-router-dom';
 import CustomAppBar from '../navbar/CustomAppBar';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
 import '../../public/css/UserProfile.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit, faSave, faTimes, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { Container, Row, Col, Form, Button, Image } from 'react-bootstrap';
 
 const UserProfile = () => {
   const [user, setUser] = useState({});
   const [isEditing, setIsEditing] = useState(false);
-  const username = localStorage.getItem('username');
   const userId = localStorage.getItem('userId');
   const navigate = useNavigate();
 
@@ -60,113 +53,125 @@ const UserProfile = () => {
   return (
     <div>
       <CustomAppBar />
-      <Container component="main" maxWidth="md">
-        <Box
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Avatar alt={user.name} src={user.avatar} sx={{ width: 100, height: 100, mb: 2 }} />
-          <Typography component="h1" variant="h5">
-            User Profile
-          </Typography>
-          <Box component="form" noValidate sx={{ mt: 3 }}>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  name="name"
-                  required
-                  fullWidth
-                  id="name"
-                  label="Name"
-                  value={user.name || ''}
-                  onChange={handleInputChange}
-                  disabled={!isEditing}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  name="phoneNumber"
-                  required
-                  fullWidth
-                  id="phoneNumber"
-                  label="Phone Number"
-                  value={user.phoneNumber || ''}
-                  onChange={handleInputChange}
-                  disabled={!isEditing}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  name="age"
-                  required
-                  fullWidth
-                  id="age"
-                  label="Age"
-                  type="number"
-                  value={user.age || ''}
-                  onChange={handleInputChange}
-                  disabled={!isEditing}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  name="email"
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email"
-                  value={user.email || ''}
-                  onChange={handleInputChange}
-                  disabled={!isEditing}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  name="username"
-                  required
-                  fullWidth
-                  id="username"
-                  label="Username"
-                  value={user.username || ''}
-                  onChange={handleInputChange}
-                  disabled
-                />
-              </Grid>
-            </Grid>
+      <Container className="mt-5">
+        <div className="d-flex flex-column align-items-center">
+          <Image
+            src={user.avatar}
+            roundedCircle
+            alt={user.name}
+            width={100}
+            height={100}
+            className="mb-2"
+          />
+          <h1>User Profile</h1>
+          <Form className="w-100 mt-3">
+            <Row>
+              <Col md={6}>
+                <Form.Group controlId="name">
+                  <Form.Label>Name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="name"
+                    value={user.name || ''}
+                    onChange={handleInputChange}
+                    disabled={!isEditing}
+                    required
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group controlId="phoneNumber">
+                  <Form.Label>Phone Number</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="phoneNumber"
+                    value={user.phoneNumber || ''}
+                    onChange={handleInputChange}
+                    disabled={!isEditing}
+                    required
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group controlId="age">
+                  <Form.Label>Age</Form.Label>
+                  <Form.Control
+                    type="number"
+                    name="age"
+                    value={user.age || ''}
+                    onChange={handleInputChange}
+                    disabled={!isEditing}
+                    required
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group controlId="email">
+                  <Form.Label>Email</Form.Label>
+                  <Form.Control
+                    type="email"
+                    name="email"
+                    value={user.email || ''}
+                    onChange={handleInputChange}
+                    disabled={!isEditing}
+                    required
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={12}>
+                <Form.Group controlId="username">
+                  <Form.Label>Username</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="username"
+                    value={user.username || ''}
+                    onChange={handleInputChange}
+                    disabled
+                    required
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={12}>
+                <Form.Group controlId="avatar">
+                  <Form.Label>Avatar</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="avatar"
+                    value={user.avatar || ''}
+                    onChange={handleInputChange}
+                    disabled={!isEditing}
+                    required
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
             {isEditing ? (
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 3 }}>
-                <Button variant="contained" color="primary" onClick={handleUpdateUser}>
-                  Save
+              <div className="d-flex justify-content-between mt-3">
+                <Button variant="success" onClick={handleUpdateUser}>
+                  <FontAwesomeIcon icon={faSave} /> Save
                 </Button>
-                <Button variant="outlined" onClick={handleCancel}>
-                  Cancel
+                <Button variant="secondary" onClick={handleCancel}>
+                  <FontAwesomeIcon icon={faTimes} /> Cancel
                 </Button>
-              </Box>
+              </div>
             ) : (
               <Button
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
+                variant="success"
+                className="w-100 mt-3 mb-2"
                 onClick={() => setIsEditing(true)}
               >
-                Edit
+                <FontAwesomeIcon icon={faEdit} /> Edit
               </Button>
             )}
             <Button
-              fullWidth
-              variant="outlined"
-              sx={{ mt: 3, mb: 2 }}
+              variant="outline-success"
+              className="w-100 mt-3 mb-2"
               onClick={handleBackClick}
             >
-              Back to Project List
+              <FontAwesomeIcon icon={faArrowLeft} /> Back to Project List
             </Button>
-          </Box>
-        </Box>
-
+          </Form>
+        </div>
       </Container>
     </div>
   );
