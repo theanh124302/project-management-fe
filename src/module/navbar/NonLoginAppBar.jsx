@@ -51,7 +51,7 @@ export default function CustomAppBar() {
              size="medium"
              edge="end"
             >
-                Sign Up
+                Register 
             </IconButton>
           </Box>
         </Toolbar>

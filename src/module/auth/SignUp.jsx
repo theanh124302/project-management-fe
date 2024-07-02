@@ -47,7 +47,7 @@ const SignUp = () => {
           
           <form onSubmit={handleSignUp}>
             <div>
-              <h2>Sign Up</h2>
+              <h2>Register</h2>
               <label htmlFor="name">Name:</label>
               <input
                 type="text"
@@ -93,7 +93,7 @@ const SignUp = () => {
               />
             </div>
             {error && <p className="error">{error}</p>}
-            <button type="submit">Sign Up</button>
+            <button type="submit">Register</button>
           </form>
         </div>
       </div>
