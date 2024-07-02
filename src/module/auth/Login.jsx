@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axiosInstance from '../AxiosInstance';
 import { useNavigate, Link } from 'react-router-dom';
+import NonLoginAppBar from '../navbar/NonLoginAppBar';
 import '../../public/css/Login.css';
 
 const Login = () => {
@@ -36,32 +37,35 @@ const Login = () => {
   };
 
   return (
-    <div className="container">
-      <h2>Login</h2>
-      <form onSubmit={handleLogin}>
-        <div>
-          <label htmlFor="username">Username:</label>
-          <input
-            type="text"
-            id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </div>
-        <div>
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        {error && <p className="error">{error}</p>}
-        <button type="submit">Login</button>
-      </form>
-      <p>Don't have an account? <Link to="/signup">Sign up now</Link></p>
-    </div>
+    <>
+      <NonLoginAppBar />
+      <div className="container">
+        <form onSubmit={handleLogin}>
+          <h2>Login</h2>
+          <div>
+            <label htmlFor="username">Username:</label>
+            <input
+              type="text"
+              id="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </div>
+          <div>
+            <label htmlFor="password">Password:</label>
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          {error && <p className="error">{error}</p>}
+          <button type="submit">Login</button>
+        </form>
+        <p>Don't have an account? <Link to="/signup">Sign up now</Link></p>
+      </div>
+    </>
   );
 };
 
