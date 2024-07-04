@@ -80,6 +80,7 @@ const ApiDevelop = () => {
         console.error('Error fetching editable:', error);
       }
     }
+    fetchEditable();
 
     const fetchEnvironments = async () => {
       try {
@@ -162,19 +163,21 @@ const ApiDevelop = () => {
     setNewTask({ name: '', description: '', priority: '', startDate: '', dueDate: '', lifeCycle: 'DEVELOP' });
   };
 
-  const handleEnvironmentChange = async (environmentId) => {
+  const handleEnvironmentChange = async (eventKey) => {
+    const environmentId = parseInt(eventKey, 10);
     try {
       await axiosInstance.post(`/api/v1/api/updateEnvironmentId`, null, {
         params: {
           id: apiId,
-          environmentId: environmentId === 0 ? null : environmentId,
+          environmentId: environmentId === 0 ? 0 : environmentId,
         },
       });
-      setApiDetails(prevDetails => ({
+      setApiDetails((prevDetails) => ({
         ...prevDetails,
-        environmentId: environmentId
+        environmentId: environmentId,
       }));
-      setEnvironmentName(environmentId === 0 ? 'None' : environments.find(env => env.id === environmentId).name);
+      const selectedEnvironment = environments.find((env) => env.id === environmentId);
+      setEnvironmentName(environmentId === 0 ? 'None' : selectedEnvironment ? selectedEnvironment.name : 'Unknown');
     } catch (error) {
       console.error('Error updating environmentId:', error);
     }
