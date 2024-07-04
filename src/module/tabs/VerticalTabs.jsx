@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
-import { FaArrowLeft, FaTasks, FaInfoCircle, FaDatabase, FaBug, FaTachometerAlt, FaCalendarAlt, FaFileAlt } from 'react-icons/fa';
+import {FaFile, FaHubspot, FaCentos, FaTasks, FaInfoCircle, FaDatabase, FaBug, FaTachometerAlt, FaCalendarAlt, FaFileAlt } from 'react-icons/fa';
 import '../../public/css/Styles.css';
 
 const VerticalTabs = () => {
@@ -65,14 +65,14 @@ const VerticalTabs = () => {
           href="#"
           onClick={() => handleTabChange(3, `/project/${projectId}/api`)}
         >
-          <FaTasks className="mr-2" /> API
+          <FaHubspot className="mr-2" /> API
         </a>
         <a
           className={`nav-link text-white ${selectedTab === 4 ? 'active' : ''}`}
           href="#"
           onClick={() => handleTabChange(4, `/project/${projectId}/environment`)}
         >
-          <FaTasks className="mr-2" /> Environment
+          <FaCentos className="mr-2" /> Environment
         </a>
         <a
           className={`nav-link text-white ${selectedTab === 5 ? 'active' : ''}`}
@@ -100,7 +100,7 @@ const VerticalTabs = () => {
           href="#"
           onClick={() => handleTabChange(8, `/project/${projectId}/file`)}
         >
-          <FaInfoCircle className="mr-2" /> File
+          <FaFile className="mr-2" /> File
         </a>
         <a
           className={`nav-link text-white ${selectedTab === 9 ? 'active' : ''}`}
