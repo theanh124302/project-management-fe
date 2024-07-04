@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import axiosInstance from '../AxiosInstance';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Card, Button, Form, Modal } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Form, Modal, Dropdown } from 'react-bootstrap';
 import CustomAppBar from '../navbar/CustomAppBar';
 import VerticalTabs from '../tabs/VerticalTabs';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -14,7 +14,9 @@ const ApiDevelop = () => {
   const { projectId, folderId, apiId } = useParams();
   const [project, setProject] = useState(null);
   const [isEditable, setEditable] = useState(false);
-  const [apiDetails, setApiDetails] = useState({ method: '', url: '', token: '', header: '', parameters: '', bodyJson: '' });
+  const [apiDetails, setApiDetails] = useState({ method: '', url: '', token: '', header: '', parameters: '', bodyJson: '', environmentId: 0 });
+  const [environments, setEnvironments] = useState([]);
+  const [environmentName, setEnvironmentName] = useState('None');
   const [response, setResponse] = useState('');
   const [token, setToken] = useState('');
   const [header, setHeader] = useState('');
@@ -44,12 +46,15 @@ const ApiDevelop = () => {
           token: data.token || '',
           header: data.header || '',
           parameters: data.parameters || '',
-          bodyJson: data.bodyJson || ''
+          bodyJson: data.bodyJson || '',
+          environmentId: data.environmentId || 0
         });
         setToken(data.token || '');
         setHeader(data.header || '');
         setParam(data.parameters || '');
         setBody(data.bodyJson || '');
+        const environmentResponse = await axiosInstance.get(`/api/v1/environment/findById?id=${data.environmentId}`);
+        setEnvironmentName(environmentResponse.data.data.name);
       } catch (error) {
         console.error('Error fetching API details:', error);
       }
@@ -61,7 +66,6 @@ const ApiDevelop = () => {
       try {
         const response = await axiosInstance.get(`/api/v1/project/findById?id=${projectId}`);
         setProject(response.data.data);
-        
       } catch (error) {
         console.error('Error fetching project details:', error);
       }
@@ -76,11 +80,24 @@ const ApiDevelop = () => {
         console.error('Error fetching editable:', error);
       }
     }
-    fetchEditable();
+
+    const fetchEnvironments = async () => {
+      try {
+        const response = await axiosInstance.get(`/api/v1/environment/findByProjectId`, {
+          params: { projectId },
+        });
+        setEnvironments(response.data.data);
+      } catch (error) {
+        console.error('Error fetching environments:', error);
+      }
+    };
+
+
+
+    fetchEnvironments();
   }, [apiId, projectId, userId]);
 
   const isLeader = project && project.leaderId === parseInt(userId, 10);
-
 
   const handleSendRequest = async () => {
     try {
@@ -145,6 +162,24 @@ const ApiDevelop = () => {
     setNewTask({ name: '', description: '', priority: '', startDate: '', dueDate: '', lifeCycle: 'DEVELOP' });
   };
 
+  const handleEnvironmentChange = async (environmentId) => {
+    try {
+      await axiosInstance.post(`/api/v1/api/updateEnvironmentId`, null, {
+        params: {
+          id: apiId,
+          environmentId: environmentId === 0 ? null : environmentId,
+        },
+      });
+      setApiDetails(prevDetails => ({
+        ...prevDetails,
+        environmentId: environmentId
+      }));
+      setEnvironmentName(environmentId === 0 ? 'None' : environments.find(env => env.id === environmentId).name);
+    } catch (error) {
+      console.error('Error updating environmentId:', error);
+    }
+  };
+
   return (
     <Container fluid>
       <CustomAppBar />
@@ -158,17 +193,40 @@ const ApiDevelop = () => {
               <Card.Title>Develop: {apiDetails.name}</Card.Title>
               <Form className="mb-3">
                 <Row className="align-items-center">
-                  <Col xs={12} md={6}>
+                  <Col xs={12} md={2}>
                     <Form.Group>
                       <Form.Label><strong>Method:</strong></Form.Label>
                       <Form.Control type="text" value={apiDetails.method} readOnly />
                     </Form.Group>
                   </Col>
-                  <Col xs={12} md={6}>
+                  <Col xs={12} md={5}>
                     <Form.Group>
                       <Form.Label><strong>URL:</strong></Form.Label>
                       <Form.Control type="text" value={apiDetails.url} readOnly />
                     </Form.Group>
+                  </Col>
+                  <Col xs={12} md={2}>
+                    <Form.Group>
+                      <Form.Label><strong>Environment:</strong></Form.Label>
+                      <Form.Control type="text" value={environmentName} readOnly />
+                    </Form.Group>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col xs={12} md={2}>
+                    <Dropdown onSelect={handleEnvironmentChange}>
+                      <Dropdown.Toggle variant="success" id="dropdown-basic">
+                        {environmentName}
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu>
+                        <Dropdown.Item eventKey={0}>None</Dropdown.Item>
+                        {environments.map((env) => (
+                          <Dropdown.Item key={env.id} eventKey={env.id}>
+                            {env.name}
+                          </Dropdown.Item>
+                        ))}
+                      </Dropdown.Menu>
+                    </Dropdown>
                   </Col>
                 </Row>
                 <Form.Group className="mb-3">

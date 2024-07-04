@@ -13,6 +13,7 @@ const EnvironmentList = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedEnvironment, setSelectedEnvironment] = useState(null);
   const [showUploadModal, setShowUploadModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [url, setUrl] = useState('');
@@ -64,6 +65,19 @@ const EnvironmentList = () => {
     setShowUploadModal(false);
   };
 
+  const handleShowEditModal = (environment) => {
+    setSelectedEnvironment(environment);
+    setName(environment.name);
+    setDescription(environment.description);
+    setUrl(environment.url);
+    setShowEditModal(true);
+  };
+
+  const handleCloseEditModal = () => {
+    setShowEditModal(false);
+    setSelectedEnvironment(null);
+  };
+
   const handleNameChange = (e) => {
     setName(e.target.value);
   };
@@ -94,6 +108,25 @@ const EnvironmentList = () => {
     }
   };
 
+  const handleEdit = async () => {
+    const environment = {
+      id: selectedEnvironment.id,
+      projectId,
+      name,
+      description,
+      url,
+    };
+
+    try {
+      await axiosInstance.post(`/api/v1/environment/update`, environment);
+      fetchEnvironments();
+      handleCloseEditModal();
+    } catch (error) {
+      console.error('Error updating environment:', error);
+      alert('Failed to update environment');
+    }
+  };
+
   return (
     <Container fluid>
       <CustomAppBar />
@@ -121,8 +154,11 @@ const EnvironmentList = () => {
                       <td>{environment.description}</td>
                       <td>{environment.url}</td>
                       <td>
-                        <Button onClick={() => handleShowModal(environment)} className="me-2 button-style">
+                        <Button variant="secondary" onClick={() => handleShowModal(environment)} className="me-2 button-style">
                           View
+                        </Button>
+                        <Button variant="success" className="me-2" onClick={() => handleShowEditModal(environment)}>
+                          Edit
                         </Button>
                         <Button variant="danger" className="me-2" onClick={() => handleDelete(environment.id)}>
                           Delete
@@ -178,6 +214,36 @@ const EnvironmentList = () => {
                 </Modal.Body>
                 <Modal.Footer>
                   <Button variant="secondary" onClick={handleCloseUploadModal}>
+                    Close
+                  </Button>
+                </Modal.Footer>
+              </Modal>
+
+              <Modal show={showEditModal} onHide={handleCloseEditModal}>
+                <Modal.Header closeButton>
+                  <Modal.Title>Edit Environment</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <Form>
+                    <Form.Group controlId="formName" className="mb-3">
+                      <Form.Label>Name</Form.Label>
+                      <Form.Control type="text" value={name} onChange={handleNameChange} />
+                    </Form.Group>
+                    <Form.Group controlId="formDescription" className="mb-3">
+                      <Form.Label>Description</Form.Label>
+                      <Form.Control type="text" value={description} onChange={handleDescriptionChange} />
+                    </Form.Group>
+                    <Form.Group controlId="formUrl" className="mb-3">
+                      <Form.Label>URL</Form.Label>
+                      <Form.Control type="text" value={url} onChange={handleUrlChange} />
+                    </Form.Group>
+                    <Button variant="primary" onClick={handleEdit}>
+                      Save Changes
+                    </Button>
+                  </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={handleCloseEditModal}>
                     Close
                   </Button>
                 </Modal.Footer>
