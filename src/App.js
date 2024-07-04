@@ -26,6 +26,7 @@ import DatabaseServerList from './module/database-server/DatabaseServerList';
 import DatabaseTableList from './module/database-server/DatabaseTableList';
 import DatabaseFieldList from './module/database-server/DatabaseFieldList';
 import FileList from './module/projectFile/FileList';
+import EnvironmentList from './module/environment/Environment';
 import ProtectedRoute from './module/hoc/ProtectedRoute';
 import Test from './module/template/Test';
 
@@ -60,6 +61,7 @@ function App() {
         <Route path='/project/:projectId/database' element={<ProtectedRoute component={DatabaseServerList} />} />
         <Route path='/project/:projectId/database-server/:serverId/tables' element={<ProtectedRoute component={DatabaseTableList} />} />
         <Route path='/project/:projectId/database-server/table/:tableId/fields' element={<ProtectedRoute component={DatabaseFieldList} />} />
+        <Route path='/project/:projectId/environment' element={<ProtectedRoute component={EnvironmentList} />} />
         <Route path='/test' element={<Test />} />
       </Routes>
     </Router>

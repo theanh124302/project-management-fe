@@ -16,13 +16,12 @@ const VerticalTabs = () => {
     else if (location.pathname.includes('/schedule')) setSelectedTab(1);
     else if (location.pathname.includes('/daily-report')) setSelectedTab(2);
     else if (location.pathname.includes('/api')) setSelectedTab(3);
-    else if (location.pathname.includes('/task')) setSelectedTab(4);
-    else if (location.pathname.includes('/database')) setSelectedTab(5);
-    else if (location.pathname.includes('/issue')) setSelectedTab(6);
-    else if (location.pathname.includes('/file')) setSelectedTab(7);
-    else if (location.pathname.includes('/detail')) setSelectedTab(8);
-
-
+    else if (location.pathname.includes('/environment')) setSelectedTab(4);
+    else if (location.pathname.includes('/task')) setSelectedTab(5);
+    else if (location.pathname.includes('/database')) setSelectedTab(6);
+    else if (location.pathname.includes('/issue')) setSelectedTab(7);
+    else if (location.pathname.includes('/file')) setSelectedTab(8);
+    else if (location.pathname.includes('/detail')) setSelectedTab(9);
   }, [location.pathname]);
 
   const handleTabChange = (tabIndex, path) => {
@@ -71,40 +70,45 @@ const VerticalTabs = () => {
         <a
           className={`nav-link text-white ${selectedTab === 4 ? 'active' : ''}`}
           href="#"
-          onClick={() => handleTabChange(4, `/project/${projectId}/task`)}
+          onClick={() => handleTabChange(4, `/project/${projectId}/environment`)}
         >
-          <FaTasks className="mr-2" /> Task
+          <FaTasks className="mr-2" /> Environment
         </a>
         <a
           className={`nav-link text-white ${selectedTab === 5 ? 'active' : ''}`}
           href="#"
-          onClick={() => handleTabChange(5, `/project/${projectId}/database`)}
+          onClick={() => handleTabChange(5, `/project/${projectId}/task`)}
         >
-          <FaDatabase className="mr-2" /> Database
+          <FaTasks className="mr-2" /> Task
         </a>
         <a
           className={`nav-link text-white ${selectedTab === 6 ? 'active' : ''}`}
           href="#"
-          onClick={() => handleTabChange(6, `/project/${projectId}/issue`)}
+          onClick={() => handleTabChange(6, `/project/${projectId}/database`)}
         >
-          <FaBug className="mr-2" /> Issue
+          <FaDatabase className="mr-2" /> Database
         </a>
         <a
           className={`nav-link text-white ${selectedTab === 7 ? 'active' : ''}`}
           href="#"
-          onClick={() => handleTabChange(7, `/project/${projectId}/file`)}
+          onClick={() => handleTabChange(7, `/project/${projectId}/issue`)}
         >
-          <FaInfoCircle className="mr-2" /> File
+          <FaBug className="mr-2" /> Issue
         </a>
         <a
           className={`nav-link text-white ${selectedTab === 8 ? 'active' : ''}`}
           href="#"
-          onClick={() => handleTabChange(8, `/project/${projectId}/detail`)}
+          onClick={() => handleTabChange(8, `/project/${projectId}/file`)}
+        >
+          <FaInfoCircle className="mr-2" /> File
+        </a>
+        <a
+          className={`nav-link text-white ${selectedTab === 9 ? 'active' : ''}`}
+          href="#"
+          onClick={() => handleTabChange(9, `/project/${projectId}/detail`)}
         >
           <FaInfoCircle className="mr-2" /> Detail
         </a>
-
-
       </nav>
     </div>
   );
