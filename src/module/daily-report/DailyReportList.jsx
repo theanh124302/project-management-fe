@@ -22,6 +22,7 @@ const DailyReportList = () => {
   const [searchName, setSearchName] = useState('');
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+  const [isSearching, setIsSearching] = useState(false);
   const userId = localStorage.getItem('userId');
   const navigate = useNavigate();
 
@@ -41,12 +42,21 @@ const DailyReportList = () => {
   };
 
   const fetchDailyReports = async (name = '') => {
+    setIsSearching(name !== '');
+    const url = name
+      ? `/api/v1/daily-report/findAllByProjectIdAndName`
+      : `/api/v1/daily-report/findAllByProjectId`;
+
+    const params = name
+      ? { projectId, name, page: 0, size: 100 }
+      : { projectId, page, size: 30 };
+
     try {
-      const response = await axiosInstance.get(`/api/v1/daily-report/findAllByProjectId`, {
-        params: { projectId, name, page, size: 30 }
-      });
+      const response = await axiosInstance.get(url, { params });
       setDailyReports(response.data.data);
-      setTotalPages(response.data.totalPages);
+      if (!name) {
+        setTotalPages(response.data.totalPages);
+      }
     } catch (error) {
       console.error('Error fetching daily reports:', error);
     }
@@ -137,7 +147,6 @@ const DailyReportList = () => {
   const handlePageChange = (newPage) => {
     setPage(newPage);
   };
-  
 
   return (
     <Container fluid>
@@ -187,11 +196,13 @@ const DailyReportList = () => {
               </Card>
             </Col>
           </Row>
-          <Pagination>
-            <Pagination.Prev onClick={() => handlePageChange(page - 1)} disabled={page === 0} />
-            <Pagination.Item active>{page + 1}</Pagination.Item>
-            <Pagination.Next onClick={() => handlePageChange(page + 1)} disabled={page === totalPages - 1} />
-          </Pagination>
+          {!isSearching && (
+            <Pagination>
+              <Pagination.Prev onClick={() => handlePageChange(page - 1)} disabled={page === 0} />
+              <Pagination.Item active>{page + 1}</Pagination.Item>
+              <Pagination.Next onClick={() => handlePageChange(page + 1)} disabled={page === totalPages - 1} />
+            </Pagination>
+          )}
 
           <Modal show={showForm} onHide={handleCloseForm}>
             <Modal.Header closeButton>
