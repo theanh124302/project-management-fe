@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../AxiosInstance';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Card, Button, Modal, Form, InputGroup, FormControl } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Modal, Form, InputGroup, FormControl, Pagination } from 'react-bootstrap';
 import CustomAppBar from '../navbar/CustomAppBar';
 import VerticalTabs from '../tabs/VerticalTabs';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -20,6 +20,8 @@ const DailyReportList = () => {
   const [projectLeaderId, setProjectLeaderId] = useState(null);
   const [userName, setUserName] = useState('');
   const [searchName, setSearchName] = useState('');
+  const [page, setPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
   const userId = localStorage.getItem('userId');
   const navigate = useNavigate();
 
@@ -27,7 +29,7 @@ const DailyReportList = () => {
     fetchProjectDetails();
     fetchDailyReports();
     fetchUserName();
-  }, [projectId]);
+  }, [projectId, page]);
 
   const fetchProjectDetails = async () => {
     try {
@@ -40,10 +42,11 @@ const DailyReportList = () => {
 
   const fetchDailyReports = async (name = '') => {
     try {
-      const response = await axiosInstance.get(`/api/v1/daily-report/findAllByProjectIdAndName`, {
-        params: { projectId, name }
+      const response = await axiosInstance.get(`/api/v1/daily-report/findAllByProjectId`, {
+        params: { projectId, name, page, size: 30 }
       });
       setDailyReports(response.data.data);
+      setTotalPages(response.data.totalPages);
     } catch (error) {
       console.error('Error fetching daily reports:', error);
     }
@@ -131,6 +134,11 @@ const DailyReportList = () => {
     fetchDailyReports(e.target.value);
   };
 
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+  };
+  
+
   return (
     <Container fluid>
       <CustomAppBar />
@@ -179,6 +187,12 @@ const DailyReportList = () => {
               </Card>
             </Col>
           </Row>
+          <Pagination>
+            <Pagination.Prev onClick={() => handlePageChange(page - 1)} disabled={page === 0} />
+            <Pagination.Item active>{page + 1}</Pagination.Item>
+            <Pagination.Next onClick={() => handlePageChange(page + 1)} disabled={page === totalPages - 1} />
+          </Pagination>
+
           <Modal show={showForm} onHide={handleCloseForm}>
             <Modal.Header closeButton>
               <Modal.Title>{currentReport ? 'Edit Daily Report' : 'Add New Daily Report'}</Modal.Title>
