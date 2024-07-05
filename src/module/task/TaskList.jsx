@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import axiosInstance from '../AxiosInstance';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Container, Row, Col, Card, Button, Modal, Form, InputGroup, FormControl } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Modal, Form, InputGroup, FormControl, Pagination } from 'react-bootstrap';
 import CustomAppBar from '../navbar/CustomAppBar';
 import VerticalTabs from '../tabs/VerticalTabs';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -37,11 +36,14 @@ const TaskList = () => {
   const navigate = useNavigate();
   const [statusFilter, setStatusFilter] = useState('');
   const [searchName, setSearchName] = useState('');
+  const [page, setPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [isSearching, setIsSearching] = useState(false);
 
   useEffect(() => {
     fetchProjectDetails();
     fetchTasks();
-  }, [projectId]);
+  }, [projectId, page]);
 
   const fetchProjectDetails = async () => {
     try {
@@ -52,23 +54,28 @@ const TaskList = () => {
     }
   };
 
-  const fetchTasks = async (name = '') => {
+  const fetchTasks = async (name = '', status = '') => {
+    setIsSearching(name !== '' || status !== '');
+    const url = name
+      ? `/api/v1/task/findByProjectIdAndName`
+      : status
+      ? `/api/v1/task/findByProjectIdAndStatus`
+      : `/api/v1/task/findByProjectId`;
+
+    const params = name
+      ? { projectId, name, page: 0, size: 100 }
+      : status
+      ? { projectId, status, page: 0, size: 100 }
+      : { projectId, page, size: 30 };
+
     try {
-      const response = await axiosInstance.get(`/api/v1/task/findByProjectIdAndName`, {
-        params: { projectId, name }
-      });
+      const response = await axiosInstance.get(url, { params });
       setTasks(response.data.data);
+      if (!name && !status) {
+        setTotalPages(response.data.totalPages);
+      }
     } catch (error) {
       console.error('Error fetching tasks:', error);
-    }
-  };
-
-  const fetchTasksByStatus = async (status) => {
-    try {
-      const response = await axiosInstance.get(`/api/v1/task/findByProjectIdAndStatus?projectId=${projectId}&status=${status}`);
-      setTasks(response.data.data);
-    } catch (error) {
-      console.error('Error fetching tasks by status:', error);
     }
   };
 
@@ -105,16 +112,16 @@ const TaskList = () => {
   const handleStatusFilterChange = (e) => {
     const selectedStatus = e.target.value;
     setStatusFilter(selectedStatus);
-    if (selectedStatus === '') {
-      fetchTasks();
-    } else {
-      fetchTasksByStatus(selectedStatus);
-    }
+    fetchTasks(searchName, selectedStatus);
   };
 
   const handleSearchChange = (e) => {
     setSearchName(e.target.value);
-    fetchTasks(e.target.value);
+    fetchTasks(e.target.value, statusFilter);
+  };
+
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
   };
 
   return (
@@ -179,6 +186,14 @@ const TaskList = () => {
               )}
             </Col>
           </Row>
+          {!isSearching && (
+            <Pagination>
+              <Pagination.Prev onClick={() => handlePageChange(page - 1)} disabled={page === 0} />
+              <Pagination.Item active>{page + 1}</Pagination.Item>
+              <Pagination.Next onClick={() => handlePageChange(page + 1)} disabled={page === totalPages - 1} />
+            </Pagination>
+          )}
+
           <Modal show={showForm} onHide={handleCloseForm}>
             <Modal.Header closeButton>
               <Modal.Title>{currentTask ? 'Edit Task' : 'Add New Task'}</Modal.Title>
