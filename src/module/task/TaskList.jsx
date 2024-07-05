@@ -126,9 +126,17 @@ const TaskList = () => {
         </Col>
         <Col xs={12} md={10} className='content-style'>
           <h2>Task List</h2>
+          <div>
+            <InputGroup className="mb-3">
+              <FormControl
+                placeholder="Search by task name"
+                value={searchName}
+                onChange={handleSearchChange}
+              />
+            </InputGroup>
+          </div>
           <div className="d-flex justify-content-end mb-3">
             <Form.Group controlId="formStatusFilter" className="d-flex align-items-center me-3">
-              <Form.Label className="mb-3">Filter by Status:</Form.Label>
               <Form.Control as="select" value={statusFilter} onChange={handleStatusFilterChange} className="w-auto">
                 <option value="">All</option>
                 {Object.keys(statusColors).map((status) => (
@@ -138,13 +146,6 @@ const TaskList = () => {
                 ))}
               </Form.Control>
             </Form.Group>
-            <InputGroup className="mb-3">
-              <FormControl
-                placeholder="Search by task name"
-                value={searchName}
-                onChange={handleSearchChange}
-              />
-            </InputGroup>
           </div>
           <Row>
             {tasks.map((task) => (

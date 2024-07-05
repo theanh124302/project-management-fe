@@ -156,7 +156,7 @@ const IssueList = () => {
             <Col xs={12} md={6} lg={4} className="mb-3">
               {projectLeaderId === parseInt(userId, 10) && (
                 <div>
-                  <Card onClick={() => setShowForm(true)} className="issue-card add-issue-card" style={{ cursor: 'pointer' }}>
+                  <Card onClick={() => setShowForm(true)} className="card-style" style={{ cursor: 'pointer' }}>
                     <Card.Body className="d-flex justify-content-center align-items-center">
                       <h1>+</h1>
                     </Card.Body>
