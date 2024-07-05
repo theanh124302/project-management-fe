@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import axiosInstance from '../AxiosInstance';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Card, Button, Modal, Form, InputGroup, FormControl } from 'react-bootstrap';
@@ -7,8 +6,6 @@ import CustomAppBar from '../navbar/CustomAppBar';
 import VerticalTabs from '../tabs/VerticalTabs';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../public/css/Styles.css';
-
-const backendUrl = 'http://localhost:8080'; // Cập nhật URL backend cố định ở đây
 
 const DailyReportList = () => {
   const { projectId } = useParams();
