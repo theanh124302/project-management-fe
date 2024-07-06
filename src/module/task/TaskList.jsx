@@ -66,7 +66,7 @@ const TaskList = () => {
       ? { projectId, name, page: 0, size: 100 }
       : status
       ? { projectId, status, page: 0, size: 100 }
-      : { projectId, page, size: 30 };
+      : { projectId, page, size: 29 };
 
     try {
       const response = await axiosInstance.get(url, { params });

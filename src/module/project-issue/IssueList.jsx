@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import axiosInstance from '../AxiosInstance';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Card, Button, Modal, Form } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Modal, Form, InputGroup, FormControl, Pagination } from 'react-bootstrap';
 import CustomAppBar from '../navbar/CustomAppBar';
 import VerticalTabs from '../tabs/VerticalTabs';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -32,33 +31,44 @@ const IssueList = () => {
   });
   const userId = localStorage.getItem('userId');
   const navigate = useNavigate();
+  const [searchName, setSearchName] = useState('');
+  const [page, setPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [isSearching, setIsSearching] = useState(false);
 
   useEffect(() => {
-    const fetchIssues = async () => {
-      try {
-        const response = await axiosInstance.get(`/api/v1/issue/findByProjectId`, {
-          params: { projectId }
-        });
-        setIssues(response.data.data);
-      } catch (error) {
-        console.error('Error fetching issues:', error);
-      }
-    };
-    const fetchProjectDetails = async () => {
-      try {
-        const response = await axiosInstance.get(`/api/v1/project/findById?id=${projectId}`);
-        setProjectLeaderId(response.data.data.leaderId);
-      } catch (error) {
-        console.error('Error fetching project details:', error);
-      }
-    };
     fetchProjectDetails();
     fetchIssues();
-  }, [projectId]);
+  }, [projectId, page]);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setNewIssue({ ...newIssue, [name]: value });
+  const fetchProjectDetails = async () => {
+    try {
+      const response = await axiosInstance.get(`/api/v1/project/findById?id=${projectId}`);
+      setProjectLeaderId(response.data.data.leaderId);
+    } catch (error) {
+      console.error('Error fetching project details:', error);
+    }
+  };
+
+  const fetchIssues = async (name = '') => {
+    setIsSearching(name !== '');
+    const url = name
+      ? `/api/v1/issue/findByNameAndProjectId`
+      : `/api/v1/issue/findByProjectId`;
+
+    const params = name
+      ? { projectId, name, page: 0, size: 100 }
+      : { projectId, page, size: 29 };
+
+    try {
+      const response = await axiosInstance.get(url, { params });
+      setIssues(response.data.data);
+      if (!name) {
+        setTotalPages(response.data.totalPages);
+      }
+    } catch (error) {
+      console.error('Error fetching issues:', error);
+    }
   };
 
   const handleAddIssue = async () => {
@@ -70,10 +80,7 @@ const IssueList = () => {
       });
       setShowForm(false);
       setNewIssue({ description: '', content: '', url: '', status: 'OPEN', priority: 'Low' });
-      const response = await axiosInstance.get(`/api/v1/issue/findByProjectId`, {
-        params: { projectId }
-      });
-      setIssues(response.data.data);
+      fetchIssues();
     } catch (error) {
       console.error('Error adding issue:', error);
     }
@@ -88,10 +95,7 @@ const IssueList = () => {
       });
       setShowForm(false);
       setCurrentIssue(null);
-      const response = await axiosInstance.get(`/api/v1/issue/findByProjectId`, {
-        params: { projectId }
-      });
-      setIssues(response.data.data);
+      fetchIssues();
     } catch (error) {
       console.error('Error editing issue:', error);
     }
@@ -100,10 +104,7 @@ const IssueList = () => {
   const handleDeleteIssue = async (id) => {
     try {
       await axiosInstance.delete(`/api/v1/issue/delete`, { params: { id } });
-      const response = await axiosInstance.get(`/api/v1/issue/findByProjectId`, {
-        params: { projectId }
-      });
-      setIssues(response.data.data);
+      fetchIssues();
     } catch (error) {
       console.error('Error deleting issue:', error);
     }
@@ -127,6 +128,23 @@ const IssueList = () => {
     navigate(`/project/${projectId}/issue/${issueId}`);
   };
 
+  const handleSearchChange = (e) => {
+    setSearchName(e.target.value);
+    fetchIssues(e.target.value);
+  };
+
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewIssue({ ...newIssue, [name]: value });
+    if (currentIssue) {
+      setCurrentIssue({ ...currentIssue, [name]: value });
+    }
+  };
+
   return (
     <Container fluid>
       <CustomAppBar />
@@ -136,6 +154,15 @@ const IssueList = () => {
         </Col>
         <Col xs={12} md={10} className='content-style'>
           <h2>Issue List</h2>
+          <div>
+            <InputGroup className="mb-3">
+              <FormControl
+                placeholder="Search by issue name"
+                value={searchName}
+                onChange={handleSearchChange}
+              />
+            </InputGroup>
+          </div>
           <Row>
             {issues.map((issue) => (
               <Col key={issue.id} xs={12} md={6} lg={4} className="mb-3">
@@ -165,6 +192,14 @@ const IssueList = () => {
               )}
             </Col>
           </Row>
+          {!isSearching && (
+            <Pagination>
+              <Pagination.Prev onClick={() => handlePageChange(page - 1)} disabled={page === 0} />
+              <Pagination.Item active>{page + 1}</Pagination.Item>
+              <Pagination.Next onClick={() => handlePageChange(page + 1)} disabled={page === totalPages - 1} />
+            </Pagination>
+          )}
+
           <Modal show={showForm} onHide={handleCloseForm}>
             <Modal.Header closeButton>
               <Modal.Title>{currentIssue ? 'Edit Issue' : 'Add New Issue'}</Modal.Title>
@@ -234,7 +269,7 @@ const IssueList = () => {
             </Modal.Body>
             <Modal.Footer>
               <Button variant="success" onClick={handleFormSubmit}>
-                Add Issue
+                {currentIssue ? 'Update Issue' : 'Add Issue'}
               </Button>
               <Button variant="secondary" onClick={handleCloseForm}>
                 Cancel
