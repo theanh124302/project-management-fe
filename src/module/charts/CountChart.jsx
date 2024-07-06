@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../AxiosInstance';
+import { ResponsiveContainer } from 'recharts';
 import { Card } from 'react-bootstrap';
 
 const CountChart = ({ projectId }) => {
@@ -43,15 +44,17 @@ const CountChart = ({ projectId }) => {
   return (
     <Card>
       <Card.Body>
-        <h5>Project Counts</h5>
-        <ul>
-          <li>APIs: {counts.apis}</li>
-          <li>Tasks: {counts.tasks}</li>
-          <li>Issues: {counts.issues}</li>
-          <li>Database Tables: {counts.databaseTables}</li>
-          <li>Environments: {counts.environments}</li>
-          <li>Files: {counts.files}</li>
-        </ul>
+        <ResponsiveContainer width="100%" height={266}>
+            <h5>Project Counts</h5>
+            <ul>
+            <li>APIs: {counts.apis}</li>
+            <li>Tasks: {counts.tasks}</li>
+            <li>Issues: {counts.issues}</li>
+            <li>Database Tables: {counts.databaseTables}</li>
+            <li>Environments: {counts.environments}</li>
+            <li>Files: {counts.files}</li>
+            </ul>
+        </ResponsiveContainer>
       </Card.Body>
     </Card>
   );

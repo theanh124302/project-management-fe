@@ -36,6 +36,7 @@ const MyPieChart = ({ projectId }) => {
     <Card>
       <Card.Body>
         <ResponsiveContainer width="100%" height={266}>
+          <h5>Task Status</h5>
             <PieChart>
               <Pie
                 data={data}
