@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import axiosInstance from '../AxiosInstance';
 import { useParams } from 'react-router-dom';
 import Paper from '@mui/material/Paper';
@@ -39,8 +38,8 @@ const Schedule = () => {
         endDate: event.endDate,
         title: event.name,
         status: event.status,
-        description: event.description,  // Add description
-        priority: event.priority  // Add priority
+        description: event.description,
+        priority: event.priority
       }));
       setAppointments(formattedEvents);
     } catch (error) {

@@ -12,6 +12,18 @@ body, html {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s ease-in-out;
   }
+
+  .dashboard-card-style {
+    position: relative;
+    margin: 25px;
+    border: 1px solid #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+    font-size: 70px;
+    text-align: center;
+    min-height: 210px;
+  }
   
   .card-style:hover {
     transform: translateY(-5px);

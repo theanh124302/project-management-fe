@@ -33,6 +33,7 @@ const DueDateTaskBarChart = () => {
   return (
     <Card>
       <Card.Body>
+        <h5>Task Due</h5>
         <ButtonGroup className="mb-3" style={{ height: '30px' }}>
           <Button
             variant={filter === 'day' ? 'success' : 'secondary'}

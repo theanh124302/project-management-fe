@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../AxiosInstance';
 import { ResponsiveContainer } from 'recharts';
-import { Card } from 'react-bootstrap';
+import { Col, Card, Row } from 'react-bootstrap';
+import '../../public/css/Styles.css';
 
 const CountChart = ({ projectId }) => {
   const [counts, setCounts] = useState({
@@ -45,15 +46,26 @@ const CountChart = ({ projectId }) => {
     <Card>
       <Card.Body>
         <ResponsiveContainer width="100%" height={266}>
-            <h5>Project Counts</h5>
-            <ul>
-            <li>APIs: {counts.apis}</li>
-            <li>Tasks: {counts.tasks}</li>
-            <li>Issues: {counts.issues}</li>
-            <li>Database Tables: {counts.databaseTables}</li>
-            <li>Environments: {counts.environments}</li>
-            <li>Files: {counts.files}</li>
-            </ul>
+        <Row>
+            <Col md={4}>
+                <Card className='dashboard-card-style'>
+                    <Card.Title><strong>APIs</strong></Card.Title>
+                    <Card.Body><strong>{counts.apis}</strong></Card.Body>
+                </Card>
+            </Col>
+            <Col md={4}>
+                <Card className='dashboard-card-style'>
+                    <Card.Title><strong>Tasks</strong></Card.Title>
+                    <Card.Body><strong>{counts.tasks}</strong></Card.Body>
+                </Card>
+            </Col>
+            <Col md={4}>
+                <Card className='dashboard-card-style'>
+                    <Card.Title><strong>Issues</strong></Card.Title>
+                    <Card.Body><strong>{counts.issues}</strong></Card.Body>
+                </Card>
+            </Col>
+        </Row>
         </ResponsiveContainer>
       </Card.Body>
     </Card>
