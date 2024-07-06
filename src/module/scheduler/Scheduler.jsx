@@ -38,6 +38,7 @@ const Schedule = () => {
         startDate: event.startDate,
         endDate: event.endDate,
         title: event.name,
+        status: event.status,
         description: event.description,  // Add description
         priority: event.priority  // Add priority
       }));
@@ -75,13 +76,25 @@ const Schedule = () => {
   const currentDate = new Date().toISOString().split('T')[0];
 
   const CustomAppointment = ({ data, ...restProps }) => {
-    let backgroundColor = '#FFA726'; // Default color
-    if (data.priority === 'High') {
-      backgroundColor = '#EF5350'; // Red
-    } else if (data.priority === 'Medium') {
-      backgroundColor = '#FFEE58'; // Yellow
-    } else if (data.priority === 'Low') {
-      backgroundColor = '#66BB6A'; // Green
+    let backgroundColor = '#FFA726';
+    if (data.status === 'CANCELLED') {
+      backgroundColor = '#dc3545';
+    } else if (data.status === 'NOT_STARTED') {
+      backgroundColor = '#6c757d';
+    } else if (data.status === 'IN_PROGRESS') {
+      backgroundColor = '#0dcaf0';
+    }
+    else if (data.status === 'COMPLETED') {
+      backgroundColor = '#198754';
+    }
+    else if (data.status === 'ON_HOLD') {
+      backgroundColor = '#ffc107';
+    }
+    else if (data.status === 'PENDING') {
+      backgroundColor = '#6c757d';
+    }
+    else if (data.status === 'BLOCKED') {
+      backgroundColor = '#212529';
     }
     return (
       <Appointments.Appointment
@@ -125,6 +138,7 @@ const Schedule = () => {
         <Modal.Body>
           <p><strong>Name:</strong> {currentEvent.title}</p>
           <p><strong>Description:</strong> {currentEvent.description}</p>
+          <p><strong>Status:</strong>{currentEvent.status}</p>
           <p><strong>Priority:</strong> {currentEvent.priority}</p>
           <p><strong>Start Date:</strong> {formatDateTime(currentEvent.startDate)}</p>
           <p><strong>End Date:</strong> {formatDateTime(currentEvent.endDate)}</p>
