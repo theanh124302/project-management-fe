@@ -1,6 +1,6 @@
 // src/components/charts/DueDateTaskBarChart.jsx
 import React, { useEffect, useState } from 'react';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, CartesianGrid } from 'recharts';
+import {LineChart,Line, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer  } from 'recharts';
 import axios from 'axios';
 import axiosInstance from '../AxiosInstance';
 import { useParams } from 'react-router-dom';
@@ -34,28 +34,28 @@ const DueDateTaskBarChart = () => {
   return (
     <Card>
       <Card.Body>
-        <Card.Title>Due Date Task Distribution</Card.Title>
-        <ButtonGroup className="mb-3">
-          <Button
-            variant={filter === 'day' ? 'success' : 'secondary'}
-            onClick={() => handleFilterChange('day')}
-          >
-            By Day
-          </Button>
-          <Button
-            variant={filter === 'month' ? 'success' : 'secondary'}
-            onClick={() => handleFilterChange('month')}
-          >
-            By Month
-          </Button>
-        </ButtonGroup>
-        <BarChart width={1100} height={500} data={data}>
-          <XAxis dataKey="number" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Bar dataKey="value" fill="#8884d8" />
-        </BarChart>
+        <ResponsiveContainer width="100%" height={200}>
+          <ButtonGroup className="mb-3">
+            <Button
+              variant={filter === 'day' ? 'success' : 'secondary'}
+              onClick={() => handleFilterChange('day')}
+            >
+              By Day
+            </Button>
+            <Button
+              variant={filter === 'month' ? 'success' : 'secondary'}
+              onClick={() => handleFilterChange('month')}
+            >
+              By Month
+            </Button>
+          </ButtonGroup>
+
+          <LineChart data={data}>
+            <Tooltip />
+            <Legend />
+            <Line type="monotone" dataKey="value" stroke="#8884d8" strokeWidth={3} />
+          </LineChart>
+        </ResponsiveContainer>
       </Card.Body>
     </Card>
   );

@@ -1,17 +1,17 @@
 // src/components/charts/MyPieChart.jsx
 import React, { useEffect, useState } from 'react';
-import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer  } from 'recharts';
 import axiosInstance from '../AxiosInstance';
 import { Card } from 'react-bootstrap';
 
 const COLOR_MAP = {
-  CANCELLED: '#dc3545', // 'danger'
-  NOT_STARTED: '#6c757d', // 'secondary'
-  IN_PROGRESS: '#17a2b8', // 'info'
-  COMPLETED: '#28a745', // 'success'
-  BLOCKED: '#343a40', // 'dark'
-  ON_HOLD: '#ffc107', // 'warning'
-  PENDING: '#007bff', // 'primary'
+  CANCELLED: '#dc3545',
+  NOT_STARTED: '#6c757d',
+  IN_PROGRESS: '#17a2b8',
+  COMPLETED: '#28a745',
+  BLOCKED: '#343a40',
+  ON_HOLD: '#ffc107',
+  PENDING: '#007bff',
 };
 
 const MyPieChart = ({ projectId }) => {
@@ -35,25 +35,27 @@ const MyPieChart = ({ projectId }) => {
   return (
     <Card>
       <Card.Body>
-        <Card.Title>Task Status Distribution</Card.Title>
-        <PieChart width={400} height={400}>
-          <Pie
-            data={data}
-            cx={200}
-            cy={200}
-            labelLine={false}
-            outerRadius={80}
-            fill="#8884d8"
-            dataKey="value"
-            nameKey="name"
-          >
-            {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={COLOR_MAP[entry.name]} />
-            ))}
-          </Pie>
-          <Tooltip formatter={(value, name, props) => `${name}: ${value}`} />
-          <Legend />
-        </PieChart>
+        <ResponsiveContainer width="100%" height={200}>
+            <PieChart>
+              <Pie
+                data={data}
+                cx="50%"
+                cy="50%"
+                labelLine={true}
+                innerRadius="50%"
+                outerRadius="70%"
+                fill="#8884d8"
+                dataKey="value"
+                nameKey="name"
+              >
+                {data.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLOR_MAP[entry.name]} />
+                ))}
+              </Pie>
+              <Tooltip formatter={(value) => `${value}`} />
+            </PieChart>
+          </ResponsiveContainer>
+
       </Card.Body>
     </Card>
   );
