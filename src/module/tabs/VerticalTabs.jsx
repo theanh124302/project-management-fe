@@ -29,10 +29,6 @@ const VerticalTabs = () => {
     navigate(path);
   };
 
-  const handleBackClick = () => {
-    navigate(`/projectList?username=${username}`);
-  };
-
   return (
     <div className="vertical-tabs d-flex flex-column p-3">
       {/* <button className="btn btn-light mb-3" onClick={handleBackClick}>

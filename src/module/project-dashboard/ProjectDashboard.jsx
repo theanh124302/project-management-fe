@@ -20,14 +20,16 @@ const Dashboard = () => {
           <VerticalTabs projectId={projectId} />
         </Col>
         <Col xs={12} md={10} className='dashboard-style' style={{backgroundColor:'#f3f4f7'}}>
-        <Row>
-          <Col xs={12} md={4}>
-            <MyPieChart projectId={projectId} />
-          </Col>
-          <Col xs={12} md={4}>
-            <DueDateTaskBarChart projectId={projectId} />
-          </Col>
-        </Row>
+          <Row>
+            <Col xs={12} md={6} className="ms-auto">
+              <MyPieChart projectId={projectId} />
+            </Col>
+          </Row>
+          <Row>
+            <Col xs={12} md={12}>
+              <DueDateTaskBarChart projectId={projectId} />
+            </Col>
+          </Row>
         </Col>
       </Row>
     </Container>

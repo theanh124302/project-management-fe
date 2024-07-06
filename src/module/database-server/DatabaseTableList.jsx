@@ -23,7 +23,8 @@ const DatabaseTableList = () => {
   const [newTable, setNewTable] = useState({
     name: '',
     description: '',
-    databaseServerId: serverId
+    databaseServerId: serverId,
+    projectId: projectId
   });
   const [editServer, setEditServer] = useState({
     name: '',
@@ -75,7 +76,7 @@ const DatabaseTableList = () => {
         ...newTable
       });
       setShowForm(false);
-      setNewTable({ name: '', description: '', databaseServerId: serverId });
+      setNewTable({ name: '', description: '', databaseServerId: serverId, projectId: projectId });
       fetchTables();
     } catch (error) {
       console.error('Error adding table:', error);
