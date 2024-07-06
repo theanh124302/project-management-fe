@@ -13,13 +13,13 @@ const Dashboard = () => {
   const { projectId } = useParams();
 
   return (
-    <Container fluid>
+    <Container fluid >
       <CustomAppBar />
       <Row>
         <Col xs={12} md={2}>
           <VerticalTabs projectId={projectId} />
         </Col>
-        <Col xs={12} md={10} className='content-style'>
+        <Col xs={12} md={10} className='dashboard-style' style={{backgroundColor:'#f3f4f7'}}>
         <Row>
           <Col xs={12} md={4}>
             <MyPieChart projectId={projectId} />
@@ -28,7 +28,6 @@ const Dashboard = () => {
             <DueDateTaskBarChart projectId={projectId} />
           </Col>
         </Row>
-
         </Col>
       </Row>
     </Container>

@@ -1,7 +1,6 @@
 // src/components/charts/DueDateTaskBarChart.jsx
 import React, { useEffect, useState } from 'react';
-import {LineChart,Line, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer  } from 'recharts';
-import axios from 'axios';
+import { LineChart, Line, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import axiosInstance from '../AxiosInstance';
 import { useParams } from 'react-router-dom';
 import { Card, ButtonGroup, Button } from 'react-bootstrap';
@@ -34,22 +33,24 @@ const DueDateTaskBarChart = () => {
   return (
     <Card>
       <Card.Body>
-        <ResponsiveContainer width="100%" height={200}>
-          <ButtonGroup className="mb-3">
-            <Button
-              variant={filter === 'day' ? 'success' : 'secondary'}
-              onClick={() => handleFilterChange('day')}
-            >
-              By Day
-            </Button>
-            <Button
-              variant={filter === 'month' ? 'success' : 'secondary'}
-              onClick={() => handleFilterChange('month')}
-            >
-              By Month
-            </Button>
-          </ButtonGroup>
+        <ButtonGroup className="mb-3" style={{ height: '30px' }}>
+          <Button
+            variant={filter === 'day' ? 'success' : 'secondary'}
+            onClick={() => handleFilterChange('day')}
+            style={{ padding: '5px 10px', fontSize: '12px' }}
+          >
+            Day
+          </Button>
+          <Button
+            variant={filter === 'month' ? 'success' : 'secondary'}
+            onClick={() => handleFilterChange('month')}
+            style={{ padding: '5px 10px', fontSize: '12px' }}
+          >
+            Month
+          </Button>
+        </ButtonGroup>
 
+        <ResponsiveContainer width="100%" height={220}>
           <LineChart data={data}>
             <Tooltip />
             <Legend />
