@@ -110,7 +110,7 @@ const DatabaseFieldList = () => {
                   <th>Field Name</th>
                   <th>Type</th>
                   <th>Description</th>
-                  <th>Value</th>
+                  <th>Sample</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -166,10 +166,10 @@ const DatabaseFieldList = () => {
                     />
                   </Form.Group>
                   <Form.Group controlId="formFieldSample" className="mb-3">
-                    <Form.Label>Value</Form.Label>
+                    <Form.Label>Sample</Form.Label>
                     <Form.Control
                       type="text"
-                      placeholder="Enter field value data"
+                      placeholder="Enter field sample data"
                       value={newField.sample}
                       onChange={(e) => setNewField({ ...newField, sample: e.target.value })}
                     />

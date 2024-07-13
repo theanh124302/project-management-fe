@@ -32,7 +32,7 @@ const DesignDocs = () => {
   const [newImpact, setNewImpact] = useState({
     impactApiId: '',
     apiImpactName: '',
-    status: '',
+    status: 'safe',
     impactDescription: '',
     impactPriority: '',
     solution: ''
@@ -410,14 +410,14 @@ const DesignDocs = () => {
                       <Card.Body>
                         <Card.Title>{impact.apiImpactName}</Card.Title>
                         <Card.Text>Status: {impact.status}</Card.Text>
-                        <Card.Text>Priority: {impact.impactPriority}</Card.Text>
+                        {/* <Card.Text>Priority: {impact.impactPriority}</Card.Text> */}
                         {isEditable && (
                         <Button variant="outline-success" size="sm" className="me-2" onClick={() => handleEditImpactClick(impact)}>
                           Edit
                         </Button>
                         )}
                         {isEditable && (
-                        <Button variant="outline-danger" size="sm" onClick={() => handleDeleteImpact(impact.id)}>
+                        <Button variant="outline-danger" size="sm" className="me-2" onClick={() => handleDeleteImpact(impact.id)}>
                           Delete
                         </Button>
                         )}
@@ -431,7 +431,7 @@ const DesignDocs = () => {
               </Row>
               {isEditable && (
               <Button variant="success" onClick={() => setShowImpactForm(true)}>
-                Add Impact
+                Add Related
               </Button>
               )}
               <Card.Title className="mt-4">Related Database Tables</Card.Title>
@@ -448,7 +448,7 @@ const DesignDocs = () => {
                         </Button>
                         )}
                         {isEditable && (
-                        <Button variant="outline-danger" size="sm" onClick={() => handleDeleteTable(table.id)}>
+                        <Button variant="outline-danger" size="sm" className="me-2" onClick={() => handleDeleteTable(table.id)}>
                           Delete
                         </Button>
                         )}
@@ -516,7 +516,7 @@ const DesignDocs = () => {
                       />
                     </Form.Group> */}
                     <Form.Group controlId="formApiImpactName" className="mb-3">
-                      <Form.Label>Impact API Name</Form.Label>
+                      <Form.Label>Related API Name</Form.Label>
                       <Form.Control
                         type="text"
                         name="apiImpactName"
@@ -537,7 +537,7 @@ const DesignDocs = () => {
                       </Form.Control>
                     </Form.Group>
                     <Form.Group controlId="formImpactDescription" className="mb-3">
-                      <Form.Label>Impact Description</Form.Label>
+                      <Form.Label>Related Description</Form.Label>
                       <Form.Control
                         as="textarea"
                         rows={5}
@@ -546,8 +546,8 @@ const DesignDocs = () => {
                         onChange={handleImpactInputChange}
                       />
                     </Form.Group>
-                    <Form.Group controlId="formImpactPriority" className="mb-3">
-                      <Form.Label>Impact Priority</Form.Label>
+                    {/* <Form.Group controlId="formImpactPriority" className="mb-3">
+                      <Form.Label>Related Priority</Form.Label>
                       <Form.Control
                         as="select"
                         name="impactPriority"
@@ -559,9 +559,9 @@ const DesignDocs = () => {
                         <option value="high">High</option>
                         <option value="critical">Critical</option>
                       </Form.Control>
-                    </Form.Group>
+                    </Form.Group> */}
                     <Form.Group controlId="formSolution" className="mb-3">
-                      <Form.Label>Solution</Form.Label>
+                      <Form.Label>Issue Description / Solution</Form.Label>
                       <Form.Control
                         as="textarea"
                         rows={5}
@@ -618,16 +618,15 @@ const DesignDocs = () => {
               </Modal>
               <Modal show={showImpactDetail} onHide={handleCloseImpactDetail}>
                 <Modal.Header closeButton>
-                  <Modal.Title>Impact Details</Modal.Title>
+                  <Modal.Title>Related Details</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                   {currentImpact && (
                     <div>
-                      <p><strong>API Impact Name:</strong> {currentImpact.apiImpactName}</p>
+                      <p><strong>API Name:</strong> {currentImpact.apiImpactName}</p>
                       <p><strong>Status:</strong> {currentImpact.status}</p>
-                      <p><strong>Impact Priority:</strong> {currentImpact.impactPriority}</p>
-                      <p><strong>Impact Description:</strong> {currentImpact.impactDescription}</p>
-                      <p><strong>Solution:</strong> {currentImpact.solution}</p>
+                      <p><strong>Related Description:</strong> {currentImpact.impactDescription}</p>
+                      <p><strong>Issue Description / Solution:</strong> {currentImpact.solution}</p>
                     </div>
                   )}
                 </Modal.Body>

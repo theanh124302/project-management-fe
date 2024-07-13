@@ -99,7 +99,7 @@ const ApiList = () => {
                       <strong>Method:</strong> {api.method}
                     </Card.Text>
                     <Card.Text>
-                      <strong>URL:</strong> {api.url}
+                      <strong>Path:</strong> {api.url}
                     </Card.Text>
                   </Card.Body>
                 </Card>

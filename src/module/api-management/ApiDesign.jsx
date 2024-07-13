@@ -590,8 +590,17 @@ const ApiDesign = () => {
               <ListGroup className="mb-3">
                 {designResponses.map((designResponse) => (
                   <ListGroup.Item key={designResponse.id} className="d-flex justify-content-between align-items-center">
-                    <div>
-                      <strong>{designResponse.description}</strong>: {designResponse.value}
+                    <div className="flex-grow-1">
+                      <Form.Group controlId={`formDesignResponse${designResponse.id}`} className="mb-3">
+                        <Form.Label><strong>{designResponse.description}</strong></Form.Label>
+                        <Form.Control
+                          as="textarea"
+                          rows={3}
+                          name={`designResponse${designResponse.id}`}
+                          value={designResponse.value}
+                          readOnly
+                        />
+                      </Form.Group>
                     </div>
                     {isEditable && (
                     <div>

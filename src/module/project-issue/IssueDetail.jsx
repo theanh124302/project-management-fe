@@ -207,7 +207,7 @@ const IssueDetail = () => {
                 )}
               </Card.Text>
               <Card.Text><strong>Priority:</strong> {issue.priority}</Card.Text>
-              <Card.Text><strong>Created By:</strong> {issue.createdBy}</Card.Text>
+{/*              <Card.Text><strong>Created By:</strong> {issue.createdBy}</Card.Text> */}
               <Card.Text><strong>Created At:</strong> {formatDate(issue.createdAt)}</Card.Text>
               <Card.Text><strong>Solved At:</strong> {issue.solvedAt ? formatDate(issue.solvedAt) : 'N/A'}</Card.Text>
               {projectLeaderId === parseInt(userId, 10) && (
