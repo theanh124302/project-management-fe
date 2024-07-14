@@ -11,7 +11,7 @@ const ApiTest = () => {
   const { projectId, folderId, apiId } = useParams();
   const [project, setProject] = useState(null);
   const [isEditable, setEditable] = useState(false);
-  const [apiDetails, setApiDetails] = useState({ name: '', method: '', url: '', installationGuide: '' });
+  const [apiDetails, setApiDetails] = useState({ name: '', method: '', url: '', installationGuide: '', testCases: '', testScenarios: '', testScripts: '' });
   const [showTaskForm, setShowTaskForm] = useState(false);
   const [newTask, setNewTask] = useState({
     name: '',
@@ -41,7 +41,11 @@ const ApiTest = () => {
           name: data.name,
           method: data.method,
           url: data.url,
-          installationGuide: data.installationGuide || ''
+          installationGuide: data.installationGuide || '',
+          testCases: data.testCases || '',
+          testScenarios: data.testScenarios || '',
+          testScripts: data.testScripts || ''
+
         });
       } catch (error) {
         console.error('Error fetching API details:', error);
@@ -142,10 +146,13 @@ const ApiTest = () => {
 
   const handleUpdateApi = async () => {
     try {
-      await axiosInstance.post(`/api/v1/api/updateInstallationGuide`, null, {
+      await axiosInstance.post(`/api/v1/api/updateTestCasesAndTestScenariosAndTestScriptsAndInstallationGuide`, null, {
         params: {
           id: apiId,
-          installationGuide: apiDetails.installationGuide
+          installationGuide: apiDetails.installationGuide,
+          testCases: apiDetails.testCases,
+          testScenarios: apiDetails.testScenarios,
+          testScripts: apiDetails.testScripts
         }
       });
       alert('Installation Guide updated successfully');
@@ -176,10 +183,40 @@ const ApiTest = () => {
                     onChange={handleInputChange}
                   />
                 </Form.Group>
+                <Form.Group controlId="formTestCases" className="mb-3">
+                  <Form.Label>Test Cases</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    rows={3}
+                    name="testCases"
+                    value={apiDetails.testCases}
+                    onChange={handleInputChange}
+                  />
+                </Form.Group>
+                <Form.Group controlId="formTestScenarios" className="mb-3">
+                  <Form.Label>Test Scenarios</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    rows={3}
+                    name="testScenarios"
+                    value={apiDetails.testScenarios}
+                    onChange={handleInputChange}
+                  />
+                </Form.Group>
+                <Form.Group controlId="formTestScripts" className="mb-3">
+                  <Form.Label>Test Scripts</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    rows={3}
+                    name="testScripts"
+                    value={apiDetails.testScripts}
+                    onChange={handleInputChange}
+                  />
+                </Form.Group>
               </Form>
               {isLeader && (
                 <Button variant="success" onClick={handleUpdateApi} className="me-2">
-                  Update Installation Guide
+                  Update
                 </Button>
               )}
               <Row className="mt-4">
