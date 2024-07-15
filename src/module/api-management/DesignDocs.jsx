@@ -14,7 +14,8 @@ const DesignDocs = () => {
     useCaseDiagram: '',
     sequenceDiagram: '',
     activityDiagram: '',
-    classDiagram: ''
+    classDiagram: '',
+    solutionDocument: ''
   });
   const [project, setProject] = useState(null);
   const [isEditable, setEditable] = useState(false);
@@ -49,7 +50,8 @@ const DesignDocs = () => {
           useCaseDiagram: data.useCaseDiagram,
           sequenceDiagram: data.sequenceDiagram,
           activityDiagram: data.activityDiagram,
-          classDiagram: data.classDiagram
+          classDiagram: data.classDiagram,
+          solutionDocument: data.solutionDocument
         });
       } catch (error) {
         console.error('Error fetching API details:', error);
@@ -139,7 +141,7 @@ const DesignDocs = () => {
 
   const handleSubmit = async () => {
     try {
-      await axiosInstance.post(`/api/v1/api/updateUseCaseDiagramAndSequenceDiagramAndActivityDiagramAndClassDiagram`, null, {
+      await axiosInstance.post(`/api/v1/api/updateUseCaseDiagramAndSequenceDiagramAndActivityDiagramAndClassDiagramAndSolutionDocument`, null, {
         params: { id: apiId, ...formData }
       });
       navigate(`/project/${projectId}/folder/${folderId}/api/${apiId}/design`);
@@ -396,6 +398,15 @@ const DesignDocs = () => {
                     onChange={handleInputChange}
                   />
                 </Form.Group>
+                <Form.Group controlId="formSolutionDocument" className="mb-3">
+                  <Form.Label>Solution Document</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="solutionDocument"
+                    value={formData.solutionDocument}
+                    onChange={handleInputChange}
+                  />
+                </Form.Group>
               </Form>
               {isEditable && (
               <Button variant="success" onClick={handleSubmit}>
@@ -410,7 +421,6 @@ const DesignDocs = () => {
                       <Card.Body>
                         <Card.Title>{impact.apiImpactName}</Card.Title>
                         <Card.Text>Status: {impact.status}</Card.Text>
-                        {/* <Card.Text>Priority: {impact.impactPriority}</Card.Text> */}
                         {isEditable && (
                         <Button variant="outline-success" size="sm" className="me-2" onClick={() => handleEditImpactClick(impact)}>
                           Edit
