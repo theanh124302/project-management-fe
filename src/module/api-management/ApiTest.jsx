@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../AxiosInstance';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Card, Button, Form, Modal } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Form, Modal, ListGroup, Dropdown } from 'react-bootstrap';
 import CustomAppBar from '../navbar/CustomAppBar';
 import VerticalTabs from '../tabs/VerticalTabs';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -11,7 +11,10 @@ const ApiTest = () => {
   const { projectId, folderId, apiId } = useParams();
   const [project, setProject] = useState(null);
   const [isEditable, setEditable] = useState(false);
-  const [apiDetails, setApiDetails] = useState({ name: '', method: '', url: '', installationGuide: '', testCases: '', testScenarios: '', testScripts: '' });
+  const [apiDetails, setApiDetails] = useState({ name: '', method: '', url: '', testScenarios: '', testScripts: '' });
+  const [testCases, setTestCases] = useState([]);
+  const [showTestCaseForm, setShowTestCaseForm] = useState(false);
+  const [newTestCase, setNewTestCase] = useState({ name: '', description: '', status: 'Pending' });
   const [showTaskForm, setShowTaskForm] = useState(false);
   const [newTask, setNewTask] = useState({
     name: '',
@@ -41,28 +44,34 @@ const ApiTest = () => {
           name: data.name,
           method: data.method,
           url: data.url,
-          installationGuide: data.installationGuide || '',
-          testCases: data.testCases || '',
           testScenarios: data.testScenarios || '',
           testScripts: data.testScripts || ''
-
         });
       } catch (error) {
         console.error('Error fetching API details:', error);
       }
     };
 
+    const fetchTestCases = async () => {
+      try {
+        const response = await axiosInstance.get(`/api/v1/testCase/findByApiId?apiId=${apiId}`);
+        setTestCases(response.data.data);
+      } catch (error) {
+        console.error('Error fetching test cases:', error);
+      }
+    };
+
     fetchApiDetails();
+    fetchTestCases();
 
     const fetchProjectDetails = async () => {
       try {
         const response = await axiosInstance.get(`/api/v1/project/findById?id=${projectId}`);
         setProject(response.data.data);
-        
       } catch (error) {
         console.error('Error fetching project details:', error);
       }
-    }
+    };
     fetchProjectDetails();
 
     const fetchEditable = async () => {
@@ -72,12 +81,11 @@ const ApiTest = () => {
       } catch (error) {
         console.error('Error fetching editable:', error);
       }
-    }
+    };
     fetchEditable();
   }, [apiId, projectId, userId]);
 
   const isLeader = project && project.leaderId === parseInt(userId, 10);
-
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -149,16 +157,46 @@ const ApiTest = () => {
       await axiosInstance.post(`/api/v1/api/updateTestCasesAndTestScenariosAndTestScriptsAndInstallationGuide`, null, {
         params: {
           id: apiId,
-          installationGuide: apiDetails.installationGuide,
-          testCases: apiDetails.testCases,
           testScenarios: apiDetails.testScenarios,
           testScripts: apiDetails.testScripts
         }
       });
-      alert('Installation Guide updated successfully');
+      alert('API details updated successfully');
     } catch (error) {
-      console.error('Error updating Installation Guide:', error);
+      console.error('Error updating API details:', error);
     }
+  };
+
+  const handleDeleteTestCase = async (testCaseId) => {
+    try {
+      await axiosInstance.delete(`/api/v1/testCase/delete`, { params: { id: testCaseId } });
+      const response = await axiosInstance.get(`/api/v1/testCase/findByApiId?apiId=${apiId}`);
+      setTestCases(response.data.data);
+    } catch (error) {
+      console.error('Error deleting test case:', error);
+    }
+  };
+
+  const handleAddTestCaseInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewTestCase({ ...newTestCase, [name]: value });
+  };
+
+  const handleAddTestCase = async () => {
+    try {
+      await axiosInstance.post(`/api/v1/testCase/create`, { ...newTestCase, apiId });
+      setShowTestCaseForm(false);
+      setNewTestCase({ name: '', description: '', status: 'Pending' });
+      const response = await axiosInstance.get(`/api/v1/testCase/findByApiId?apiId=${apiId}`);
+      setTestCases(response.data.data);
+    } catch (error) {
+      console.error('Error adding test case:', error);
+    }
+  };
+
+  const handleCloseTestCaseForm = () => {
+    setShowTestCaseForm(false);
+    setNewTestCase({ name: '', description: '', status: 'Pending' });
   };
 
   return (
@@ -173,16 +211,6 @@ const ApiTest = () => {
             <Card.Body>
               <Card.Title>Test: {apiDetails.name}</Card.Title>
               <Form>
-                <Form.Group controlId="formTestCases" className="mb-3">
-                  <Form.Label>Test Cases</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={3}
-                    name="testCases"
-                    value={apiDetails.testCases}
-                    onChange={handleInputChange}
-                  />
-                </Form.Group>
                 <Form.Group controlId="formTestScenarios" className="mb-3">
                   <Form.Label>Test Scenarios</Form.Label>
                   <Form.Control
@@ -204,12 +232,32 @@ const ApiTest = () => {
                   />
                 </Form.Group>
               </Form>
-              <h3 className="mt-4"></h3>
               {isLeader && (
                 <Button variant="success" onClick={handleUpdateApi} className="me-2">
                   Update
                 </Button>
               )}
+              <h3 className="mt-4">Test Cases</h3>
+              <ListGroup className="mb-3">
+                {testCases.map((testCase) => (
+                  <ListGroup.Item key={testCase.id} className="d-flex justify-content-between align-items-center">
+                    <div>
+                      <strong>{testCase.name}</strong>
+                    </div>
+                    <div>
+                      <strong>{testCase.status}</strong>
+                    </div>
+                    <div>
+                      <Button variant="outline-danger" size="sm" onClick={() => handleDeleteTestCase(testCase.id)}>
+                        Delete
+                      </Button>
+                    </div>
+                  </ListGroup.Item>
+                ))}
+              </ListGroup>
+              <Button variant="secondary" onClick={() => setShowTestCaseForm(true)}>
+                Add Test Case
+              </Button>
               <Row className="mt-4">
                 {isEditable && (
                   <Col xs="auto">
@@ -380,6 +428,33 @@ const ApiTest = () => {
           <Button variant="danger" onClick={handleCloseIssueForm}>
             Cancel
           </Button>
+        </Modal.Footer>
+      </Modal>
+      <Modal show={showTestCaseForm} onHide={handleCloseTestCaseForm}>
+        <Modal.Header closeButton>
+          <Modal.Title>Add New Test Case</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group controlId="formTestCaseName" className="mb-3">
+              <Form.Label>Test Case Name</Form.Label>
+              <Form.Control
+                type="text"
+                name="name"
+                value={newTestCase.name}
+                onChange={handleAddTestCaseInputChange}
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="success" onClick={handleAddTestCase}>
+            Add Test Case
+          </Button>
+          <Button variant="secondary" onClick={handleCloseTestCaseForm}>
+            Cancel
+          </Button>
+
         </Modal.Footer>
       </Modal>
     </Container>
