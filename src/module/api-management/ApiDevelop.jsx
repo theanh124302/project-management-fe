@@ -14,7 +14,7 @@ const ApiDevelop = () => {
   const { projectId, folderId, apiId } = useParams();
   const [project, setProject] = useState(null);
   const [isEditable, setEditable] = useState(false);
-  const [apiDetails, setApiDetails] = useState({ method: '', url: '', token: '', header: '', parameters: '', bodyJson: '', environmentId: 0 });
+  const [apiDetails, setApiDetails] = useState({ method: '', url: '', token: '', header: '', parameters: '', bodyJson: '', environmentId: 0, installationGuide: '' });
   const [environments, setEnvironments] = useState([]);
   const [environmentName, setEnvironmentName] = useState('None');
   const [response, setResponse] = useState('');
@@ -22,6 +22,7 @@ const ApiDevelop = () => {
   const [header, setHeader] = useState('');
   const [param, setParam] = useState('');
   const [body, setBody] = useState('');
+  const [installationGuide, setInstallationGuide] = useState('');
   const [showTaskForm, setShowTaskForm] = useState(false);
   const [newTask, setNewTask] = useState({
     name: '',
@@ -47,12 +48,14 @@ const ApiDevelop = () => {
           header: data.header || '',
           parameters: data.parameters || '',
           bodyJson: data.bodyJson || '',
-          environmentId: data.environmentId || 0
+          environmentId: data.environmentId || 0,
+          installationGuide: data.installationGuide || ''
         });
         setToken(data.token || '');
         setHeader(data.header || '');
         setParam(data.parameters || '');
         setBody(data.bodyJson || '');
+        setInstallationGuide(data.installationGuide || '');
         const environmentResponse = await axiosInstance.get(`/api/v1/environment/findById?id=${data.environmentId}`);
         setEnvironmentName(environmentResponse.data.data.name);
       } catch (error) {
@@ -92,8 +95,6 @@ const ApiDevelop = () => {
         console.error('Error fetching environments:', error);
       }
     };
-
-
 
     fetchEnvironments();
   }, [apiId, projectId, userId]);
@@ -183,6 +184,24 @@ const ApiDevelop = () => {
     }
   };
 
+  const handleInstallationGuideChange = (e) => {
+    setInstallationGuide(e.target.value);
+  };
+
+  const handleUpdateInstallationGuide = async () => {
+    try {
+      await axiosInstance.post(`/api/v1/api/updateInstallationGuide`, null, {
+        params: {
+          id: apiId,
+          installationGuide: installationGuide,
+        },
+      });
+      alert('Installation Guide updated successfully');
+    } catch (error) {
+      console.error('Error updating Installation Guide:', error);
+    }
+  };
+
   return (
     <Container fluid>
       <CustomAppBar />
@@ -269,6 +288,23 @@ const ApiDevelop = () => {
                   <pre>{typeof response === 'object' ? JSON.stringify(response, null, 2) : response}</pre>
                 </Card.Body>
               </Card>
+              <h3 className="mt-4"></h3>
+              <Form>
+                <Form.Group controlId="formInstallationGuide" className="mb-3">
+                  <Form.Label>Installation Guide</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    rows={3}
+                    value={installationGuide}
+                    onChange={handleInstallationGuideChange}
+                  />
+                </Form.Group>
+                {isLeader && (
+                  <Button variant="success" onClick={handleUpdateInstallationGuide} className="me-2">
+                    Update Installation Guide
+                  </Button>
+                )}
+              </Form>
               <Row className="mt-4">
                 {isLeader && (
                 <Col xs="auto">

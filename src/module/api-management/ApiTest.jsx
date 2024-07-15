@@ -173,16 +173,6 @@ const ApiTest = () => {
             <Card.Body>
               <Card.Title>Test: {apiDetails.name}</Card.Title>
               <Form>
-                <Form.Group controlId="formInstallationGuide" className="mb-3">
-                  <Form.Label>Installation Guide</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={3}
-                    name="installationGuide"
-                    value={apiDetails.installationGuide}
-                    onChange={handleInputChange}
-                  />
-                </Form.Group>
                 <Form.Group controlId="formTestCases" className="mb-3">
                   <Form.Label>Test Cases</Form.Label>
                   <Form.Control
@@ -214,6 +204,7 @@ const ApiTest = () => {
                   />
                 </Form.Group>
               </Form>
+              <h3 className="mt-4"></h3>
               {isLeader && (
                 <Button variant="success" onClick={handleUpdateApi} className="me-2">
                   Update
