@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../AxiosInstance';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Card, Button, Form, Modal, ListGroup, Badge, Dropdown } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Form, Modal, ListGroup, Dropdown, Badge } from 'react-bootstrap';
 import CustomAppBar from '../navbar/CustomAppBar';
 import VerticalTabs from '../tabs/VerticalTabs';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -267,9 +267,9 @@ const ApiTest = () => {
               <ListGroup className="mb-3">
                 {testCases.map((testCase) => (
                   <ListGroup.Item key={testCase.id} className="d-flex justify-content-between align-items-center" onClick={() => handleTestCaseClick(testCase.id)}>
-                    <div>
-                      <strong>{testCase.name}</strong>
-                    </div>
+                  <div>
+                    <strong>{testCase.name}</strong>
+                  </div>
                     <div>
                       <Badge bg={getStatusVariant(testCase.status)}>{testCase.status}</Badge>
                     </div>
@@ -309,6 +309,42 @@ const ApiTest = () => {
           </Card>
         </Col>
       </Row>
+      <Modal show={selectedTestCase !== null} onHide={() => setSelectedTestCase(null)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Test Case Steps</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <ListGroup>
+            {testCaseSteps.map((step) => (
+              <ListGroup.Item key={step.id}>
+                <div className="d-flex justify-content-between align-items-center">
+                  <Badge bg={getStatusVariant(step.status)}>{step.status}</Badge>
+                  <Dropdown onSelect={(status) => handleUpdateStepStatus(step.id, status)}>
+                    <Dropdown.Toggle variant="outline-secondary" size="sm" id="dropdown-basic">
+                      Update Status
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      <Dropdown.Item eventKey="Pass">Pass</Dropdown.Item>
+                      <Dropdown.Item eventKey="Fail">Fail</Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                </div>
+                <div className="mt-2">
+                  <p><strong>Description:</strong> {step.description}</p>
+                  <p><strong>Expected:</strong> {step.expected}</p>
+                  <p><strong>Actual:</strong> {step.actual}</p>
+                  <p><strong>Note:</strong> {step.note}</p>
+                </div>
+              </ListGroup.Item>
+            ))}
+          </ListGroup>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setSelectedTestCase(null)}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
       <Modal show={showTaskForm} onHide={handleCloseTaskForm}>
         <Modal.Header closeButton>
           <Modal.Title>Create Task</Modal.Title>
@@ -480,39 +516,7 @@ const ApiTest = () => {
           <Button variant="secondary" onClick={handleCloseTestCaseForm}>
             Cancel
           </Button>
-        </Modal.Footer>
-      </Modal>
-      <Modal show={selectedTestCase !== null} onHide={() => setSelectedTestCase(null)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Test Case Steps</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <ListGroup>
-            {testCaseSteps.map((step) => (
-              <ListGroup.Item key={step.id} className="d-flex justify-content-between align-items-center">
-                <div>{step.description}</div>
-                <div>
-                  <Badge bg={getStatusVariant(step.status)}>{step.status}</Badge>
-                </div>
-                <div>
-                  <Dropdown onSelect={(eventKey) => handleUpdateStepStatus(step.id, eventKey)}>
-                    <Dropdown.Toggle variant="secondary" id="dropdown-basic" size="sm">
-                      Update Status
-                    </Dropdown.Toggle>
-                    <Dropdown.Menu>
-                      <Dropdown.Item eventKey="Pass">Pass</Dropdown.Item>
-                      <Dropdown.Item eventKey="Fail">Fail</Dropdown.Item>
-                    </Dropdown.Menu>
-                  </Dropdown>
-                </div>
-              </ListGroup.Item>
-            ))}
-          </ListGroup>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setSelectedTestCase(null)}>
-            Close
-          </Button>
+
         </Modal.Footer>
       </Modal>
     </Container>
