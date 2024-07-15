@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../AxiosInstance';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Card, Button, Form, Modal, ListGroup, Dropdown } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Form, Modal, ListGroup, Badge, Dropdown } from 'react-bootstrap';
 import CustomAppBar from '../navbar/CustomAppBar';
 import VerticalTabs from '../tabs/VerticalTabs';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -13,6 +13,8 @@ const ApiTest = () => {
   const [isEditable, setEditable] = useState(false);
   const [apiDetails, setApiDetails] = useState({ name: '', method: '', url: '', testScenarios: '', testScripts: '' });
   const [testCases, setTestCases] = useState([]);
+  const [selectedTestCase, setSelectedTestCase] = useState(null);
+  const [testCaseSteps, setTestCaseSteps] = useState([]);
   const [showTestCaseForm, setShowTestCaseForm] = useState(false);
   const [newTestCase, setNewTestCase] = useState({ name: '', description: '', status: 'Pending' });
   const [showTaskForm, setShowTaskForm] = useState(false);
@@ -199,6 +201,30 @@ const ApiTest = () => {
     setNewTestCase({ name: '', description: '', status: 'Pending' });
   };
 
+  const handleTestCaseClick = async (testCaseId) => {
+    try {
+      const response = await axiosInstance.get(`/api/v1/testCaseStep/findByTestCaseId?testCaseId=${testCaseId}`);
+      setTestCaseSteps(response.data.data);
+      setSelectedTestCase(testCaseId);
+    } catch (error) {
+      console.error('Error fetching test case steps:', error);
+    }
+  };
+
+  const handleUpdateStepStatus = async (stepId, status) => {
+    try {
+      await axiosInstance.post(`/api/v1/testCaseStep/update`, { id: stepId, status });
+      const response = await axiosInstance.get(`/api/v1/testCaseStep/findByTestCaseId?testCaseId=${selectedTestCase}`);
+      setTestCaseSteps(response.data.data);
+    } catch (error) {
+      console.error('Error updating step status:', error);
+    }
+  };
+
+  const getStatusVariant = (status) => {
+    return status === 'Pass' ? 'success' : 'danger';
+  };
+
   return (
     <Container fluid>
       <CustomAppBar />
@@ -240,12 +266,12 @@ const ApiTest = () => {
               <h3 className="mt-4">Test Cases</h3>
               <ListGroup className="mb-3">
                 {testCases.map((testCase) => (
-                  <ListGroup.Item key={testCase.id} className="d-flex justify-content-between align-items-center">
+                  <ListGroup.Item key={testCase.id} className="d-flex justify-content-between align-items-center" onClick={() => handleTestCaseClick(testCase.id)}>
                     <div>
                       <strong>{testCase.name}</strong>
                     </div>
                     <div>
-                      <strong>{testCase.status}</strong>
+                      <Badge bg={getStatusVariant(testCase.status)}>{testCase.status}</Badge>
                     </div>
                     <div>
                       <Button variant="outline-danger" size="sm" onClick={() => handleDeleteTestCase(testCase.id)}>
@@ -454,7 +480,39 @@ const ApiTest = () => {
           <Button variant="secondary" onClick={handleCloseTestCaseForm}>
             Cancel
           </Button>
-
+        </Modal.Footer>
+      </Modal>
+      <Modal show={selectedTestCase !== null} onHide={() => setSelectedTestCase(null)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Test Case Steps</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <ListGroup>
+            {testCaseSteps.map((step) => (
+              <ListGroup.Item key={step.id} className="d-flex justify-content-between align-items-center">
+                <div>{step.description}</div>
+                <div>
+                  <Badge bg={getStatusVariant(step.status)}>{step.status}</Badge>
+                </div>
+                <div>
+                  <Dropdown onSelect={(eventKey) => handleUpdateStepStatus(step.id, eventKey)}>
+                    <Dropdown.Toggle variant="secondary" id="dropdown-basic" size="sm">
+                      Update Status
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      <Dropdown.Item eventKey="Pass">Pass</Dropdown.Item>
+                      <Dropdown.Item eventKey="Fail">Fail</Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                </div>
+              </ListGroup.Item>
+            ))}
+          </ListGroup>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setSelectedTestCase(null)}>
+            Close
+          </Button>
         </Modal.Footer>
       </Modal>
     </Container>
