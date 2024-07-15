@@ -213,7 +213,13 @@ const ApiTest = () => {
 
   const handleUpdateStepStatus = async (stepId, status) => {
     try {
-      await axiosInstance.post(`/api/v1/testCaseStep/update`, { id: stepId, status });
+      await axiosInstance.post('/api/v1/testCaseStep/updateStatus', null, {
+        params: {
+            id: stepId,
+            status: status
+        }
+      });
+    
       const response = await axiosInstance.get(`/api/v1/testCaseStep/findByTestCaseId?testCaseId=${selectedTestCase}`);
       setTestCaseSteps(response.data.data);
     } catch (error) {
