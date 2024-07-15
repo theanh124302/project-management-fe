@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import axiosInstance from '../AxiosInstance';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Card, Button, Form, Modal, Dropdown } from 'react-bootstrap';
@@ -14,7 +13,7 @@ const ApiDevelop = () => {
   const { projectId, folderId, apiId } = useParams();
   const [project, setProject] = useState(null);
   const [isEditable, setEditable] = useState(false);
-  const [apiDetails, setApiDetails] = useState({ method: '', url: '', token: '', header: '', parameters: '', bodyJson: '', environmentId: 0, installationGuide: '' });
+  const [apiDetails, setApiDetails] = useState({ method: '', url: '', token: '', header: '', parameters: '', bodyJson: '', environmentId: 0, installationGuide: '', sourceCode: '' });
   const [environments, setEnvironments] = useState([]);
   const [environmentName, setEnvironmentName] = useState('None');
   const [response, setResponse] = useState('');
@@ -49,7 +48,8 @@ const ApiDevelop = () => {
           parameters: data.parameters || '',
           bodyJson: data.bodyJson || '',
           environmentId: data.environmentId || 0,
-          installationGuide: data.installationGuide || ''
+          installationGuide: data.installationGuide || '',
+          sourceCode: data.sourceCode || ''
         });
         setToken(data.token || '');
         setHeader(data.header || '');
@@ -286,6 +286,14 @@ const ApiDevelop = () => {
               <Card className="mt-2">
                 <Card.Body>
                   <pre>{typeof response === 'object' ? JSON.stringify(response, null, 2) : response}</pre>
+                </Card.Body>
+              </Card>
+              <h3 className="mt-4">Source Code</h3>
+              <Card className="mt-2">
+                <Card.Body>
+                  <a href={apiDetails.sourceCode} target="_blank" rel="noopener noreferrer">
+                    {apiDetails.sourceCode}
+                  </a>
                 </Card.Body>
               </Card>
               <h3 className="mt-4"></h3>
