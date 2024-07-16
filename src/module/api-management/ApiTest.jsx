@@ -242,33 +242,6 @@ const ApiTest = () => {
           <Card className="mt-4">
             <Card.Body>
               <Card.Title>Test: {apiDetails.name}</Card.Title>
-              <Form>
-                <Form.Group controlId="formTestScenarios" className="mb-3">
-                  <Form.Label>Test Scenarios</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={3}
-                    name="testScenarios"
-                    value={apiDetails.testScenarios}
-                    onChange={handleInputChange}
-                  />
-                </Form.Group>
-                <Form.Group controlId="formTestScripts" className="mb-3">
-                  <Form.Label>Test Scripts</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={3}
-                    name="testScripts"
-                    value={apiDetails.testScripts}
-                    onChange={handleInputChange}
-                  />
-                </Form.Group>
-              </Form>
-              {isLeader && (
-                <Button variant="success" onClick={handleUpdateApi} className="me-2">
-                  Update
-                </Button>
-              )}
               <h3 className="mt-4">Test Cases</h3>
               <ListGroup className="mb-3">
                 {testCases.map((testCase) => (
